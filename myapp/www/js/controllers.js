@@ -1375,10 +1375,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           '<input type="number" placeholder="{{ \'REQUIREMENTS\' | translate }}" ng-model="modelNewAchievement.requirements">'+
         '</label>'+
         '<label class="item item-input list-elements">'+
-          '<span class="input-label">PUNTOS NECESARIOS PARA PASAR DE NIVEL</span>'+
-          '<input type="number" placeholder="PUNTOS NECESARIOS PARA PASAR DE NIVEL" ng-model="modelNewAchievement.pointsToLevel">'+
-        '</label>'+
-        '<label class="item item-input list-elements">'+
           '<span class="input-label">MÁXIMO NIVEL</span>'+
           '<input type="number" placeholder="MÁXIMO NIVEL" ng-model="modelNewAchievement.maxLevel">'+
         '</label>'+
@@ -1390,7 +1386,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       '</form>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm  button-block" ng-click="closeModalNewAchievement()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button class="button button-calm  button-block"  ng-click="createAchievement(modelNewAchievement.name, modelNewAchievement.description, modelNewAchievement.requirements, modelNewAchievement.pointsToLevel, modelNewAchievement.maxLevel, modelNewAchievement.badge)" ng-disabled="!modelNewAchievement.name || !modelNewAchievement.description || !modelNewAchievement.requirements || !modelNewAchievement.pointsToLevel || !modelNewAchievement.maxLevel">{{ \'ADD_ACHIEVEMENT\' | translate }}</button>'+
+        '<button class="button button-calm  button-block"  ng-click="createAchievement(modelNewAchievement.name, modelNewAchievement.description, modelNewAchievement.requirements, modelNewAchievement.maxLevel, modelNewAchievement.badge)" ng-disabled="!modelNewAchievement.name || !modelNewAchievement.description || !modelNewAchievement.requirements || !modelNewAchievement.maxLevel">{{ \'ADD_ACHIEVEMENT\' | translate }}</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -2682,14 +2678,26 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     for (var item in student.items) {
       for(i = 0 ; i < $scope.items.length ; i++){
         if(student.items[item].id == $scope.items[i].id){
-          $scope.studentItems.push({
-            'id' : student.items[item].id,
-            'points' : student.items[item].points,
-            'name' : $scope.items[i].name,
-            'score' : $scope.items[i].score,
-            'maxScore' : $scope.items[i].maxScore,
-            'useForLevel' : $scope.items[i].useForLevel,
-          });
+          if($scope.items[i].achievements != undefined) {
+            $scope.studentItems.push({
+              'id' : student.items[item].id,
+              'points' : student.items[item].points,
+              'name' : $scope.items[i].name,
+              'score' : $scope.items[i].score,
+              'maxScore' : $scope.items[i].maxScore,
+              'useForLevel' : $scope.items[i].useForLevel,
+              'achievements' : $scope.items[i].achievements,
+            });
+          } else {
+            $scope.studentItems.push({
+              'id' : student.items[item].id,
+              'points' : student.items[item].points,
+              'name' : $scope.items[i].name,
+              'score' : $scope.items[i].score,
+              'maxScore' : $scope.items[i].maxScore,
+              'useForLevel' : $scope.items[i].useForLevel,
+            });
+          }
         }
       }
     }
@@ -2971,7 +2979,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   $scope.evaluateStudents = function(item) {
     /*
-    **Hay que comprobar si con la puntuacion que se le va a asignar al alumno, los logros del item suben de nivel o se desbloquean.
     **Hay que comprobar si con la puntuacion que se le va a asignar al alumno y los logros que quiza desbloquee, completará una mision.
     **(Para la claridad del codigo, todas estas comprobaciones quiza se deberian hacer en diferentes metodos. Con su consiguiente codigo de introduccion en la base de datos en caso de cumplirse las condiciones),
     **/
@@ -2984,6 +2991,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             'id' : item.id,
             'points' : item.score,
           });
+          $scope.checkAchievements(item, $scope.studentsToEvaluate[pos], item.score);
 
         } else {
           var studentPoints = $scope.studentsToEvaluate[pos].items[item.id].points;
@@ -2992,17 +3000,20 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               'id' : item.id,
               'points' : item.maxScore,
             });
+            $scope.checkAchievements(item, $scope.studentsToEvaluate[pos], item.maxScore);
             alert('EL ALUMNO: ' + $scope.studentsToEvaluate[pos].name + ' ' + $scope.studentsToEvaluate[pos].surname + ' HA RECIBIDO MAS PUNTUACION DE LA MAXIMA ESTABLECIDA EN EL ITEM: ' + item.name + ', SE HA ESTABLECIDO LA PUNTUACION MAXIMA');
           } else {
             studentItemRef.set({
               'id' : item.id,
               'points' : Number(studentPoints) + Number(item.score),
             });
+            $scope.checkAchievements(item, $scope.studentsToEvaluate[pos], (Number(studentPoints) + Number(item.score)));
             if ((Number(studentPoints) + Number(item.score)) < 0) {
               studentItemRef.set({
                 'id' : item.id,
                 'points' : 0,
               });
+              $scope.checkAchievements(item, $scope.studentsToEvaluate[pos], 0);
               alert('EL ALUMNO: ' + $scope.studentsToEvaluate[pos].name + ' ' + $scope.studentsToEvaluate[pos].surname + ' HA PERDIDO MAS PUNTUACION DE LA MAXIMA ESTABLECIDA EN EL ITEM: ' + item.name + ', SE HA ESTABLECIDO LA PUNTUACION A 0');
             }
           }
@@ -3013,10 +3024,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           'id' : item.id,
           'points' : item.score,
         });
+        $scope.checkAchievements(item, $scope.studentsToEvaluate[pos], item.score);
       }
       if (item.useForLevel) {
-        //THINGS TO DO
-        //Profundizar en achievements (como comprobar los requisitos y los niveles?)
         var pointsAdded = Number($scope.studentsToEvaluate[pos].classrooms[$scope.classroom.id].totalPoints) + Number(item.score);
         var studentClassroomTotalPointsRef = firebase.database().ref('students/' + $scope.studentsToEvaluate[pos].id + '/classrooms/' + $scope.classroom.id + '/totalPoints');
         if(pointsAdded < 0){
@@ -3024,7 +3034,8 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         } else {
           studentClassroomTotalPointsRef.set(pointsAdded);  
         }
-      }    
+      }
+          
     }
        
   }
@@ -3047,6 +3058,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                   'id' : item.id,
                   'points' : item.score,
                 });
+                $scope.checkAchievements(item, $scope.students[studentPos], item.score);
               } else {
                 var studentPoints = $scope.students[studentPos].items[item.id].points;
                 if((Number(studentPoints) - Number(item.score)) > Number(item.maxScore)) {
@@ -3054,17 +3066,20 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                     'id' : item.id,
                     'points' : item.maxScore,
                   });
+                  $scope.checkAchievements(item, $scope.students[studentPos], item.maxScore);
                   alert('EL ALUMNO: ' + $scope.students[studentPos].name + ' ' + $scope.students[studentPos].surname + ' HA RECIBIDO MAS PUNTUACION DE LA MAXIMA ESTABLECIDA EN EL ITEM: ' + item.name + ', SE HA ESTABLECIDO LA PUNTUACION MAXIMA');
                 } else {
                   studentItemRef.set({
                     'id' : item.id,
                     'points' : Number(studentPoints) + Number(item.score),
                   });
+                  $scope.checkAchievements(item, $scope.students[studentPos], (Number(studentPoints) + Number(item.score)));
                   if((Number(studentPoints) + Number(item.score)) < 0) {
                     studentItemRef.set({
                       'id' : item.id,
                       'points' : 0,
                     });
+                    $scope.checkAchievements(item, $scope.students[studentPos], 0);
                     alert('EL ALUMNO: ' + $scope.students[studentPos].name + ' ' + $scope.students[studentPos].surname + ', HA PERDIDO MAS PUNTUACION DE LA MAXIMA ESTABLECIDA EN EL ITEM: ' + item.name + ', SE HA ESTABLECIDO LA PUNTUACION A 0');
                   }
                 }
@@ -3075,6 +3090,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                 'id' : item.id,
                 'points' : item.score,
               });
+              $scope.checkAchievements(item, $scope.students[studentPos], item.score);
             }
             if(item.useForLevel) {
               //THINGS TO DO
@@ -3087,6 +3103,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                 studentClassroomTotalPointsRef.set(pointsAdded);
               }
             }
+            
           }
         }
       }
@@ -3177,9 +3194,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       alert ('EL ALUMNO NO DISPONE DE SUFICIENTES PUNTOS PARA RESTAR, LA PUNTUACION SERA ESTABLECIDA A 0');
       studentItemPointsToRemoveRef.set(0);
       $scope.student.items[item.id].points = 0;
+      $scope.checkAchievements(item, $scope.student, 0);
     } else {
       studentItemPointsToRemoveRef.set((Number($scope.student.items[item.id].points) - Number(item.score)));
       $scope.student.items[item.id].points = (Number($scope.student.items[item.id].points) - Number(item.score));
+      $scope.checkAchievements(item, $scope.student, Number($scope.student.items[item.id].points));
     }
 
     item.points = $scope.student.items[item.id].points;
@@ -3202,9 +3221,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       alert('EL ALUMNO HA RECIBIDO MAS PUNTUACION DE LA MAXIMA ESTABLECIDA EN EL ITEM, LA PUNTUACION SERA ESTABLECIDA AL MAXIMO');
       studentItemPointsToAddRef.set(item.maxScore);
       $scope.student.items[item.id].points = item.maxScore;
+      $scope.checkAchievements(item, $scope.student, item.maxScore);
     } else {
       studentItemPointsToAddRef.set((Number($scope.student.items[item.id].points) + Number(item.score)));
       $scope.student.items[item.id].points = (Number($scope.student.items[item.id].points) + Number(item.score));
+      $scope.checkAchievements(item, $scope.student, Number($scope.student.items[item.id].points));
     }
 
     item.points = $scope.student.items[item.id].points;
@@ -3261,7 +3282,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
 
-  $scope.createAchievement = function(name, description, requirements, pointsToLevel, maxLevel, badge) {
+  $scope.createAchievement = function(name, description, requirements, maxLevel, badge) {
     if(badge == undefined){
       badge = $scope.defaultAvatar
     }
@@ -3272,7 +3293,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         'name' : name,
         'description' : description,
         'requirements' : requirements,
-        'pointsToLevel' : pointsToLevel,
         'maxLevel' : maxLevel,
         'badge' : badge,
       }).then(function(ref) {
@@ -3308,15 +3328,14 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.achievementsForm();
   }
 
-  $scope.editAchievement = function(name, description, requirements, pointsToLevel, maxLevel, badge) {
-    if(name != undefined && description != undefined && requirements != undefined && pointsToLevel != undefined && maxLevel != undefined && badge != undefined){
+  $scope.editAchievement = function(name, description, requirements, maxLevel, badge) {
+    if(name != undefined && description != undefined && requirements != undefined && maxLevel != undefined && badge != undefined){
       var achievementRef = firebase.database().ref('achievements/' + $scope.achievement.id);
       var achievementEdit = {
         'id' : $scope.achievement.id,
         'name' : name,
         'description' : description,
         'requirements' : requirements,
-        'pointsToLevel' : pointsToLevel,
         'maxLevel' : maxLevel,
         'badge' : badge,
       };
@@ -3335,11 +3354,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       if(requirements != undefined) {
         var achievementRequirementsRef = firebase.database().ref('achievements/' + $scope.achievement.id + '/requirements');
         achievementRequirementsRef.set(requirements);
-      }
-
-      if(pointsToLevel != undefined) {
-        var achievementPointsToLevelRef = firebase.database().ref('achievements/' + $scope.achievement.id + '/pointsToLevel');
-        achievementPointsToLevelRef.set(pointsToLevel);
       }
 
       if(maxLevel != undefined) {
@@ -3378,6 +3392,42 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       achievement.selected = true;
     } else {
       achievement.selected = false;
+    }
+  }
+
+  $scope.checkAchievements = function(item, student, points) {
+    if(item.achievements != undefined) {
+      var itemAchievementsRef = firebase.database().ref('items/' + item.id + '/achievements');
+      var itemAchievementsArray = $firebaseArray(itemAchievementsRef);
+      var achievementsArray = $firebaseArray(achievementsRef);
+      itemAchievementsArray.$loaded(function(){
+        achievementsArray.$loaded(function(){
+          for(i = 0 ; i < itemAchievementsArray.length ; i++) {
+            var achievementKey = itemAchievementsArray.$keyAt(i);
+            var loopAchievements = firebase.database().ref('achievements/' + achievementKey);
+            loopAchievements.on('value', function(snapshot){
+              if(snapshot.val() != null) {
+                var achievementToCheck = snapshot.val();
+                if(points > achievementToCheck.requirements) {
+                  var levelAchievement = points / achievementToCheck.requirements;
+                  levelAchievement = Math.trunc(levelAchievement);
+                  if(levelAchievement > achievementToCheck.maxLevel) {
+                    levelAchievement = achievementToCheck.maxLevel;
+                  }
+                  var studentItemAchievementRef = firebase.database().ref('students/' + student.id + '/items/' + item.id + '/achievements/' + achievementToCheck.id);
+                  studentItemAchievementRef.set({
+                    'id' : achievementToCheck.id,
+                    'level' : levelAchievement,
+                  });
+                } else {
+                  var studentItemAchievementRef = firebase.database().ref('students/' + student.id + '/items/' + item.id + '/achievements/' + achievementToCheck.id);
+                  studentItemAchievementRef.remove();
+                }
+              }
+            });
+          }
+        });
+      });
     }
   }
 
