@@ -153,8 +153,10 @@
         <button id="class-button29" ng-click="teamsForm()"  class="button button-light  button-outline">{{ 'TEAMS' | translate }}</button>
       </div>
       <ion-list id="class-list5" class="list-elements">
-        <ion-item class="list-student" id="class-list-item7" ng-repeat="student in students" ng-show="student.classrooms[classroom.id].inClass" ng-click="setStudent(student)">
-          <h2>{{student.name}} {{student.surname}}</h2>
+        <ion-item class="list-student item item-avatar" id="class-list-item7" ng-repeat="student in students" ng-show="student.classrooms[classroom.id].inClass" ng-click="setStudent(student)">
+          <img src="{{student.avatar}}">
+          <h2>{{student.name}}</h2>
+          <p>{{student.surname}}</p>
         </ion-item>
       </ion-list>
       <div class="button-bar action_buttons">

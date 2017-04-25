@@ -843,7 +843,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       '<h3 id="attendance-heading3" class="attendance-hdg3">{{classroomName}}</h3>'+
       '<h3 id="attendance-heading3" class="attendance-hdg3">SELECCIONA ESTUDIANTES</h3>'+
       '<ion-list id="attendance-list7" class="list-elements">'+
-        '<ion-checkbox id="attendance-checkbox2" name="checkStudent" class="list-student" ng-repeat="studentForSelection in studentsForSelection" ng-click="changeSelectedStudent(studentForSelection)" ng-checked="studentForSelection.selected">{{studentForSelection.name}} {{studentForSelection.surname}}</ion-checkbox>'+  
+        '<ion-checkbox id="attendance-checkbox2" name="checkStudent" class="list-student" ng-repeat="studentForSelection in studentsForSelection" ng-click="changeSelectedStudent(studentForSelection)" ng-checked="studentForSelection.selected">'+
+          '<p>{{studentForSelection.name}}</p>'+
+          '<p>{{studentForSelection.surname}}</p>'+
+        '</ion-checkbox>'+  
       '</ion-list>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm  button-block" ng-click="closeSelectStudentsModal()">{{ \'CANCEL\' | translate }}</button>'+
@@ -2550,9 +2553,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             if($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
               $scope.$apply();
             }
-            $scope.getStudentsForSelection();
           }
         });
+        $scope.getStudentsForSelection();
       }
     }).then(function() {
       $scope.classForm();
@@ -2668,8 +2671,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       var studentMissionsToDeleteRef = firebase.database().ref('students/' + student.id + '/missions/' + $scope.missions[mission].id);
       studentMissionsToDeleteRef.remove();
     }
-
-    $scope.getStudents();
   }
 
   $scope.setStudent = function(student) {
@@ -2773,6 +2774,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           $scope.deleteStudent($scope.studentsForSelection[element]);
         }
       }
+      $scope.getStudents();
     } else if ($scope.actionsheetClassStudentsType === 'evaluate') {
       $scope.studentsToEvaluate = [];
       for (var element in $scope.studentsForSelection) {
