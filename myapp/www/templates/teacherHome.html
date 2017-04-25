@@ -1,0 +1,408 @@
+<ion-view title="Teacher Home" hide-nav-bar="true" id="page7">
+  <ion-content padding="false" class="manual-ios-statusbar-padding">
+
+    <!-- TeacherHome Page -->
+
+    <div ng-show="teacherHomeView">
+      <header id="pageHeader">
+        <h3 id="teacherHome-heading1" class="margin-top-null">
+          <span>{{ 'SELECT_YOUR_CLASS' | translate }}</span>
+        </h3>
+        <a id="menu" class="button button-light icon ion-drag" ng-click="openPopoverTeacherHome($event)"></a>
+      </header>
+      <ion-list id="teacherHome-list16" class="list-elements align-text-center">
+        <ion-item id="teacherHome-list-item47" ng-repeat="class in classrooms" ng-click="setClassroom(class)" ng-hide="class.archived">
+          <span class="ion-university"></span><br>{{class.name}}
+        </ion-item>
+      </ion-list>
+      <div class="button-bar action_buttons">
+        <button id="teacherHome-button12" ng-click="showModalNewClass()" class="button button-calm  button-block bold-font">{{ 'ADD_CLASS' | translate }}</button>
+      </div>
+      <div ng-show="archivedClassroomsToShow">
+        <h3 id="teacherHome-heading1" class="margin-top-null">CLASES ARCHIVADAS</h3>
+        <ion-list id="teacherHome-list16" class="list-elements align-text-center">
+          <ion-item id="teacherHome-list-item47" ng-repeat="class in classrooms" ng-click="setClassroom(class)" ng-show="class.archived">
+            <span class="ion-university"></span><br>{{class.name}}
+          </ion-item>
+        </ion-list>
+      </div>
+      <button class="button button-positive button-float addButton" ng-click="showActionsheetTeacherHome()">
+        <i class="icon ion-plus"></i>
+      </button>
+    </div>
+
+    <!-- Profile Page -->
+
+    <div ng-show="profileView">
+      <form id="teacherProfileForm" class="list">
+        <ion-list>
+          <header id="pageHeader">
+            <h3 id="teams-heading5" class="margin-top-null">
+              <a id="teacherHome-dropdown" class="button button-light icon ion-home homeButton" ng-click="teacherHomeForm()"></a>
+              <span>{{ 'PROFILE' | translate }}</span>
+            </h3>
+          </header>
+          <ion-item class ="teacherAvatar">
+            <img src={{teacher.avatar}} class="avatar">
+          </ion-item>
+          <label class="item item-input list-elements" id="signUp-input3">
+            <span class="inputLabelProfile">
+              <i class="icon ion-person"></i>&nbsp;&nbsp;{{ 'NAME' | translate }}
+              <input id="inputName" type="text" placeholder="{{teacher.name}}" ng-model="modelProfile.name">
+            </span>
+          </label>
+          <label class="item item-input list-elements" id="signUp-input3">
+            <span class="inputLabelProfile">
+              <i class="icon ion-person"></i>&nbsp;&nbsp;{{ 'SURNAME' | translate }}
+              <input id="inputSurname" type="text" placeholder="{{teacher.surname}}" ng-model="modelProfile.surname">
+            </span>
+          </label>
+          <label class="item item-input list-elements" id="signUp-input3">
+            <span class="inputLabelProfile">
+              <i class="icon ion-clipboard"></i>&nbsp;&nbsp;ESCUELA
+              <input id="inputAvatar" type="text" placeholder="{{teacher.school}}" ng-model="modelProfile.school">
+            </span>
+          </label>
+          <label class="item item-input list-elements" id="signUp-input3">
+            <span class="inputLabelProfile">
+              <i class="icon ion-image"></i>&nbsp;&nbsp;{{ 'AVATAR' | translate }}
+              <input id="inputAvatar" type="text" placeholder="{{teacher.avatar}}" ng-model="modelProfile.avatar">
+            </span>
+          </label>
+          <div class="button-bar action_buttons">
+            <button id="signUp-button8" class="button button-calm button-block" ng-click="settingsForm()">{{ 'CANCEL' | translate }}</button>
+            <button id="signUp-button9" ng-disabled="!modelProfile.name && !modelProfile.surname && !modelProfile.school && !modelProfile.avatar" id="signUp-btn9" class="button button-calm button-block" ng-click="editTeacherData(modelProfile.name, modelProfile.surname, modelProfile.school, modelProfile.avatar)">{{ 'SAVE_CHANGES' | translate }}</button>
+          </div>
+        </ion-list>
+      </form>
+      <form id="teacherProfileFormPassword">
+        <ion-list>
+          <label class="item item-input list-elements" id="signUp-input6">
+            <span class="inputLabelProfile">
+              <i class="icon ion-locked"></i>&nbsp;&nbsp;{{ 'PASSWORD' | translate }}
+              <input id="inputPassword" type="password" placeholder="{{teacher.password}}" ng-model="modelProfile.password" ng-minlenght="6">
+            </span>
+          </label>
+          <label class="item item-input list-elements" id="signUp-input7">
+            <span class="inputLabelProfile">
+              <i class="icon ion-locked"></i>&nbsp;&nbsp;{{ 'CONFIRM_PASSWORD' | translate }}
+              <input id="inputRepeatpassword" type="password" placeholder="{{teacher.password}}" ng-model="modelProfile.passwordRepeat" ng-minlenght="6">
+            </span>
+          </label>
+          <div class="button-bar action_buttons">
+            <button id="signUp-button8" class="button button-calm button-block" ng-click="settingsForm()">{{ 'CANCEL' | translate }}</button>
+            <button id="signUp-button9" ng-disabled="!modelProfile.password || !modelProfile.passwordRepeat || !modelProfile.password == modelProfile.passwordRepeat" id="signUp-btn9" class="button button-calm button-block" ng-click="updateTeacherPassword(modelProfile.password)">CONFIRMAR</button>
+          </div>
+        </ion-list>
+      </form>
+      <form id="teacherProfileFormEmail">
+        <ion-list>
+          <label class="item item-input list-elements" id="signUp-input5">
+            <span class="inputLabelProfile">
+              <i class="icon ion-at"></i>&nbsp;&nbsp;{{ 'EMAIL' | translate }}
+              <input id="inputEmail" type="email" placeholder="{{teacher.email}}" ng-model="modelProfile.email">
+            </span>
+          </label>
+          <div class="button-bar action_buttons">
+            <button id="signUp-button8" class="button button-calm button-block" ng-click="settingsForm()">{{ 'CANCEL' | translate }}</button>
+            <button id="signUp-button9" ng-disabled="!modelProfile.email" id="signUp-btn9" class="button button-calm button-block" ng-click="updateTeacherEmail(modelProfile.email)">CONFIRMAR EMAIL</button>
+          </div>
+        </ion-list>
+      </form>
+    </div>
+
+    <!-- Settings Page -->
+
+    <div ng-show="settingsView">
+      <header id="pageHeader">
+        <h3 id="teacherHome-heading1" class="margin-top-null">
+          <a id="teacherHome-dropdown" class="button button-light icon ion-home homeButton" ng-click="teacherHomeForm()"></a>
+          <span>{{ 'SETTINGS' | translate }}</span>
+        </h3>
+      </header>
+      <div>
+        <ion-list class="list-elements align-text-center">
+          <ion-item ng-click="profileForm()">{{'PROFILE'| translate}}</ion-item>
+          <ion-item ng-click="openPopoverLanguages($event)">{{'LANGUAGES'| translate}}</ion-item>
+          <ion-item ng-controller="settingsCtrl" ng-click="showHelpPopup()">AYUDA</ion-item>
+          <ion-item ng-controller="settingsCtrl" ng-click="showTermsPopup()">TERMINOS Y CONDICIONES</ion-item>
+          <ion-item ng-controller="settingsCtrl" ng-click="showAboutPopup()">ACERCA DE</ion-item>
+        </ion-list>
+      </div>
+      <div class="button-bar action_buttons">
+        <a id="teacherSettings-button81" id="teacherSettings-btn81" class="button button-assertive  button-block button-clear icon ion-ios-close-empty logout" ng-click="logOut()">&nbsp;{{ 'LOG_OUT' | translate }}</a>
+      </div>
+    </div>
+
+    <!-- Class Students Page -->
+
+    <div ng-show="classStudentsView">
+      <header id="pageHeader">
+        <h3 id="class-heading2">
+          <a id="teacherHome-dropdown" class="button button-light icon ion-home homeButton" ng-click="teacherHomeForm()"></a>
+          <span>{{classroom.name}}</span>
+          <a id="menu" class="button button-light icon ion-drag" ng-click="openPopoverClassStudents($event)"></a>
+          <div class="subheader">
+            <br/>
+            <p>ESTUDIANTES</p>
+          </div>
+        </h3>
+      </header>
+      <div id="class-button-bar5" class="button-bar">
+        <button id="class-button26" ng-click="classForm()"  class="button button-light  button-outline">ESTUDIANTES</button>
+        <button id="class-button29" ng-click="teamsForm()"  class="button button-light  button-outline">{{ 'TEAMS' | translate }}</button>
+      </div>
+      <ion-list id="class-list5" class="list-elements">
+        <ion-item class="list-student" id="class-list-item7" ng-repeat="student in students" ng-show="student.classrooms[classroom.id].inClass" ng-click="setStudent(student)">
+          <h2>{{student.name}} {{student.surname}}</h2>
+        </ion-item>
+      </ion-list>
+      <div class="button-bar action_buttons">
+        <button id="students-button44" id="students-btn44" class="button button-calm  button-block" ng-click="showModalNewStudentDialog()">{{ 'ADD_STUDENT' | translate }}</button>
+      </div>
+      <button class="button button-positive button-float addButton" ng-click="showActionsheetClassStudents()">
+        <i class="icon ion-plus"></i>
+      </button>
+    </div>
+
+    <!-- Class Teams Page -->
+
+    <div ng-show="classTeamsView">
+      <header id="pageHeader">
+        <h3 id="teams-heading5" class="teams-hdg5">
+          <a id="teacherHome-dropdown" class="button button-light icon ion-home homeButton" ng-click="teacherHomeForm()"></a>
+          <span>{{classroom.name}}</span>
+          <a id="menu" class="button button-light icon ion-drag" ng-click="openPopoverClassTeams($event)"></a>
+          <div class="subheader">
+            <br/>
+            <p>{{ 'TEAMS' | translate }}</p>
+          </div>
+        </h3>
+      </header>
+      <div id="class-button-bar5" class="button-bar">
+        <button id="class-button26" ng-click="classForm()"  class="button button-light  button-outline">ESTUDIANTES</button>
+        <button id="class-button29" ng-click="teamsForm()"  class="button button-light  button-outline">{{ 'TEAMS' | translate }}</button>
+      </div>
+      <ion-list id="teams-list10" class="list-elements">
+        <ion-item class="list-student" id="teams-list-item14" ng-repeat="team in teams" ng-click="setTeam(team)">
+          <h2>{{team.name}}</h2>
+        </ion-item>
+      </ion-list>
+      <div class="button-bar action_buttons">
+        <button id="teams-button44" ng-click="showModalNewTeamDialog()" id="teams-btn44" class="button button-calm  button-block">{{ 'ADD_TEAM' | translate }}</button>
+      </div>
+	  <div class="button-bar action_buttons">
+        <button id="teams-button44" ng-click="showModalQuantityRandomTeams()" id="teams-btn44" class="button button-calm  button-block">CREAR EQUIPOS ALEATORIOS</button>
+      </div>
+      <button class="button button-positive button-float addButton" ng-click="showActionsheetClassTeams()">
+        <i class="icon ion-plus"></i>
+      </button>
+    </div>
+
+    <!-- Rules Page -->
+
+    <div ng-show="rulesView">
+      <header id="pageHeader">
+        <h3 id="rules-heading11" class="rules-hdg11">
+          <a id="teacherHome-dropdown" class="button button-light icon ion-home homeButton" ng-click="teacherHomeForm()"></a>
+          <span ng-click="classForm()">{{classroom.name}}</span>
+          <a id="menu" class="button button-light icon ion-drag" ng-click="openPopoverTeacherDefault($event)"></a>
+          <div class="subheader">
+            <br/>
+            <p>RULES</p>
+          </div>
+        </h3>
+      </header>
+      <ion-list id="items-list9">
+        <ion-item id="items-list-item15" class="list-student" ng-repeat="item in items" ng-click="setItem(item)">
+            <h2>{{item.name}}</h2>
+            <p>{{item.score}}</p>
+        </ion-item>
+      </ion-list>
+      <div class="button-bar action_buttons">
+        <button id="items-button67" ng-click="showModalNewItem()" class="button button-calm  button-block">{{ 'ADD_ITEM' | translate }}</button>
+      </div>
+      <button class="button button-positive button-float addButton" ng-click="showActionsheetItems()">
+        <i class="icon ion-plus"></i>
+      </button>
+    </div>
+
+    <!-- Items Page -->
+
+    <div ng-show="itemsView">
+      <header id="pageHeader">
+        <h3 id="achievements-heading13" class="achievements-hdg13">
+          <a id="teacherHome-dropdown" class="button button-light icon ion-home homeButton" ng-click="teacherHomeForm()"></a>
+          <span ng-click="classForm()">{{classroom.name}}</span>
+          <a id="menu" class="button button-light icon ion-drag" ng-click="openPopoverTeacherDefault($event)"></a>
+          <div class="subheader">
+            <br/>
+            <p>{{item.name}}</p>
+          </div>
+        </h3>
+      </header>
+      <div class="list-student list-elements">
+        <div class="avatar_content">
+          <img src={{item.picture}} class="avatar">
+        </div>
+        <button  class="button button-light  button-block button-outline">{{ 'TAKE_PICTURE' | translate }}</button>
+        <form class="list">
+          <div class="button-bar action_buttons">
+            <button class="button button-calm  button-block" ng-click="rulesForm()">{{ 'CANCEL' | translate }}</button>
+            <button class="button button-calm  button-block" ng-click="editItem(modelItem.name, modelItem.description, modelItem.requirements, modelItem.score, modelItem.maxScore, modelItem.useForLevel)" ng-disabled="!modelItem.name && !modelItem.description && !modelItem.requirements && !modelItem.maxScore && !modelItem.score && !modelItem.useForLevel">EDITAR</button>
+          </div>
+        </form>
+      </div>
+      <div class="list-team list-elements">
+        <form id="editItemForm" class="list list-student fullScreen">
+          <ion-list>
+            <label class="item item-input list-elements">
+              <span class="input-label">{{ 'NAME' | translate }}</span>
+              <input type="text" placeholder="{{item.name}}" ng-model="modelItem.name">
+            </label>
+            <label class="item item-input list-elements">
+              <span class="input-label">{{ 'DESCRIPTION' | translate }}</span>
+              <input type="text" placeholder="{{item.description}}" ng-model="modelItem.description">
+            </label>
+            <label class="item item-input list-elements">
+              <span class="input-label">{{ 'REQUIREMENTS' | translate }}</span>
+              <input type="text" placeholder="{{item.requirements}}" ng-model="modelItem.requirements">
+            </label>
+            <label class="item item-input list-elements">
+              <span class="input-label">{{ 'MAX_SCORE' | translate }}</span>
+              <input type="number" placeholder="{{item.maxScore}}" ng-model="modelItem.maxScore">
+            </label>
+            <label class="item item-input list-elements">
+              <span class="input-label">{{ 'SCORE' | translate }}</span>
+              <input type="number" placeholder="{{item.score}}" ng-model="modelItem.score">
+            </label>
+            <ion-toggle toggle-class="toggle-calm" ng-model="modelItem.useForLevel" ng-checked="item.useForLevel">USAR PARA NIVEL</ion-toggle>
+          </ion-list>
+        </form>
+      </div>
+      <h3 id="teams-heading5" class="teams-hdg5">{{ 'ACHIEVEMENTS' | translate }}</h3>
+      <ion-list id="items-list9" class="list-elements align-text-center">
+        <ion-item ng-click="achievementsForm()">
+          <h2>{achievement.name}</h2>
+        </ion-item>
+        <ion-item id="items-list-item15" class="list-item" ng-click="setAchievement(achievement)" ng-repeat="achievement in achievements">
+          <h2>{{achievement.name}}</h2>
+        </ion-item>
+      </ion-list>
+      <div class="button-bar action_buttons">
+        <button id="achievements-button91" ng-click="showModalNewAchievement()" class="button button-calm  button-block">{{ 'ADD_ACHIEVEMENT' | translate }}</button>
+      </div>
+      <button class="button button-positive button-float addButton" ng-click="showActionsheetAchievements()">
+          <i class="icon ion-plus"></i>
+      </button>
+    </div>
+
+    <!-- Achievements Page -->
+
+    <div ng-show="achievementsView">
+      <form id="editAchievementForm" class="list">
+        <ion-list>
+          <header id="pageHeader">
+            <h3 id="achievements-heading13" class="achievements-hdg13">
+              <a id="teacherHome-dropdown" class="button button-light icon ion-home homeButton" ng-click="teacherHomeForm()"></a>
+              <span ng-click="classForm()">{{classroom.name}}</span>
+              <a id="menu" class="button button-light icon ion-drag" ng-click="openPopoverTeacherDefault($event)"></a>
+              <div class="subheader">
+                <br/>
+                <p>{{achievement.name}}</p>
+              </div>
+            </h3>
+          </header>
+          <ion-item class ="teacherAvatar">
+            <img src={{achievement.badge}} class="avatar">
+          </ion-item>
+          <label class="item item-input list-elements">
+            <span class="input-label">{{ 'NAME' | translate }} </span>
+            <input type="text" placeholder="{{achievement.name}}" ng-model="modelAchievement.name">
+          </label>
+          <label class="item item-input list-elements">
+            <span class="input-label">{{ 'DESCRIPTION' | translate }}</span>
+            <input type="text" placeholder="{{achievement.description}}" ng-model="modelAchievement.description">
+          </label>
+          <label class="item item-input list-elements">
+            <span class="input-label">{{ 'REQUIREMENTS' | translate }}</span>
+            <input type="number" placeholder="{{achievement.requirements}}" ng-model="modelAchievement.requirements">
+          </label>
+          <label class="item item-input list-elements">
+            <span class="input-label">PUNTOS NECESARIOS PARA PASAR DE NIVEL</span>
+            <input type="number" placeholder="{{achievement.pointsToLevel}}" ng-model="modelAchievement.pointsToLevel">
+          </label>
+          <label class="item item-input list-elements">
+            <span class="input-label">MÁXIMO NIVEL</span>
+            <input type="number" placeholder="{{achievement.maxLevel}}" ng-model="modelAchievement.maxLevel">
+          </label>
+          <label class="item item-input list-elements">
+            <span class="input-label">MEDALLA</span>
+            <input type="text" placeholder="{{achievement.badge}}" ng-model="modelAchievement.badge">
+          </label>
+        </ion-list>
+      </form>
+      <div class="button-bar action_buttons">
+        <button class="button button-calm  button-block" ng-click="itemsForm()">{{ 'CANCEL' | translate }}</button>
+        <button class="button button-calm  button-block" ng-click="editAchievement(modelAchievement.name, modelAchievement.description, modelAchievement.requirements, modelAchievement.pointsToLevel, modelAchievement.maxLevel, modelAchievement.badge)" ng-disabled="!modelAchievement.name && !modelAchievement.description && !modelAchievement.requirements && !modelAchievement.pointsToLevel && !modelAchievement.maxLevel && !modelAchievement.badge">EDITAR LOGRO</button>
+      </div>
+    </div>
+
+    <!-- Missions Page -->
+
+    <div ng-show="missionsView">
+      <header id="pageHeader">
+        <h3 id="class-heading2">
+          <a id="teacherHome-dropdown" class="button button-light icon ion-home homeButton" ng-click="teacherHomeForm()"></a>
+          <span ng-click="classForm()">{{classroom.name}}</span>
+          <a id="menu" class="button button-light icon ion-drag" ng-click="openPopoverTeacherDefault($event)"></a>
+          <div class="subheader">
+            <br/>
+            <p>MISIONES</p>
+          </div>
+        </h3>
+      </header>
+      <ion-list id="class-list5" class="list-elements">
+        <ion-item class="list-student" id="class-list-item7" ng-click="setMission(mission)" ng-repeat="mission in missions">
+          <h2>{{mission.name}}</h2>
+        </ion-item>
+      </ion-list>
+      <div class="button-bar action_buttons">
+        <button id="class-button31" ng-click="setNewMissionNamePopup()" class="button button-calm  button-block">AÑADIR MISIÓN</button>
+      </div>
+      <button class="button button-positive button-float addButton" ng-click="showActionsheetMissions()">
+        <i class="icon ion-plus"></i>
+      </button>
+    </div>
+
+    <!-- Rewards Page -->
+
+    <div ng-show="rewardShopView">
+      <header id="pageHeader">
+        <h3 id="class-heading2">
+          <a id="teacherHome-dropdown" class="button button-light icon ion-home homeButton" ng-click="teacherHomeForm()"></a>
+          <span ng-click="classForm()">{{classroom.name}}</span>
+          <a id="menu" class="button button-light icon ion-drag" ng-click="openPopoverTeacherDefault($event)"></a>
+          <div class="subheader">
+            <br/>
+            <p>TIENDA DE RECOMPENSAS</p>
+          </div>
+        </h3>
+      </header>
+      <ion-list id="class-list5" class="list-elements">
+        <ion-item class="list-student" id="class-list-item7" ng-repeat="reward in rewards" ng-click="setReward(reward)">
+          <h2>{{reward.name}}</h2>
+        </ion-item>
+      </ion-list>
+      <div class="button-bar action_buttons">
+        <button id="class-button31" ng-click="showModalNewReward()" class="button button-calm  button-block">AÑADIR RECOMPENSA</button>
+      </div>
+      <button class="button button-positive button-float addButton" ng-click="showActionsheetRewards()">
+        <i class="icon ion-plus"></i>
+      </button>
+    </div>
+
+    <!--  -->
+
+  </ion-content>
+</ion-view>

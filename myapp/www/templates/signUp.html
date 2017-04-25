@@ -1,0 +1,50 @@
+<ion-view title="Sign up" hide-nav-bar="true" id="page6">
+  <ion-content padding="false" class="manual-ios-statusbar-padding">
+    <form id="signUp-form2" class="list">
+      <div class="logoContainer">
+        <img src="img/JOKiWwG0RpmqQmRNuC0l_ownLogo.png" class="logoOwn">
+      </div>
+      <ion-list id="signUp-list2">
+        <label class="item item-input list-elements" id="signUp-input3">
+          <span class="input-label">
+            <i class="icon ion-person"></i>&nbsp;&nbsp;{{ 'NAME' | translate }}</span>
+          <input type="text" placeholder="" ng-model="modelSignUp.name">
+        </label>
+        <label class="item item-input list-elements" id="signUp-input3">
+          <span class="input-label">
+            <i class="icon ion-person"></i>&nbsp;&nbsp;{{ 'SURNAME' | translate }}</span>
+          <input type="text" placeholder="" ng-model="modelSignUp.surname">
+        </label>
+        <label class="item item-input list-elements" id="signUp-input5">
+          <span class="input-label">
+            <i class="icon ion-at"></i>&nbsp;&nbsp;{{ 'EMAIL' | translate }}</span>
+          <input type="email" placeholder="" ng-model="modelSignUp.email">
+        </label>
+        <label class="item item-input list-elements" id="signUp-input6">
+          <span class="input-label">
+            <i class="icon ion-locked"></i>&nbsp;&nbsp;{{ 'PASSWORD' | translate }}</span>
+          <input type="password" placeholder="" ng-model="modelSignUp.password">
+        </label>
+        <label class="item item-input list-elements" id="signUp-input7">
+          <span class="input-label">
+            <i class="icon ion-locked"></i>&nbsp;&nbsp;{{ 'CONFIRM_PASSWORD' | translate }}</span>
+            <input type="password" placeholder="" ng-model="modelSignUp.passwordRepeat">
+        </label>
+        <label class="item item-input list-elements" id="signUp-input3">
+            <span class="input-label">
+              <i class="icon ion-clipboard"></i>&nbsp;&nbsp;ESCUELA</span>
+              <input id="inputSchool" type="text" placeholder="" ng-model="modelSignUp.school">
+          </label>
+        <label class="item item-input list-elements" id="signUp-input3">
+          <span class="input-label">
+            <i class="icon ion-image"></i>&nbsp;&nbsp;{{ 'AVATAR' | translate }}</span>
+          <input type="text" placeholder="" ng-model="modelSignUp.avatar">
+        </label>
+      </ion-list>
+      <div class="button-bar">
+        <button id="signUp-button9" ng-disabled="!modelSignUp.name || !modelSignUp.surname || !modelSignUp.email || !modelSignUp.password || modelSignUp.password!=modelSignUp.passwordRepeat || !modelSignUp.passwordRepeat" id="signUp-btn9" class="button button-calm button-large button-block" ng-click="registerUser(modelSignUp.name, modelSignUp.surname, modelSignUp.email, modelSignUp.password, modelSignUp.school, modelSignUp.avatar)">{{ 'SIGN_UP' | translate }}</button>
+      </div>
+      <a id="signUp-button11" class="button button-light  button-block button-clear icon ion-ios-arrow-forward" ng-click="clearForm()">{{ 'ALREADY_HAVE_AN_ACCOUNT' | translate }}</a>
+    </form>
+  </ion-content>
+</ion-view>

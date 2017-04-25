@@ -1,0 +1,68 @@
+$ionicons-font-path: "../lib/ionic/fonts" !default;
+@import "../www/lib/ionic/scss";
+.list-elements {
+	border-width: 0px;
+	margin-bottom: 2px;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+.align-text-center {
+	text-align: center;
+}
+
+.list-item {
+	display: inline-block;
+	width: 33%;
+	list-style-type: none;
+}
+
+.list-item-header {
+	display: inline-block;
+	width: 33%;
+	list-style-type: none;
+	background-color: #333333;
+}
+
+.list-student {
+	display: inline-block;
+	width: 48%;
+	margin-left: 2px;
+	list-style-type: none;
+}
+
+.list-student-dialog {
+	display: inline-block;
+	width: 100%;
+	list-style-type: none;
+	background: transparent;
+	border-width: 0px;
+}
+
+.list-mission {
+	display: inline-block;
+	width: 31%;
+	list-style-type: none;
+}
+
+.list-mission-header {
+	display: inline-block;
+	width: 100%;
+	list-style-type: none;
+	background-color: #333333;
+}
+
+.list-student-team {
+	height: 10px;
+}
+
+.list-team {
+	display: inline-block;
+	width: 48%;
+	list-style-type: none;
+	margin-left: 2px;
+}
+
+ion-view,.pane,.view {
+	background-color: #387EF5;
+}
