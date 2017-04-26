@@ -1154,7 +1154,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 	  '<input class="item item-input" id="quantityInput" type="number" ng-model="modelQuantity.quantity">'+
 	  '<div class="button-bar action_buttons">'+
 		'<button class="button button-calm  button-block" ng-click="closeModalQuantityRandomTeams()">{{ \'CANCEL\' | translate }}</button>'+
-		'<button class="button button-calm  button-block" ng-click="closeModalQuantityRandomTeams()">{{ \'EDIT_TEAM\' | translate }}</button>'+
+		'<button class="button button-calm  button-block" ng-click="createRandomTeams(modelQuantity.quantity)">CREAR EQUIPOS ALEATORIOS</button>'+
 	  '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -3535,6 +3535,73 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         $scope.getTeams();
       });  
     });
+  }
+
+  $scope.createRandomTeams = function(numEquipos) {
+    if(numEquipos > $scope.students.length) {
+      alert('NO PUEDES CREAR MAS EQUIPOS QUE ALUMNOS');
+    } else {
+      var objective = 'Random';
+      var picture = $scope.defaultTeamAvatar;
+      var numParticipants = $scope.students.length;
+      var participantsPerTeam = Math.trunc(numParticipants / numEquipos);
+      var lefttovers = numParticipants % numEquipos;
+      randomNumberList = [];
+      for (i = 0 ; i < numParticipants ; i++) {
+        randomNumberList.push(i);
+      }
+      randomNumberList = randomNumberList.sort(function() { return Math.random() - 0.5 });
+      var teamsList = [];
+      var teamNamesList = [];
+      for (i = 0 ; i < numEquipos ; i++) {
+        var team = [];
+        for (j = 0 ; j < participantsPerTeam ; j++) {
+          team.push($scope.students[randomNumberList[0]]);
+          randomNumberList.splice(0, 1);
+        }
+        teamNamesList.push('Random ' + (i+1));
+        teamsList.push(team);
+      }
+      if (lefttovers > 0) {
+        for ( i = 0 ; i < lefttovers ; i++) {
+          var randomTeam = Math.trunc(Math.random()*numEquipos);
+          teamsList[randomTeam].push($scope.students[randomNumberList[i]]);
+        }
+      }
+      var teamsNode = $firebaseArray(teamsRef);
+      teamsNode.$loaded(function() {
+        var counter = 0;
+        for (i = 0 ; i < numEquipos ; i++) {
+          teamsNode.$add({
+            'name' : teamNamesList[i],
+            'objective' : objective,
+            'picture' : picture,
+          }).then(function(ref) {
+            var id = ref.key;
+            
+            var idForTeamRef = firebase.database().ref('teams/' + id + '/id');
+            idForTeamRef.set(id);
+
+            var classroomRef = firebase.database().ref('classrooms/' + $scope.classroom.id  + '/teams/' + id);
+            classroomRef.set(true);
+
+            for (var element in teamsList[counter]) {
+
+              var studentId = teamsList[counter][element].id;
+
+              var studentTeamsRef = firebase.database().ref('students/' + studentId + '/teams/' + id);
+              studentTeamsRef.set(true);
+
+              var teamStudentsRef = firebase.database().ref('teams/' + id + '/students/' + studentId);
+              teamStudentsRef.set(true);
+            }
+            counter++;
+            $scope.getTeams();
+          });
+        }
+      });
+      $scope.closeModalQuantityRandomTeams();
+    }
   }
 
   $scope.deleteTeam = function(team) {
