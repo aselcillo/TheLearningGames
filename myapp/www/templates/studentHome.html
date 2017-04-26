@@ -229,12 +229,22 @@
           </ion-list>
         </form>
       </div>
-      <h3 id="teams-heading5" class="teams-hdg5">{{ 'ACHIEVEMENTS' | translate }}</h3>
-      <ion-list id="items-list9" class="list-elements align-text-center">
-        <ion-item id="items-list-item15" class="list-item" ng-click="setAchievement(achievement)" ng-repeat="achievement in achievements">
-          <h2>{{achievement.name}}</h2>
-        </ion-item>
-      </ion-list>
+      <div ng-show="unlockedAchievementsExist">
+        <h3 id="teams-heading5" class="teams-hdg5">LOGROS DESBLOQUEADOS</h3>
+        <ion-list id="items-list9" class="list-elements align-text-center">
+          <ion-item id="items-list-item15" class="list-item" ng-click="setAchievement(achievement)" ng-repeat="achievement in achievementsUnlocked">
+            <h2>{{achievement.name}}</h2>
+          </ion-item>
+        </ion-list>
+      </div>
+      <div ng-show="lockedAchievementsExist">
+        <h3 id="teams-heading5" class="teams-hdg5">LOGROS BLOQUEADOS</h3>
+        <ion-list id="items-list9" class="list-elements align-text-center">
+          <ion-item id="items-list-item15" class="list-item" ng-click="setAchievement(achievement)" ng-repeat="achievement in achievementsLocked">
+            <h2>{{achievement.name}}</h2>
+          </ion-item>
+        </ion-list>
+      </div>
       <button ng-click="rulesItemsForm()" class="button button-positive button-block icon ion-arrow-return-left"></button>
     </div>
 

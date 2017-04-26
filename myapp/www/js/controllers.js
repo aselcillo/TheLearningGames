@@ -2900,12 +2900,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     for (var student in $scope.students) {
       var studentItemsToDeleteRef = firebase.database().ref('students/' + $scope.students[student].id + '/items/' + item.id);
       studentItemsToDeleteRef.remove();
-
-      /* PARA CUANDO SE DESBLOQUEEN LOGROS EN EL ALUMNO //THINGS TO DO
-      for (var achievement in item.achievements) {
-        var studentAchievementsToDeleteRef = firebase.database().ref('students/' + $scope.students[student].id + '/achievements/' + achievement);
-        studentAchievementsToDeleteRef.remove();
-      }*/
     }
 
     for(var mission in $scope.missions) {
@@ -2981,6 +2975,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   $scope.evaluateStudents = function(item) {
     /*
+    **THINGS TO DO
     **Hay que comprobar si con la puntuacion que se le va a asignar al alumno y los logros que quiza desbloquee, completará una mision.
     **(Para la claridad del codigo, todas estas comprobaciones quiza se deberian hacer en diferentes metodos. Con su consiguiente codigo de introduccion en la base de datos en caso de cumplirse las condiciones),
     **/
@@ -3044,7 +3039,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   $scope.evaluateTeams = function(item) {
     /* THINGS TO DO
-    **Hay que comprobar si con la puntuacion que se le va a asignar al alumno, los logros del item suben de nivel o se desbloquean.
     **Hay que comprobar si con la puntuacion que se le va a asignar al alumno y los logros que quiza desbloquee, completará una mision.
     **(Para la claridad del codigo, todas estas comprobaciones quiza se deberian hacer en diferentes metodos. Con su consiguiente codigo de introduccion en la base de datos en caso de cumplirse las condiciones),
     **/
@@ -3319,9 +3313,13 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var achievementToDeleteRef = firebase.database().ref('achievements/' + achievement.id);
     achievementToDeleteRef.remove();
 
-    //THINGS TO DO
-    //ELIMINAR LOS LOGROS DEL ESTUDIANTE
-
+    for (var student in $scope.students) {
+      if($scope.students[student].items != undefined && $scope.students[student].items[$scope.item.id] != undefined 
+        && $scope.students[student].items[$scope.item.id].achievements != undefined) {
+        var studentAchievementToDeleteRef = firebase.database().ref('students/' + $scope.students[student].id + '/items/' + $scope.item.id + '/achievements/' + achievement.id);
+        studentAchievementToDeleteRef.remove();
+      }
+    }
     $scope.getAchievements();
   }
 
@@ -3747,12 +3745,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var rewardToDeleteRef = firebase.database().ref('rewards/' + reward.id);
     rewardToDeleteRef.remove();
 
-    //THINGS TO DO
-    /* CUANDO EL ALUMNO TENGA RECOMPENSAS DESBLOQUEADAS 
-    for (var student in $scope.classroom.students) {
-      var studentRewardToDeleteRef = firebase.database().ref('students/' + student + '/rewards/' + reward.id);
+    for (var student in $scope.students) {
+      var studentRewardToDeleteRef = firebase.database().ref('students/' + $scope.students[student].id + '/rewards/' + reward.id);
       studentRewardToDeleteRef.remove();
-    }*/
+    }
 
     $scope.getRewards();
   }
@@ -4444,10 +4440,10 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
             '<p>{{achievement.requirements}}</p>'+
           '</span>'+
         '</label>'+
-        '<label class="item item-input list-elements" id="signUp-input3">'+
+        '<label class="item item-input list-elements" id="signUp-input3" ng-show="unlockedAchievement">'+
           '<span class="inputLabelProfile">'+
-            '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;PUNTOS NECESARIOS PARA PASAR DE NIVEL'+
-            '<p>{{achievement.pointsToLevel}}</p>'+
+            '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;TU NIVEL ACTUAL'+
+            '<p>{{achievement.level}}</p>'+
           '</span>'+
         '</label>'+
         '<label class="item item-input list-elements" id="signUp-input3">'+
@@ -4927,6 +4923,8 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
   $scope.setItem = function(item) {
     $scope.item = item;
+    $scope.unlockedAchievementsExist = false;
+    $scope.lockedAchievementsExist = false;
     $scope.getAchievements();
     $scope.itemsForm();
   }
@@ -4954,34 +4952,77 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     var achievementKeys = $firebaseArray(itemAchievementsRef);
     achievementKeys.$loaded(function() {
       $scope.achievements = [];
+      $scope.achievementsLocked = [];
+      $scope.achievementsUnlocked = [];
       for (i = 0 ; i < achievementKeys.length ; i++) {
         var achievementKey = achievementKeys.$keyAt(i);
-        var loopAchievemnt = firebase.database().ref('achievements/' + achievementKey);
-        loopAchievemnt.on('value', function(snapshot) {
+        var loopAchievement = firebase.database().ref('achievements/' + achievementKey);
+        loopAchievement.on('value', function(snapshot) {
           if(snapshot.val() != null) {
             var change = false;
             var index = -1;
             var achievement = snapshot.val();
-            for(j = 0 ; j < $scope.achievements.length ; j++) {
-              if(achievement.id == $scope.achievements[j].id) {
-                change = true;
-                index = j;
+            var toLock = false;
+            for(h = 0 ; h < $scope.itemsLocked.length ; h++) {
+              if($scope.item.id == $scope.itemsLocked[h].id) {
+                toLock = true;
               }
             }
-            if(!change) {
-              $scope.achievements.push(achievement);
+            if(toLock) {
+              for(j = 0 ; j < $scope.achievementsLocked.length ; j++) {
+                if(achievement.id == $scope.achievementsLocked[j].id) {
+                  change = true;
+                  index = j;
+                }
+              }
+              if(!change) {
+                $scope.achievementsLocked.push(achievement);
+              } else {
+                $scope.achievementsLocked[index] = achievement;
+              }
             } else {
-              $scope.achievements[index] = achievement;
+              if($scope.student.items[$scope.item.id].achievements == undefined || !(achievement.id in $scope.student.items[$scope.item.id].achievements)) {
+                for(j = 0 ; j < $scope.achievementsLocked.length ; j++) {
+                  if(achievement.id == $scope.achievementsLocked[j].id) {
+                    change = true;
+                    index = j;
+                  }
+                }
+                if(!change) {
+                  $scope.achievementsLocked.push(achievement);
+                } else {
+                  $scope.achievementsLocked[index] = achievement;
+                }
+              } else {
+                for(j = 0 ; j < $scope.achievementsUnlocked.length ; j++) {
+                  if($scope.item.id == $scope.achievementsUnlocked[j].id) {
+                    change = true;
+                    index = j;
+                    achievement.level = $scope.student.items[$scope.item.id].achievements[achievement.id].level;
+                  }
+                }
+                if (!change) {
+                  achievement.level = $scope.student.items[$scope.item.id].achievements[achievement.id].level;
+                  $scope.achievementsUnlocked.push(achievement);
+                } else {
+                  $scope.achievementsUnlocked[index] = achievement;
+                }
+              }
             }
           }
+          $scope.unlockedAchievementsExist = $scope.achievementsUnlocked.length > 0;
+          $scope.lockedAchievementsExist = $scope.achievementsLocked.length > 0;
+          if($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+            $scope.$apply();
+          }
         });
-
       }
     });
   }
 
    $scope.setAchievement = function(achievement) {
     $scope.achievement = achievement;
+    $scope.unlockedAchievement = (achievement.level != undefined);
     $scope.showModalAchievementDialog();
   }
                     
