@@ -267,7 +267,8 @@
         </h3>
       </header>
       <ion-list id="teams-list10" class="list-elements">
-        <ion-item class="list-student" id="teams-list-item14" ng-repeat="team in teams" ng-click="setTeam(team)">
+        <ion-item class="list-student item item-avatar" id="teams-list-item14" ng-repeat="team in teams" ng-click="setTeam(team)">
+          <img src="{{team.picture}}">
           <h2>{{team.name}}</h2>
         </ion-item>
       </ion-list>
