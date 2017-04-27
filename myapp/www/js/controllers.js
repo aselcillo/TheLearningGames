@@ -12,6 +12,11 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray) {
   $scope.loginType=false;
   $scope.loginType2=false;
 
+  $scope.allFalseForm = function() {
+    $scope.loginType=false;
+    $scope.loginType2=false;
+  }
+  
   $scope.teacherForm = function(){
     $scope.loginType=true;
     $scope.loginType2=false;
@@ -53,6 +58,7 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray) {
           if (teachersArray.$getRecord(sessionUser.uid)) {
             $state.go('teacherHome');
             $scope.modelLoginTeacher = {};
+            $scope.allFalseForm();
           } else {
             alert('NO EXISTE CUENTA DE PROFESOR');
           }
@@ -95,6 +101,7 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray) {
           if (studentsArray.$getRecord(sessionUser.uid)) {
             $state.go('studentHome');
             $scope.modelLoginStudent = {};
+            $scope.allFalseForm();
           } else {
             alert('NO EXISTE CUENTA DE ALUMNO');
           }
@@ -4615,6 +4622,12 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
           '<p>{{reward.price}}</p>'+
         '</span>'+
       '</label>'+
+      '<label class="item item-input list-elements">'+
+        '<span class="inputLabelProfile">'+
+          '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;CANTIDAD'+
+          '<p>{{(student.rewards[reward.id].amount != undefined) ? student.rewards[reward.id].amount : 0}}</p>'+
+        '</span>'+
+      '</label>'+
       '<button class="button button-positive button-block" ng-show="possessedReward" ng-click="consumeReward(reward)">USAR RECOMPENSA</button>'+
       '<button ng-click="closeModalRewardDialog()" class="button button-positive button-block icon ion-arrow-return-left"></button>'+
     '</ion-content>'+
@@ -4942,7 +4955,11 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     $scope.getMissions();
     $scope.rulesItemsForm();
     $scope.getClassroomStudents();
-    $scope.availablePoints = $scope.student.classrooms[$scope.classroom.id].totalPoints - $scope.student.classrooms[$scope.classroom.id].usedPoints;
+    if ($scope.student.classrooms[$scope.classroom.id].usedPoints != undefined) {
+      $scope.availablePoints = $scope.student.classrooms[$scope.classroom.id].totalPoints - $scope.student.classrooms[$scope.classroom.id].usedPoints;
+    } else {
+      $scope.availablePoints = $scope.student.classrooms[$scope.classroom.id].totalPoints;
+    }
   }
 
   $scope.showArchivedClassrooms = function(value) {
@@ -5000,6 +5017,8 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
               }
             }
           }
+          $scope.unlockedItemsExist = $scope.itemsUnlocked.length > 0;
+          $scope.lockedItemsExist = $scope.itemsLocked.length > 0;
           if($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
             $scope.$apply();
           }
@@ -5199,7 +5218,6 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     var classroomRewardsRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/rewards');
     var rewardKeys = $firebaseArray(classroomRewardsRef);
     rewardKeys.$loaded(function() {
-      $scope.rewards = [];
       $scope.rewardsLocked = [];
       $scope.rewardsUnlocked = [];
       for (i = 0 ; i < rewardKeys.length ; i++) {
@@ -5235,6 +5253,8 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
                 $scope.rewardsUnlocked[index] = reward;
               }
             }
+            $scope.unlockedRewardsExist = $scope.rewardsUnlocked.length > 0;
+            $scope.lockedRewardsExist = $scope.rewardsLocked.length > 0;
             if($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
               $scope.$apply();
             }
@@ -5246,7 +5266,11 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   }
 
   $scope.getRewardsForSelection = function() {
-    $scope.rewardsForSelection = angular.copy($scope.rewardsLocked);
+    $scope.rewards = $scope.rewardsLocked.concat($scope.rewardsUnlocked);
+
+    $scope.rewards.sort(sortByName);
+
+    $scope.rewardsForSelection = angular.copy($scope.rewards);
     for (var element in $scope.rewardsForSelection) {
       $scope.rewardsForSelection[element].selected = false;
     }
@@ -5268,11 +5292,26 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
   $scope.buyReward = function(reward) {
     if ($scope.availablePoints >= reward.price) {
-      var rewardForStudentRef = firebase.database().ref('students/' + $scope.student.id + '/rewards/' + reward.id + '/id');
-      rewardForStudentRef.set(true);
+      var rewardForStudentRef = firebase.database().ref('students/' + $scope.student.id + '/rewards/' + reward.id);
+
+      if ($scope.student.rewards != undefined && $scope.student.rewards[reward.id] != undefined) {
+        rewardForStudentRef.set({
+          'id' : reward.id,
+          'amount' : (Number($scope.student.rewards[reward.id].amount) + 1),
+        });
+      } else {
+        rewardForStudentRef.set({
+          'id' : reward.id,
+          'amount' : 1,
+        });
+      }
 
       var usedPointsForStudentRef = firebase.database().ref('students/' + $scope.student.id + '/classrooms/' + $scope.classroom.id + '/usedPoints');
-      usedPointsForStudentRef.set($scope.student.classrooms[$scope.classroom.id].usedPoints + reward.price);
+      if ($scope.student.classrooms[$scope.classroom.id].usedPoints != undefined) {
+        usedPointsForStudentRef.set($scope.student.classrooms[$scope.classroom.id].usedPoints + reward.price);
+      } else {
+        usedPointsForStudentRef.set(reward.price);
+      }
 
       $scope.availablePoints -= reward.price;
 
@@ -5286,7 +5325,14 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     $scope.closeModalRewardDialog();
 
     var rewardForStudentRef = firebase.database().ref('students/' + $scope.student.id + '/rewards/' + reward.id);
-    rewardForStudentRef.remove();
+    if ($scope.student.rewards[reward.id].amount > 1) {
+      rewardForStudentRef.set({
+        'id': reward.id,
+        'amount' : Number($scope.student.rewards[reward.id].amount) - 1,
+      });
+    } else {
+      rewardForStudentRef.remove();
+    }
 
     $scope.getRewards();
   }
@@ -5415,6 +5461,20 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     }
     $scope.showModalMissionDialog();
   }
+
+  var sortByName = function(a, b) {
+    var nameA = a.name.toUpperCase(); // ignore upper and lowercase
+    var nameB = b.name.toUpperCase(); // ignore upper and lowercase
+    if (nameA < nameB) {
+      return -1;
+    }
+    if (nameA > nameB) {
+      return 1;
+    }
+    // names must be equal
+    return 0;
+  }
+  
 }])
 
 
