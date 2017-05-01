@@ -2042,6 +2042,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             if($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
               $scope.$apply();
             }
+            $scope.classrooms.sort(sortByName);
             $scope.getClassroomsForSelection();
           }
         });
@@ -2456,6 +2457,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               if($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
                 $scope.$apply();
               }
+              $scope.levels.sort(sortByLevel);
             }
           });
         }
@@ -2575,6 +2577,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             if($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
               $scope.$apply();
             }
+            $scope.students.sort(sortBySurname);
           }
         });
         $scope.getStudentsForSelection();
@@ -2867,6 +2870,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             } else {
               $scope.items[index] = item;
             }
+            $scope.items.sort(sortByName);
             $scope.getItemsForSelection();
           }
         });
@@ -2996,11 +3000,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   }
 
   $scope.evaluateStudents = function(item) {
-    /*
-    **THINGS TO DO
-    **Hay que comprobar si con la puntuacion que se le va a asignar al alumno y los logros que quiza desbloquee, completará una mision.
-    **(Para la claridad del codigo, todas estas comprobaciones quiza se deberian hacer en diferentes metodos. Con su consiguiente codigo de introduccion en la base de datos en caso de cumplirse las condiciones),
-    **/
     for(var pos in $scope.studentsToEvaluate) {
       if($scope.studentsToEvaluate[pos].items != undefined) {
         var studentItems = $scope.studentsToEvaluate[pos].items;
@@ -3064,10 +3063,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   }
 
   $scope.evaluateTeams = function(item) {
-    /* THINGS TO DO
-    **Hay que comprobar si con la puntuacion que se le va a asignar al alumno y los logros que quiza desbloquee, completará una mision.
-    **(Para la claridad del codigo, todas estas comprobaciones quiza se deberian hacer en diferentes metodos. Con su consiguiente codigo de introduccion en la base de datos en caso de cumplirse las condiciones),
-    **/
     for(var pos in $scope.teamsToEvaluate) {
       for(var element in $scope.teamsToEvaluate[pos].students) {
         for(var studentPos in $scope.students) {
@@ -3303,6 +3298,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             if($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
               $scope.$apply();
             }
+            $scope.achievements.sort(sortByName);
             $scope.getAchievementsForSelection();
           }
         });
@@ -3506,6 +3502,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             if($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
               $scope.$apply();
             }
+            $scope.teams.sort(sortByName);
             $scope.getTeamsForSelection();
           }
         });
@@ -3811,6 +3808,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             } else {
               $scope.rewards[index] = reward;
             }
+            $scope.rewards.sort(sortByName);
             $scope.getRewardsForSelection();
           }
         });
@@ -3966,6 +3964,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             } else {
               $scope.missions[index] = mission;
             }
+            $scope.missions.sort(sortByName);
             $scope.getMissionsForSelection();
           }
         });
@@ -4419,6 +4418,49 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         }
       }
     }
+  }
+
+  /*
+    *************************************EVERY SORT FUNCTION GOES HERE***********************
+  */
+
+  var sortByName = function(a, b) {
+    var nameA = a.name.toUpperCase(); // ignore upper and lowercase
+    var nameB = b.name.toUpperCase(); // ignore upper and lowercase
+    if (nameA < nameB) {
+      return -1;
+    }
+    if (nameA > nameB) {
+      return 1;
+    }
+    // names must be equal
+    return 0;
+  }
+
+  var sortBySurname = function(a, b) {
+    var surnameA = a.surname.toUpperCase();
+    var surnameB = b.surname.toUpperCase();
+    if(surnameA < surnameB) {
+      return -12;
+    }
+    if(surnameA > surnameB) {
+      return 1;
+    }
+    //surnames must be equal
+    return 0;
+  }
+
+  var sortByLevel = function(a, b) {
+    var levelA = a.level;
+    var levelB = b.level;
+    if(levelA < levelB) {
+      return -12;
+    }
+    if(levelA > levelB) {
+      return 1;
+    }
+    //levels must be equal
+    return 0;
   }
 
 }])
@@ -5066,6 +5108,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
             } else {
               $scope.classrooms[index] = snapshot.val();
             }
+            $scope.classrooms.sort(sortByName);
           }
         });
       }
@@ -5161,6 +5204,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
               } else {
                 $scope.itemsLocked[index] = item;
               }
+              $scope.itemsLocked.sort(sortByName);
             } else {
               for(j = 0 ; j < $scope.itemsUnlocked.length ; j++){
                 if(item.id == $scope.itemsUnlocked[j].id){
@@ -5175,6 +5219,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
               } else {
                 $scope.itemsUnlocked[index] = item;
               }
+              $scope.itemsUnlocked.sort(sortByName);
             }
           }
           $scope.unlockedItemsExist = $scope.itemsUnlocked.length > 0;
@@ -5191,6 +5236,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   $scope.getClassroomItems = function() {
     $scope.itemsClassroom = [];
     $scope.itemsClassroom = $scope.itemsLocked.concat($scope.itemsUnlocked);
+    $scope.itemsClassroom.sort(sortByName);
   }
 
   $scope.setItem = function(item) {
@@ -5252,6 +5298,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
               } else {
                 $scope.achievementsLocked[index] = achievement;
               }
+              $scope.achievementsLocked.sort(sortByName);
             } else {
               if($scope.student.items[$scope.item.id].achievements == undefined || !(achievement.id in $scope.student.items[$scope.item.id].achievements)) {
                 for(j = 0 ; j < $scope.achievementsLocked.length ; j++) {
@@ -5265,6 +5312,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
                 } else {
                   $scope.achievementsLocked[index] = achievement;
                 }
+                $scope.achievementsLocked.sort(sortByName);
               } else {
                 for(j = 0 ; j < $scope.achievementsUnlocked.length ; j++) {
                   if($scope.item.id == $scope.achievementsUnlocked[j].id) {
@@ -5279,6 +5327,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
                 } else {
                   $scope.achievementsUnlocked[index] = achievement;
                 }
+                $scope.achievementsUnlocked.sort(sortByName);
               }
             }
           }
@@ -5329,6 +5378,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
                 } else {
                   $scope.teams[index] = team;
                 }
+                $scope.teams.sort(sortByName);
               }
             });
           }
@@ -5400,6 +5450,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
               } else {
                 $scope.rewardsLocked[index] = reward;
               }
+              $scope.rewardsLocked.sort(sortByName);
             } else {
               for(j = 0 ; j < $scope.rewardsUnlocked.length ; j++) {
                 if(reward.id == $scope.rewardsUnlocked[j].id) {
@@ -5412,6 +5463,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
               } else {
                 $scope.rewardsUnlocked[index] = reward;
               }
+              $scope.rewardsUnlocked.sort(sortByName);
             }
             $scope.unlockedRewardsExist = $scope.rewardsUnlocked.length > 0;
             $scope.lockedRewardsExist = $scope.rewardsLocked.length > 0;
@@ -5542,6 +5594,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
               } else {
                 $scope.missions[index] = mission;
               }
+              $scope.missions.sort(sortByName);
             }
           }
         });
@@ -5575,6 +5628,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
             } else {
               $scope.students[index] = student
             }
+            $scope.students.sort(sortBySurname);
           }
         });
       }
@@ -5622,6 +5676,10 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     $scope.showModalMissionDialog();
   }
 
+  /*
+    *************************************EVERY SORT FUNCTION GOES HERE***********************
+  */
+
   var sortByName = function(a, b) {
     var nameA = a.name.toUpperCase(); // ignore upper and lowercase
     var nameB = b.name.toUpperCase(); // ignore upper and lowercase
@@ -5632,6 +5690,19 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       return 1;
     }
     // names must be equal
+    return 0;
+  }
+
+  var sortBySurname = function(a, b) {
+    var surnameA = a.surname.toUpperCase();
+    var surnameB = b.surname.toUpperCase();
+    if(surnameA < surnameB) {
+      return -12;
+    }
+    if(surnameA > surnameB) {
+      return 1;
+    }
+    //surnames must be equal
     return 0;
   }
   
