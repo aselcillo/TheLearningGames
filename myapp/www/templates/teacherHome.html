@@ -351,20 +351,30 @@
         <h3 id="class-heading2">
           <a id="teacherHome-dropdown" class="button button-light icon ion-home homeButton" ng-click="teacherHomeForm()"></a>
           <span ng-click="classForm()">{{classroom.name}}</span>
-          <a id="menu" class="button button-light icon ion-drag" ng-click="openPopoverTeacherDefault($event)"></a>
+          <a id="menu" class="button button-light icon ion-drag" ng-click="openPopoverMissions($event)"></a>
           <div class="subheader">
             <br/>
             <p>MISIONES</p>
           </div>
         </h3>
       </header>
-      <ion-list id="class-list5" class="list-elements">
-        <ion-item class="list-student" id="class-list-item7" ng-click="setMission(mission)" ng-repeat="mission in missions">
-          <h2>{{mission.name}}</h2>
-        </ion-item>
-      </ion-list>
+      <div>
+        <ion-list id="class-list5" class="list-elements">
+          <ion-item class="list-student" id="class-list-item7" ng-click="setMission(mission)" ng-repeat="mission in missions" ng-hide="mission.finished">
+            <h2>{{mission.name}}</h2>
+          </ion-item>
+        </ion-list>
+      </div>
       <div class="button-bar action_buttons">
         <button id="class-button31" ng-click="setNewMissionNamePopup()" class="button button-calm  button-block">AÑADIR MISIÓN</button>
+      </div>
+      <div ng-show="finishedMissionsToShow">
+        <h3 class="margin-top-null">MISIONES FINALIZADAS</h3>
+        <ion-list class="list-elements">
+          <ion-item class="list-student" ng-click="setMission(mission)" ng-repeat="mission in missions" ng-show="mission.finished">
+            <h2>{{mission.name}}</h2>
+          </ion-item>
+        </ion-list>
       </div>
       <button class="button button-positive button-float addButton" ng-click="showActionsheetMissions()">
         <i class="icon ion-plus"></i>
