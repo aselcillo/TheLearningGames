@@ -356,6 +356,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   $scope.templateTeacherHomePopover = '<ion-popover-view>'+
     '<ion-list class="list-elements">'+
+      '<ion-item class="itemPopover" ng-click="createDemoClassroom()">CREAR CLASE DEMO</ion-item>'+
       '<ion-item class="itemPopover">IMPORTAR</ion-item>'+
       '<ion-item class="itemPopover">EXPORTAR</ion-item>'+
       '<ion-item class="itemPopover" ng-hide="archivedClassroomsToShow" ng-click="showArchivedClassrooms(true)">VER ARCHIVADAS</ion-item>'+
@@ -1689,6 +1690,8 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   var sessionUser;
   var secondaryConnection = null;
 
+  var demoClassroom = false;
+
   var rootRef = firebase.database().ref();
 
   var teachersRef = firebase.database().ref('teachers');
@@ -1783,8 +1786,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   }
 
   $scope.createClassroom = function(name) {
-	//THINGS TO DO
-	//Añadir niveles a las clases, el profesor es el que va a poder crearlos (numero nivel, nombre)
     var classroomsNode = $firebaseArray(classroomsRef);
     classroomsNode.$loaded(function() {
       classroomsNode.$add({
@@ -1793,33 +1794,81 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         'archived' : false,
         'notifications' : true,
         'teacher' : $scope.teacher.$id,
-      }).then(function(ref) {
-        var id = ref.key;
+      }).then(function(refNewClassroom) {
+        var newClassroomId = refNewClassroom.key;
 
-        var idForClassroomRef = firebase.database().ref('classrooms/' + id + '/id');
-        idForClassroomRef.set(id);
+        var idForClassroomRef = firebase.database().ref('classrooms/' + newClassroomId + '/id');
+        idForClassroomRef.set(newClassroomId);
 
-        var a = CryptoJS.SHA1(id + Date.now().toString()).toString();
+        var a = CryptoJS.SHA1(newClassroomId + Date.now().toString()).toString();
         var hash = a.substr(0, 10).toUpperCase();
-        var hashCodeForClassroomRef = firebase.database().ref('classrooms/' + id + '/hashcode');
+        var hashCodeForClassroomRef = firebase.database().ref('classrooms/' + newClassroomId + '/hashcode');
         hashCodeForClassroomRef.set(hash);
 
         var hashCodeRef = firebase.database().ref('hashcodes/' + hash + '/id');
-        hashCodeRef.set(id);
+        hashCodeRef.set(newClassroomId);
 
-        var newteacherClassroomRef = firebase.database().ref('teachers/' + $scope.teacher.$id + '/classrooms/' + id);
+        var newteacherClassroomRef = firebase.database().ref('teachers/' + $scope.teacher.$id + '/classrooms/' + newClassroomId);
         newteacherClassroomRef.set(true);
 
         //COPY PREFERENCES FROM OTHER CLASSROOM
-        var classroomIndex = document.getElementById("selectClass").selectedIndex;
+        if (document.getElementById("selectClass") != null) {
+          var classroomIndex = document.getElementById("selectClass").selectedIndex;
+        } else {
+          var classroomIndex = 0;
+        }
+        
         if (classroomIndex != 0) {
         	var classroom = $scope.classrooms[classroomIndex - 1];
-          $scope.copyPreferencesFromClassroom(classroom, id);
+          $scope.copyPreferencesFromClassroom(classroom, newClassroomId);
+        } else if (demoClassroom) {
+
+          //EN PROCESO (CREATE DEMO CLASSROOM)
+          /*LA IDEA ES CREAR UNA CLASE, RELLENARLA CON INFORMACION DE DEMO. Y LUEGO CAMBIAR EL ID DE ESA CLASE
+            PARA QUE NINGUN PROFESOR LA RECIBA. Y RECIBIRLA JUSTO AQUI, ANTES DE CREAR UNA NUEVA CLASE, COPIANDO
+            LAS PREFERENCIAS DE ESA CLASE DE DEMO.
+          */
+
+          $scope.demoClassroom = [];
+          var loopClassroom = firebase.database().ref('classrooms/' + 'demoClassroomKey');
+          loopClassroom.on('value', function(snapshot) {
+            if (snapshot.val() != null) {
+              $scope.demoClassroom.push(snapshot.val());
+              $scope.copyPreferencesFromClassroom($scope.demoClassroom, newClassroomId);
+              demoClassroom = false;
+            }
+          });
+
+          //EN PROCESO
+
         } else {
+          //CREATE DEMO LEVEL
+          var demoLevel = {
+            'title' : 'Beginner',
+            'level' : 0,
+            'requiredPoints' : 0,
+          }
+          var classroomLevelRef = firebase.database().ref('classrooms/' + newClassroomId + '/levels');
+          var classroomLevelArray = $firebaseArray(classroomLevelRef);
+          classroomLevelArray.$loaded(function() {
+            classroomLevelArray.$add(demoLevel).then(function(refNewLevel) {
+              var levelId = refNewLevel.key;
+
+              var idForLevelRef = firebase.database().ref('classrooms/' + newClassroomId + '/levels/' + levelId + '/id');
+              idForLevelRef.set(levelId);
+            });
+          });
+
           $scope.getClassrooms();
         }
-      });  
+      });
     });
+  }
+
+  $scope.createDemoClassroom = function() {
+    $scope.closePopoverTeacherHome();
+    demoClassroom = true;
+    $scope.createClassroom('Demo Classroom');
   }
 
   $scope.deleteClassroom = function(classroom) {
@@ -1901,11 +1950,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.showArchivedClassrooms = function(value) {
     $scope.archivedClassroomsToShow = value;
     $scope.closePopoverTeacherHome();
-  }
-
-  $scope.duplicateClassroom = function(classroom) {
-    //DUPLICATE ACTION GOES HERE
-    //THINGS TO DO
   }
 
   $scope.copyPreferencesFromClassroom = function(originalClassroom, newClassroomId) {
@@ -2072,12 +2116,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       for (var element in $scope.classroomsForSelection) {
         if ($scope.classroomsForSelection[element].selected === true) {
           $scope.unArchiveClassroom($scope.classroomsForSelection[element]);
-        }
-      }
-    } else if ($scope.actionSheetTeacherHomeType === 'duplicate') {
-      for (var element in $scope.classroomsForSelection) {
-        if ($scope.classroomsForSelection[element].selected === true) {
-          $scope.duplicateClassroom($scope.classroomsForSelection[element]); //THINGS TO DO
         }
       }
     }
@@ -2367,6 +2405,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             });
 
             secondaryConnection.auth().signOut();
+
             $scope.closeModalNewStudentDialog();
             $scope.getStudents();
           });
