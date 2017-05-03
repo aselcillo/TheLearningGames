@@ -1,9 +1,9 @@
 angular.module('app.loginController', ['pascalprecht.translate'])
      
-.controller('loginCtrl', ['$scope', '$stateParams', '$http', '$state', 'sharedData', '$firebaseArray',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('loginCtrl', ['$scope', '$stateParams', '$http', '$state', 'sharedData', '$firebaseArray', '$ionicPopup',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray) {
+function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ionicPopup) {
 
   /*
     *************************************DECLARE FUNCTIONS FOR NG-SHOW********************************
@@ -112,21 +112,52 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray) {
     }).catch(function(error) {
       if (error) {
         switch (error.code) {
-			case "auth/wrong-password":
-				alert("EL EMAIL O CONTRASEÑA SON INCORRECTOS");
-				break;
-			case "auth/user-not-found":
-				alert("EL EMAIL O CONTRASEÑA NO SON INCORRECTOS");
-				break;
-			case "auth/invalid-email":
-				alert("EMAIL INVALIDO");
-				break;
-			default:
-				alert("ERROR DESCONOCIDO");
-				break;
-			}
-		}
+    			case "auth/wrong-password":
+    				alert("EL EMAIL O CONTRASEÑA SON INCORRECTOS");
+    				break;
+    			case "auth/user-not-found":
+    				alert("EL EMAIL O CONTRASEÑA NO SON INCORRECTOS");
+    				break;
+    			case "auth/invalid-email":
+    				alert("EMAIL INVALIDO");
+    				break;
+    			default:
+    				alert("ERROR DESCONOCIDO");
+    				break;
+    			}
+		  }
     });
   }
+
+  $scope.showResetPasswordPopup = function() {
+    $scope.emailUser = {};
+    var ressetPasswordPopup = $ionicPopup.alert({
+      title: 'CODIGO DE LA CLASE',
+      template: '<input type="text" ng-model="emailUser.mail">',
+      scope : $scope,
+
+      buttons : [
+        {text: 'CANCELAR'},
+        {text: 'ACEPTAR',
+          onTap: function(e) {
+            firebase.auth().sendPasswordResetEmail($scope.emailUser.mail).then(function() {
+              alert('REVISA TU CORREO ELECTRONICO PARA RESTABLECER TU CONTRASEÑA');
+            }).catch(function(error) {
+              if (error) {
+                switch (error.code) {
+                  case "auth/argument-error":
+                    alert("INTRODUZCA UN EMAIL CORRECTO");
+                    break;
+                  default:
+                    alert("INTRODUZCA UN EMAIL CORRECTO");
+                    break;
+                  }
+              }
+            });
+          }
+        },
+      ] 
+    });     
+  };
 
 }])
