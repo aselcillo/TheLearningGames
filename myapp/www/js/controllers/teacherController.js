@@ -679,7 +679,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       "<div>"+
         '<form class="list">'+
           '<label class="item item-input item-select">'+
-            '<span class="input-label">{{ \'IMPORT_PREFERENCES_FROM\' | translate }}</span>'+
+            '<span class="input-label">COPIAR ELEMENTOS DE OTRA CLASE</span>'+
             '<select id="selectClass">'+
               '<option>{{ \'NONE\' | translate }}</option>'+
               '<option ng-repeat="class in classrooms">{{class.name}}</option>'+
@@ -792,19 +792,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.newStudentModal = '<ion-modal-view class="fondo">'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3>{{ \'NEW_STUDENT\' | translate }}</h3>'+
-      '<div class="list-student">'+
-        '<div class="teacherAvatar">'+
-          '<img src={{defaultAvatar}} class="avatar">'+
-        '</div>'+
-        '<button  class="button button-light  button-block button-outline">{{ \'TAKE_PICTURE\' | translate }}</button>'+
-        '<form class="list">'+
-          '<div class="button-bar action_buttons">'+
-            '<button class="button button-calm  button-block" ng-click="closeModalNewStudentDialog()">{{ \'CANCEL\' | translate }}</button>'+
-            '<button class="button button-calm  button-block" ng-disabled="!modelNewStudent.name || !modelNewStudent.surname || !modelNewStudent.email || !modelNewStudent.password || modelNewStudent.password != modelNewStudent.passwordRepeat || !modelNewStudent.passwordRepeat" ng-click="createNewStudent(modelNewStudent.name, modelNewStudent.surname, modelNewStudent.email, modelNewStudent.password)">{{ \'GENERATE\' | translate }}</button>'+
-          '</div>'+
-        '</form>'+
+      '<div class="teacherAvatar">'+
+        '<img src={{defaultAvatar}} class="avatar">'+
       '</div>'+
-      '<div class="list-team list-elements">'+
+      '<button  class="button button-light  button-block button-outline">{{ \'TAKE_PICTURE\' | translate }}</button>'+
+      '<div>'+
         '<ion-list>'+
           '<form id="newStudentForm" class="list">'+
             '<label class="item item-input list-elements" id="signUp-input3">'+
@@ -817,23 +809,18 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                 '<i class="icon ion-person"></i>&nbsp;&nbsp;{{ \'SURNAME\' | translate }}</span>'+
               '<input type="text" placeholder="{{ \'SURNAME\' | translate }}" ng-model="modelNewStudent.surname">'+
             '</label>'+
-            '<label class="item item-input list-elements" id="signUp-input5">'+
-              '<span class="input-label">'+
-                '<i class="icon ion-at"></i>&nbsp;&nbsp;{{ \'EMAIL\' | translate }}</span>'+
-              '<input type="email" placeholder="{{ \'EMAIL\' | translate }}" ng-model="modelNewStudent.email">'+
-            '</label>'+
-            '<label class="item item-input list-elements" id="signUp-input6">'+
-              '<span class="input-label">'+
-                '<i class="icon ion-locked"></i>&nbsp;&nbsp;{{ \'PASSWORD\' | translate }}</span>'+
-              '<input type="password" placeholder="{{ \'PASSWORD\' | translate }}" ng-model="modelNewStudent.password">'+
-            '</label>'+
-            '<label class="item item-input list-elements" id="signUp-input7">'+
-              '<span class="input-label">'+
-                '<i class="icon ion-locked"></i>&nbsp;&nbsp;{{ \'CONFIRM_PASSWORD\' | translate }}</span>'+
-                '<input type="password" placeholder="{{ \'CONFIRM_PASSWORD\' | translate }}" ng-model="modelNewStudent.passwordRepeat">'+
-            '</label>'+
           '</form>'+
+          '<h3>EL EMAIL SERA AUTOGENERADO</h3>'+
+          '<h3>CONTRASEÑA: student</h3>'+
         '</ion-list>'+
+      '</div>'+
+      '<div>'+
+        '<form class="list">'+
+          '<div class="button-bar action_buttons">'+
+            '<button class="button button-calm  button-block" ng-click="closeModalNewStudentDialog()">{{ \'CANCEL\' | translate }}</button>'+
+            '<button class="button button-calm  button-block" ng-disabled="!modelNewStudent.name || !modelNewStudent.surname" ng-click="createNewStudent(modelNewStudent.name, modelNewStudent.surname)">{{ \'GENERATE\' | translate }}</button>'+
+          '</div>'+
+        '</form>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>)';
@@ -841,15 +828,29 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.studentDialogModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3>{{student.name}} {{student.surname}}</h3>'+
-      '<div class="list-student">'+
+      '<div>'+
         '<div class="teacherAvatar">'+
           '<img src={{student.avatar}} class="avatar">'+
         '</div>'+
-        '<button  class="button button-light  button-block button-outline" ng-click="showModalStudentProfile()">{{ \'VIEW_PROFILE\' | translate }}</button>'+
-        '<button ng-click="showModalSecondary()" class="button button-positive  button-block icon ion-android-more-horizontal"></button>'+
-        '<button ng-click="closeModalStudentDialog()" class="button button-positive  button-block icon ion-arrow-return-left"></button>'+
+        '<form id="studentProfileFormData" class="list">'+
+          '<ion-list id="signUp-list2">'+
+            '<label class="item item-input list-elements" id="signUp-input3">'+
+              '<span class="inputLabelProfile">'+
+                '<i class="icon ion-clipboard"></i>&nbsp;&nbsp;ESCUELA'+
+                '<p>{{student.school}}</p>'+
+              '</span>'+
+            '</label>'+
+            '<label class="item item-input list-elements" id="signUp-input5">'+
+              '<span class="inputLabelProfile">'+
+                '<i class="icon ion-at"></i>&nbsp;&nbsp;{{ \'EMAIL\' | translate }}'+
+                '<p>{{student.email}}</p>'+
+              '</span>'+
+            '</label>'+
+          '</ion-list>'+
+        '</form>'+
       '</div>'+
-      '<div class="list-student list-elements">'+
+      '<div ng-show="studentHasItems">'+
+        '<h3>ITEMS:</h3>'+
         '<ion-list>'+
           '<ion-item class="list-student-dialog" ng-repeat="item in studentItems">'+
             '<i class="icon ion-clipboard"></i>&nbsp;&nbsp;{{item.name}}'+
@@ -862,37 +863,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             '</ion-option-button>'+
         '</ion-list>'+
       '</div>'+
+      '<div class="button-bar action_buttons">'+
+        '<button ng-click="closeModalStudentDialog()" class="button button-light button-block button-outline icon ion-arrow-return-left"></button>'+
+        '<button ng-click="showModalSecondary()" class="button button-light button-block button-outline icon ion-android-more-horizontal"></button>'+
+      '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
-
-  $scope.studentProfileModal = '<ion-modal-view>'+
-    '<ion-content>'+
-      '<h3 id="teams-heading5" class="teams-hdg5">'+
-        '<a id="teacherHome-dropdown" class="button button-light icon ion-home" ng-click="teacherHomeForm() ; closeModalStudentProfile() ; closeModalStudentDialog()"></a>'+
-        '<h3>{{student.name}} {{student.surname}}</h3>'+
-      '</h3>'+
-      '<form id="studentProfileFormData" class="list">'+
-        '<ion-list id="signUp-list2">'+
-          '<ion-item class ="teacherAvatar">'+
-            '<img src={{student.avatar}} class="avatar">'+
-          '</ion-item>'+
-          '<label class="item item-input list-elements" id="signUp-input3">'+
-            '<span class="inputLabelProfile">'+
-              '<i class="icon ion-clipboard"></i>&nbsp;&nbsp;ESCUELA'+
-              '<p>{{student.school}}</p>'+
-            '</span>'+
-          '</label>'+
-          '<label class="item item-input list-elements" id="signUp-input5">'+
-            '<span class="inputLabelProfile">'+
-              '<i class="icon ion-at"></i>&nbsp;&nbsp;{{ \'EMAIL\' | translate }}'+
-              '<p>{{student.email}}</p>'+
-            '</span>'+
-          '</label>'+
-          '<button id="signUp-button8" class="button button-positive  button-block icon ion-arrow-return-left" ng-click="closeModalStudentProfile()"></button>'+
-        '</ion-list>'+
-      '</form>'
-    '</ion-content>'+
-  '</ion-modal-view>'
 
   $scope.quantityRandomTeamsModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
@@ -1459,19 +1435,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   }
   $scope.closeModalStudentDialog = function() {
     $scope.studentDialogModal.hide();
-  }
-
-                                        /* STUDENT PROFILE MODAL */
-
-  $scope.studentProfileModal = $ionicModal.fromTemplate($scope.studentProfileModal, {
-    scope: $scope,
-    animation: 'slide-in-up'
-  });
-  $scope.showModalStudentProfile = function() {
-    $scope.studentProfileModal.show();  
-  }
-  $scope.closeModalStudentProfile = function() {
-    $scope.studentProfileModal.hide();
   }
   
                                           /* QUANTITY RANDOM TEAMS MODAL */
@@ -2363,7 +2326,18 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
 
-  $scope.createNewStudent = function(name, surname, email, password) {
+  $scope.createNewStudent = function(name, surname) {
+
+    var teacherId = $scope.teacher.$id;
+    var a = teacherId.substr(teacherId.length -2).toLowerCase();
+    var classroomId = $scope.classroom.id;
+    var b = classroomId.substr(classroomId.length -2).toLowerCase();
+    var dateTimeHash = Date.now().toString();
+    var c = dateTimeHash.substr(dateTimeHash.length -3).toLowerCase();
+
+    var email = (name.replace(/\s/g, '') + surname.replace(/\s/g, '') + '.' + a + b + c + '@student.com').toLowerCase().trim();
+    var password = "student";
+
     if (secondaryConnection == null) {
       var config = {
         apiKey: "AIzaSyBBKqBEuzK2MF9zm4V6u5BoqWWfdtQEF94",
@@ -2458,10 +2432,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   $scope.setStudent = function(student) {
     $scope.student = student;
+    $scope.studentHasItems = false;
     $scope.studentItems = [];
     for (var itemId in student.items) {
       for (i = 0 ; i < $scope.items.length ; i++) {
         if (student.items[itemId].id == $scope.items[i].id) {
+          $scope.studentHasItems = true;
           if ($scope.items[i].achievements != undefined) {
             $scope.studentItems.push({
               'id' : student.items[itemId].id,
