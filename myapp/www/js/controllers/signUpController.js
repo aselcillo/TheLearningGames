@@ -68,7 +68,10 @@ function ($scope, $stateParams, $http, $state, sharedData) {
               'school' : school,
               'avatar' : avatar,
             }).then(function() {
-              $state.go('teacherHome');
+              sessionUser.sendEmailVerification();
+              alert('VERIFIQUE SU CORREO PARA PODER ACTIVAR SU CUENTA');
+              $state.go('login');
+              firebase.auth().signOut();
               $scope.modelSignUp = {};
             });
           } else if (signUpType === 'student') { //STUDENT
@@ -80,8 +83,12 @@ function ($scope, $stateParams, $http, $state, sharedData) {
               'email' : sessionUser.email,
               'school' : school,
               'avatar' : avatar,
+              'emailVerified' : false,
             }).then(function() {
-              $state.go('studentHome');
+              sessionUser.sendEmailVerification();
+              alert('VERIFIQUE SU CORREO PARA PODER ACTIVAR SU CUENTA');
+              $state.go('login');
+              firebase.auth().signOut();
               $scope.modelSignUp = {};
             });
           }
