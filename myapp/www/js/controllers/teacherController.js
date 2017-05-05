@@ -2366,6 +2366,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             'email' : sessionStudent.email,
             'school' : $scope.teacher.school,
             'avatar' : sessionStudent.photoURL,
+            'emailVerified' : true,
           }).then(function() {
             var newClassStudentRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/students/' + sessionStudent.uid);
             newClassStudentRef.set(true);
