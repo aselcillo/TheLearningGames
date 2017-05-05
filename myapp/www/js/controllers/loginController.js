@@ -55,12 +55,15 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
         //User is signed in.
         var teachersArray = $firebaseArray(teachersRef);
         teachersArray.$loaded(function() {
-          if (teachersArray.$getRecord(sessionUser.uid)) {
+          if (teachersArray.$getRecord(sessionUser.uid) && sessionUser.emailVerified == true) {
             $state.go('teacherHome');
             $scope.modelLoginTeacher = {};
             $scope.allFalseForm();
+          } else if (sessionUser.emailVerified == false){
+            alert('VERIFIQUE SU CORREO PARA PODER ACCEDER A SU CUENTA');
+            firebase.auth().signOut();
           } else {
-            alert('NO EXISTE CUENTA DE PROFESOR');
+            alert('NO EXISTE ESA CUETNA DE PROFESOR');
           }
         });
       } else {
@@ -99,9 +102,15 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
         var studentsArray = $firebaseArray(studentsRef);
         studentsArray.$loaded(function() {
           if (studentsArray.$getRecord(sessionUser.uid)) {
-            $state.go('studentHome');
-            $scope.modelLoginStudent = {};
-            $scope.allFalseForm();
+            var student = studentsArray.$getRecord(sessionUser.uid);
+            if(student.emailVerified == true || sessionUser.emailVerified == true) {
+              $state.go('studentHome');
+              $scope.modelLoginStudent = {};
+              $scope.allFalseForm();
+            } else {
+              alert('VERIFIQUE SU CORREO PARA PODER ACCEDER A SU CUENTA');
+              firebase.auth().signOut();
+            }
           } else {
             alert('NO EXISTE CUENTA DE ALUMNO');
           }
