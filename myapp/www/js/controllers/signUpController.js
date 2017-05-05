@@ -1,9 +1,9 @@
 angular.module('app.signUpController', ['pascalprecht.translate'])
 
-.controller('signUpCtrl', ['$scope', '$stateParams', '$http', '$state', 'sharedData',  // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('signUpCtrl', ['$scope', '$stateParams', '$http', '$state', 'sharedData', '$ionicLoading',  // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams, $http, $state, sharedData) {
+function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading) {
 
   /*
     *************************************CLEAN FORM FUNCTIONS GOES HERE*******************************
@@ -39,8 +39,13 @@ function ($scope, $stateParams, $http, $state, sharedData) {
 
   $scope.registerUser = function(name, surname, email, password, school, avatar) {
 
+    if (email.includes('@')) {
+      $ionicLoading.show();
+    }
+
     if (firebase.auth().currentUser) {
       firebase.auth().signOut();
+      $ionicLoading.hide();
     }
 
     firebase.auth().createUserWithEmailAndPassword(email, password).then(function(firebaseUser) {
@@ -73,6 +78,7 @@ function ($scope, $stateParams, $http, $state, sharedData) {
               $state.go('login');
               firebase.auth().signOut();
               $scope.modelSignUp = {};
+              $ionicLoading.hide();
             });
           } else if (signUpType === 'student') { //STUDENT
             var newStudentRef = firebase.database().ref('students/'+sessionUser.uid);
@@ -90,6 +96,7 @@ function ($scope, $stateParams, $http, $state, sharedData) {
               $state.go('login');
               firebase.auth().signOut();
               $scope.modelSignUp = {};
+              $ionicLoading.hide();
             });
           }
         });
@@ -97,19 +104,20 @@ function ($scope, $stateParams, $http, $state, sharedData) {
     }).catch(function(error) {
       if (error) {
         switch (error.code) {
-			case "auth/weak-password":
-				alert("LA CONTRASEÑA DEBE SER DE AL MENOS 6 CARACTERES");
-				break;
-			case "auth/email-already-in-use":
-				alert("EL CORREO INDICADO YA SE ENCUETNRA EN USO");
-				break;
-			case "auth/invalid-email":
-				alert("EL CORREO INDICADO NO ES VALIDO");
-				break;
-			default:
-				alert("ERROR DESCONOCIDO");
-			}
-		}
+    			case "auth/weak-password":
+    				alert("LA CONTRASEÑA DEBE SER DE AL MENOS 6 CARACTERES");
+    				break;
+    			case "auth/email-already-in-use":
+    				alert("EL CORREO INDICADO YA SE ENCUETNRA EN USO");
+    				break;
+    			case "auth/invalid-email":
+    				alert("EL CORREO INDICADO NO ES VALIDO");
+    				break;
+    			default:
+    				alert("ERROR DESCONOCIDO");
+        }
+        $ionicLoading.hide();
+		  }
     });
   }
 

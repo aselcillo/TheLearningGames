@@ -1,8 +1,7 @@
 angular.module('app.teacherController', ['pascalprecht.translate'])
 
-.controller('teacherHomeCtrl', ['$scope', '$stateParams', '$ionicModal', '$http', '$state', '$ionicPopover', '$ionicActionSheet', '$firebaseObject', '$firebaseArray', '$ionicPopup', 'sharedData', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
-// You can include any angular dependencies as parameters for this function
-// TIP: Access Route Parameters for your page via $stateParams.parameterName
+.controller('teacherHomeCtrl', ['$scope', '$stateParams', '$ionicModal', '$http', '$state', '$ionicPopover', '$ionicActionSheet', '$firebaseObject', '$firebaseArray', '$ionicPopup', 'sharedData',
+
 function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ionicActionSheet, $firebaseObject, $firebaseArray, $ionicPopup, sharedData) {
 
   /*
@@ -1792,12 +1791,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             LAS PREFERENCIAS DE ESA CLASE DE DEMO.
           */
 
-          $scope.demoClassroom = [];
-          var loopClassroom = firebase.database().ref('classrooms/' + 'demoClassroomKey');
+          $scope.demoClassrooms = [];
+          var loopClassroom = firebase.database().ref('classrooms/demoClassroomKey');
           loopClassroom.on('value', function(snapshot) {
             if (snapshot.val() != null) {
-              $scope.demoClassroom.push(snapshot.val());
-              $scope.copyPreferencesFromClassroom($scope.demoClassroom, newClassroomId);
+              $scope.demoClassrooms.push(snapshot.val());
+              $scope.copyPreferencesFromClassroom(snapshot.val(), newClassroomId);
               demoClassroom = false;
             }
           });
@@ -4181,7 +4180,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var surnameA = a.surname.toUpperCase();
     var surnameB = b.surname.toUpperCase();
     if (surnameA < surnameB) {
-      return -12;
+      return -1;
     }
     if (surnameA > surnameB) {
       return 1;
@@ -4194,7 +4193,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var levelA = a.level;
     var levelB = b.level;
     if (levelA < levelB) {
-      return -12;
+      return -1;
     }
     if (levelA > levelB) {
       return 1;
