@@ -1017,6 +1017,8 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
       $scope.availablePoints -= reward.price;
 
+      $scope.createNotificationRewards(reward, 'buy', $scope.student);
+
       $scope.getRewards();
     } else {
       alert('NO TIENES PUNTOS SUFICIENTES PARA COMPRAR ' + reward.name);
@@ -1035,6 +1037,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     } else {
       rewardForStudentRef.remove();
     }
+    $scope.createNotificationRewards(reward, 'consume', $scope.student);
 
     $scope.getRewards();
   }
@@ -1118,7 +1121,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
             if (!change) {
               $scope.students.push(student);
             } else {
-              $scope.students[index] = student
+              $scope.students[index] = student;
             }
             $scope.students.sort(sortBySurname);
           }
@@ -1166,6 +1169,33 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       }
     }
     $scope.showModalMissionDialog();
+  }
+
+  
+
+
+                                        /* FUNCTIONS NOTIFICATIONS */
+
+  $scope.getNotifications = function() {}
+
+  $scope.createNotificationRewards = function(reward, operationType, student) {
+    var teacherNotificationsRef = firebase.database().ref('teachers/' + $scope.classroom.teacher + '/notifications/' + $scope.classroom.id);
+    var teacherNotificationsArray = $firebaseArray(teacherNotificationsRef);
+    teacherNotificationsArray.$loaded(function() {
+      if (operationType == 'buy') {
+        teacherNotificationsArray.$add({
+          'type' : 'RECOMPENSA',
+          'message' : 'EL ALUMNO ' + CryptoJS.AES.decrypt(student.name, student.id).toString(CryptoJS.enc.Utf8) + ' ' + CryptoJS.AES.decrypt(student.surname, student.id).toString(CryptoJS.enc.Utf8) + ' HA OBTENIDO LA RECOMPENSA ' + reward.name,
+          'date' : Date.now(),
+        });
+      } else if (operationType == 'consume') {
+        teacherNotificationsArray.$add({
+          'type' : 'RECOMPENSA',
+          'message' : 'EL ALUMNO ' + CryptoJS.AES.decrypt(student.name, student.id).toString(CryptoJS.enc.Utf8) + ' ' + CryptoJS.AES.decrypt(student.surname, student.id).toString(CryptoJS.enc.Utf8) + ' HA USADO LA RECOMPENSA ' + reward.name + ' x1',
+          'date' : Date.now(),
+        });
+      }
+    });
   }
 
   /*
