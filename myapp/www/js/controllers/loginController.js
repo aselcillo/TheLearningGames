@@ -1,9 +1,9 @@
 angular.module('app.loginController', ['pascalprecht.translate'])
      
-.controller('loginCtrl', ['$scope', '$stateParams', '$http', '$state', 'sharedData', '$firebaseArray', '$ionicPopup',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('loginCtrl', ['$scope', '$stateParams', '$http', '$state', 'sharedData', '$firebaseArray', '$ionicPopup', '$ionicLoading',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ionicPopup) {
+function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ionicPopup, $ionicLoading) {
 
   /*
     *************************************DECLARE FUNCTIONS FOR NG-SHOW********************************
@@ -45,8 +45,13 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
 
   $scope.logInTeacher = function(email, password) {
 
+    if (email != undefined && email.includes('@')) {
+      $ionicLoading.show();
+    }
+
     if (firebase.auth().currentUser) {
       firebase.auth().signOut();
+      $ionicLoading.hide();
     }
 
     firebase.auth().signInWithEmailAndPassword(email, password).then(function(firebaseUser) {
@@ -59,64 +64,19 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
             $state.go('teacherHome');
             $scope.modelLoginTeacher = {};
             $scope.allFalseForm();
+            $ionicLoading.hide();
           } else if (sessionUser.emailVerified == false){
             alert('VERIFIQUE SU CORREO PARA PODER ACCEDER A SU CUENTA');
             firebase.auth().signOut();
+            $ionicLoading.hide();
           } else {
-            alert('NO EXISTE ESA CUETNA DE PROFESOR');
+            alert('NO EXISTE ESA CUENTA DE PROFESOR');
+            $ionicLoading.hide();
           }
         });
       } else {
         //No user is signed in.
-      }
-    }).catch(function(error) {
-      if (error) {
-        switch (error.code) {
-			case "auth/wrong-password":
-				alert("EL EMAIL O CONTRASEÑA SON INCORRECTOS");
-				break;
-			case "auth/user-not-found":
-				alert("EL EMAIL O CONTRASEÑA NO SON INCORRECTOS");
-				break;
-			case "auth/invalid-email":
-				alert("EMAIL INVALIDO");
-				break;
-			default:
-				alert("ERROR DESCONOCIDO");
-				break;
-			}
-		}
-    });
-  }
-
-  $scope.logInStudent = function(email, password) {
-
-    if (firebase.auth().currentUser) {
-      firebase.auth().signOut();
-    }
-
-    firebase.auth().signInWithEmailAndPassword(email, password).then(function(firebaseUser) {
-      var sessionUser = firebase.auth().currentUser;
-      if (sessionUser) {
-        //User is signed in.
-        var studentsArray = $firebaseArray(studentsRef);
-        studentsArray.$loaded(function() {
-          if (studentsArray.$getRecord(sessionUser.uid)) {
-            var student = studentsArray.$getRecord(sessionUser.uid);
-            if(student.emailVerified == true || sessionUser.emailVerified == true) {
-              $state.go('studentHome');
-              $scope.modelLoginStudent = {};
-              $scope.allFalseForm();
-            } else {
-              alert('VERIFIQUE SU CORREO PARA PODER ACCEDER A SU CUENTA');
-              firebase.auth().signOut();
-            }
-          } else {
-            alert('NO EXISTE CUENTA DE ALUMNO');
-          }
-        });
-      } else {
-        //No user is signed in.
+        $ionicLoading.hide();
       }
     }).catch(function(error) {
       if (error) {
@@ -133,7 +93,67 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
     			default:
     				alert("ERROR DESCONOCIDO");
     				break;
-    			}
+  			}
+        $ionicLoading.hide();
+		  }
+    });
+  }
+
+  $scope.logInStudent = function(email, password) {
+
+    if (email != undefined && email.includes('@')) {
+      $ionicLoading.show();
+    }
+
+    if (firebase.auth().currentUser) {
+      $ionicLoading.hide();
+      firebase.auth().signOut();
+    }
+
+    firebase.auth().signInWithEmailAndPassword(email, password).then(function(firebaseUser) {
+      var sessionUser = firebase.auth().currentUser;
+      if (sessionUser) {
+        //User is signed in.
+        var studentsArray = $firebaseArray(studentsRef);
+        studentsArray.$loaded(function() {
+          if (studentsArray.$getRecord(sessionUser.uid)) {
+            var student = studentsArray.$getRecord(sessionUser.uid);
+            if(student.emailVerified == true || sessionUser.emailVerified == true) {
+              $state.go('studentHome');
+              $scope.modelLoginStudent = {};
+              $scope.allFalseForm();
+              $ionicLoading.hide();
+            } else {
+              alert('VERIFIQUE SU CORREO PARA PODER ACCEDER A SU CUENTA');
+              firebase.auth().signOut();
+              $ionicLoading.hide();
+            }
+          } else {
+            alert('NO EXISTE ESA CUENTA DE ALUMNO');
+            $ionicLoading.hide();
+          }
+        });
+      } else {
+        //No user is signed in.
+        $ionicLoading.hide();
+      }
+    }).catch(function(error) {
+      if (error) {
+        switch (error.code) {
+    			case "auth/wrong-password":
+    				alert("EL EMAIL O CONTRASEÑA SON INCORRECTOS");
+    				break;
+    			case "auth/user-not-found":
+    				alert("EL EMAIL O CONTRASEÑA NO SON INCORRECTOS");
+    				break;
+    			case "auth/invalid-email":
+    				alert("EMAIL INVALIDO");
+    				break;
+    			default:
+    				alert("ERROR DESCONOCIDO");
+    				break;
+    		}
+        $ionicLoading.hide();
 		  }
     });
   }
@@ -160,7 +180,7 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
                   default:
                     alert("INTRODUZCA UN EMAIL CORRECTO");
                     break;
-                  }
+                }
               }
             });
           }
