@@ -358,6 +358,21 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     '</ion-content>'+
   '</ion-modal-view>';
 
+  $scope.notificationsModal = '<ion-modal-view>'+
+    '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
+      '<h3 id="attendance-heading3" class="attendance-hdg3">NOTIFICACIONES</h3>'+
+      '<ion-list id="attendance-list7">'+
+        '<ion-item id="attendance-checkbox2" ng-repeat="notification in notifications">{{notification.message}}'+
+          '<p>{{notification.type}}</p>'+
+        '</ion-item>'+
+      '</ion-list>'+
+      '<div class="button-bar action_buttons">'+
+        '<button class="button button-calm  button-block" ng-click="closeNotificationsModal()">{{ \'CANCEL\' | translate }}</button>'+
+        '<button class="button button-calm  button-block" ng-click="deleteNotifications()">LIMPIAR NOTIFICACIONES</button>'+
+      '</div>'+
+    '</ion-content>'+
+  '</ion-modal-view>';
+
   /*
     *************************************EVERY MODAL FUNCTION GOES HERE*******************************
   */
@@ -461,6 +476,19 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   }
   $scope.closeModalRewardDialog = function() {
     $scope.rewardDialogModal.hide();
+  }
+
+                                        /* NOTIFICATIONS MODAL */
+
+  $scope.notificationsModal = $ionicModal.fromTemplate($scope.notificationsModal, {
+    scope: $scope,
+    animation: 'slide-in-up'
+  })
+  $scope.showNotificationsModal = function() {
+    $scope.notificationsModal.show();
+  }
+  $scope.closeNotificationsModal = function() {
+    $scope.notificationsModal.hide();
   }
   
   /*
@@ -647,6 +675,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     $scope.getMissions();
     $scope.rulesItemsForm();
     $scope.getClassroomStudents();
+    $scope.getNotifications();
     if ($scope.student.classrooms[$scope.classroom.id].usedPoints != undefined) {
       $scope.availablePoints = $scope.student.classrooms[$scope.classroom.id].totalPoints - $scope.student.classrooms[$scope.classroom.id].usedPoints;
     } else {
@@ -1175,7 +1204,32 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
                                         /* FUNCTIONS NOTIFICATIONS */
 
-  $scope.getNotifications = function() {}
+  $scope.getNotifications = function() {
+    var studentNotificationsRef = firebase.database().ref('students/' + $scope.student.id + '/notifications/' + $scope.classroom.id);
+    var studentNotificationsArray = $firebaseArray(studentNotificationsRef);
+    studentNotificationsArray.$loaded(function() {
+      $scope.notifications = [];
+        for (var element in studentNotificationsArray) {
+          var studentNotificationRef = firebase.database().ref('students/' + $scope.student.id + '/notifications/' + $scope.classroom.id + '/' + studentNotificationsArray[element].$id);
+          studentNotificationRef.on('value', function(snapshot) {
+            if (snapshot.val() != null) {
+              var change = false;
+              var index = -1;
+              var notification = snapshot.val();
+              $scope.notifications.push(notification);
+
+              if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+                $scope.$apply();
+              }
+              $scope.notifications.sort(sortByDate);
+            }
+          });
+        }
+        if ($scope.notifications.length > 0) {
+          $scope.showNotificationsModal();
+        }
+    });
+  }
 
   $scope.createNotificationRewards = function(reward, operationType, student) {
     var teacherNotificationsRef = firebase.database().ref('teachers/' + $scope.classroom.teacher + '/notifications/' + $scope.classroom.id);
@@ -1195,6 +1249,13 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
         });
       }
     });
+  }
+
+  $scope.deleteNotifications = function() {
+    var notificationToDeleteRef = firebase.database().ref('students/' + $scope.student.id + '/notifications/' + $scope.classroom.id);
+    notificationToDeleteRef.remove();
+    $scope.closeNotificationsModal();
+    $scope.getNotifications();
   }
 
   /*
@@ -1224,6 +1285,19 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       return 1;
     }
     //surnames must be equal
+    return 0;
+  }
+
+  var sortByDate = function(a, b) {
+    var dateA = a.date;
+    var dateB = b.date;
+    if (dateA > dateB) {
+      return -1;
+    }
+    if (dateA < dateB) {
+      return 1;
+    }
+    //dates must be equal
     return 0;
   }
   

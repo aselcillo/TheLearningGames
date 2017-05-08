@@ -184,7 +184,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       titleText: 'ACCIONES CLASS TEAMS',
       buttons: [
         { text: 'EVALUAR EQUIPO(S)' },
-        { text: 'DUPLICAR EQUIPO(S)' },
         { text: 'ENVIAR MENSAJE' },
       ],
       destructiveText: 'BORRAR EQUIPO(S)',
@@ -198,10 +197,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           $scope.actionSheetClassTeamsType = 'evaluate';
           $scope.showSelectTeamsModal();
         } else if (index === 1) {
-          //DUPLICATE TEAMS ACTION
-          $scope.actionSheetClassTeamsType = 'duplicate';
-          $scope.showSelectTeamsModal();
-        } else if (index === 2) {
           //SEND MESSAGE ACTION
         }
         return true;
@@ -220,21 +215,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.showActionsheetItems = function() {
     $ionicActionSheet.show({
       titleText: 'ACCIONES ITEMS',
-      buttons: [
-        { text: 'DUPLICAR ITEM(S)' },
-      ],
       destructiveText: 'BORRAR ITEM(S)',
       cancelText: 'CANCELAR',
       cancel: function() {
         //CANCEL ACTION
-      },
-      buttonClicked: function(index) {
-        if (index === 0) {
-          //DUPLICATE ITEMS ACTION
-          $scope.actionSheetItemsType = 'duplicate';
-          $scope.showSelectItemsModal();
-        }
-        return true;
       },
       destructiveButtonClicked: function() {
         //DELETE ITEMS ACTION
@@ -250,21 +234,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.showActionsheetAchievements = function() {
     $ionicActionSheet.show({
       titleText: 'ACCIONES LOGROS',
-      buttons: [
-        { text: 'DUPLICAR LOGRO(S)' },
-      ],
       destructiveText: 'BORRAR LOGRO(S)',
       cancelText: 'CANCELAR',
       cancel: function() {
         //CANCEL ACTION
-      },
-      buttonClicked: function(index) {
-        if (index === 0) {
-          //DUPLICATE ACHIEVEMENT ACTION
-          $scope.actionSheetAchievementsType = 'duplicate';
-          $scope.showSelectAchievementsModal();
-        }
-        return true;
       },
       destructiveButtonClicked: function() {
         //DELETE ACHIEVEMENT ACTION
@@ -280,21 +253,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.showActionsheetRewards = function() {
     $ionicActionSheet.show({
       titleText: 'ACCIONES RECOMPENSAS',
-      buttons: [
-        { text: 'DUPLICAR RECOMPENSA(S)' },
-      ],
       destructiveText: 'BORRAR RECOMPENSA(S)',
       cancelText: 'CANCELAR',
       cancel: function() {
         //CANCEL ACTION
-      },
-      buttonClicked: function(index) {
-        if (index === 0) {
-          //DUPLICATE REWARDS ACTION
-          $scope.actionSheetRewardsType = 'duplicate';
-          $scope.showSelectRewardsModal();
-        }
-        return true;
       },
       destructiveButtonClicked: function() {
         //DELETE REWARD ACTION
@@ -310,21 +272,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.showActionsheetMissions = function() {
     $ionicActionSheet.show({
       titleText: 'ACCIONES MISIONES',
-      buttons: [
-        { text: 'DUPLICAR MISION(S)' },
-      ],
       destructiveText: 'BORRAR MISION(S)',
       cancelText: 'CANCELAR',
       cancel: function() {
         //CANCEL ACTION
-      },
-      buttonClicked: function(index) {
-        if (index === 0) {
-          //DUPLICATE MISSION ACTION
-          $scope.actionSheetMissionsType = 'duplicate';
-          $scope.showSelectMissionsModal();
-        }
-        return true;
       },
       destructiveButtonClicked: function() {
         //DELETE MISSION ACTION
@@ -1178,6 +1129,21 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     '</ion-content>'+
   '</ion-modal-view>';
 
+  $scope.notificationsModal = '<ion-modal-view>'+
+    '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
+      '<h3 id="attendance-heading3" class="attendance-hdg3">NOTIFICACIONES</h3>'+
+      '<ion-list id="attendance-list7">'+
+        '<ion-item id="attendance-checkbox2" ng-repeat="notification in notifications">{{notification.message}}'+
+          '<p>{{notification.type}}</p>'+
+        '</ion-item>'+
+      '</ion-list>'+
+      '<div class="button-bar action_buttons">'+
+        '<button class="button button-calm  button-block" ng-click="closeNotificationsModal()">{{ \'CANCEL\' | translate }}</button>'+
+        '<button class="button button-calm  button-block" ng-click="deleteNotifications()">LIMPIAR NOTIFICACIONES</button>'+
+      '</div>'+
+    '</ion-content>'+
+  '</ion-modal-view>';
+
   /*
     *************************************EVERY MODAL FUNCTION GOES HERE*******************************
   */
@@ -1613,6 +1579,19 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.editRewardModal.hide();
   }
 
+                                        /* NOTIFICATIONS MODAL */
+
+  $scope.notificationsModal = $ionicModal.fromTemplate($scope.notificationsModal, {
+    scope: $scope,
+    animation: 'slide-in-up'
+  })
+  $scope.showNotificationsModal = function() {
+    $scope.notificationsModal.show();
+  }
+  $scope.closeNotificationsModal = function() {
+    $scope.notificationsModal.hide();
+  }
+
   /*
     *************************************CLEAN FORM FUNCTIONS GOES HERE*******************************
   */
@@ -1895,6 +1874,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.getTeams();
     $scope.getRewards();
     $scope.getMissions();
+    $scope.getNotifications();
   }
 
   $scope.archiveClassroom = function(classroom) {
@@ -2888,12 +2868,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           $scope.deleteItem($scope.itemsForSelection[element]);
         }
       }
-    } else if ($scope.actionSheetItemsType === 'duplicate') {
-      for (var element in $scope.itemsForSelection) {
-        if ($scope.itemsForSelection[element].selected === true) {
-          $scope.duplicateItem($scope.itemsForSelection[element]); //THINGS TO DO
-        }
-      }
     } else if ($scope.actionSheetItemsType === 'evaluateStudents') {
       for (var element in $scope.itemsForSelection) {
         if ($scope.itemsForSelection[element].selected === true) {
@@ -3171,13 +3145,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           $scope.deleteAchievement($scope.achievementsForSelection[element]);
         }
       }
-    $scope.achievementsForSelection = $scope.achievements;
-    } else if ($scope.actionSheetAchievementsType === 'duplicate') {
-      for (var element in $scope.achievementsForSelection) {
-        if ($scope.achievementsForSelection[element].selected === true) {
-          $scope.duplicateAchievement($scope.achievementsForSelection[element]); //THINGS TO DO
-        }
-      }
+      $scope.achievementsForSelection = $scope.achievements;
     }
   }
   
@@ -3505,12 +3473,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         }
       }
     $scope.teamsForSelection = $scope.teams;
-    } else if ($scope.actionSheetClassTeamsType === 'duplicate') {
-      for (var element in $scope.teamsForSelection) {
-        if ($scope.teamsForSelection[element].selected === true) {
-          $scope.duplicateTeam($scope.teamsForSelection[element]); //THINGS TO DO
-        }
-      }
     } else if ($scope.actionSheetClassTeamsType === 'evaluate') {
       $scope.teamsToEvaluate = [];
       for (var element in $scope.teamsForSelection) {
@@ -3689,12 +3651,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         }
       }
     $scope.rewardsForSelection = $scope.rewards;
-    } else if ($scope.actionSheetRewardsType === 'duplicate') {
-      for (var element in $scope.rewardsForSelection) {
-        if ($scope.rewardsForSelection[element].selected === true) {
-          $scope.duplicateReward($scope.rewardsForSelection[element]); //THINGS TO DO
-        }
-      }
     } else if ($scope.actionSheetRewardsType === 'newMissionCreation') {
       $scope.newMission.rewards = $scope.rewardsForSelection;
       $scope.createMission($scope.newMission);
@@ -4033,13 +3989,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           $scope.deleteMission($scope.missionsForSelection[element]);
         }
       }
-    $scope.missionsForSelection = $scope.rewards;
-    } else if ($scope.actionSheetMissionsType === 'duplicate') {
-      for (var element in $scope.missionsForSelection) {
-        if ($scope.missionsForSelection[element].selected === true) {
-          $scope.duplicateMission($scope.missionsForSelection[element]); //THINGS TO DO
-        }
-      }
+      $scope.missionsForSelection = $scope.rewards;
     }
   }
 
@@ -4210,7 +4160,32 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
                                         /* FUNCTIONS NOTIFICATIONS */
 
-  $scope.getNotifications = function() {}
+  $scope.getNotifications = function() {
+    var teacherNotificationsRef = firebase.database().ref('teachers/' + $scope.teacher.$id + '/notifications/' + $scope.classroom.id);
+    var teacherNotificationsArray = $firebaseArray(teacherNotificationsRef);
+    teacherNotificationsArray.$loaded(function() {
+      $scope.notifications = [];
+        for (var element in teacherNotificationsArray) {
+          var teacherNotificationRef = firebase.database().ref('teachers/' + $scope.teacher.$id + '/notifications/' + $scope.classroom.id + '/' + teacherNotificationsArray[element].$id);
+          teacherNotificationRef.on('value', function(snapshot) {
+            if (snapshot.val() != null) {
+              var change = false;
+              var index = -1;
+              var notification = snapshot.val();
+              $scope.notifications.push(notification);
+
+              if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+                $scope.$apply();
+              }
+              $scope.notifications.sort(sortByDate);
+            }
+          });
+        }
+        if ($scope.notifications.length > 0 && $scope.classroom.notifications) {
+          $scope.showNotificationsModal();
+        }
+    });
+  }
 
   $scope.createNotificationItems = function(userId, item, operationType) {
     var studentNotificationsRef = firebase.database().ref('students/' + userId + '/notifications/' + $scope.classroom.id);
@@ -4264,7 +4239,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         } else if (operationType == 'lose') {
           teacherNotificationsArray.$add({
             'type' : 'LOGRO',
-            'message' : 'EL ALUNO ' + studentToEvaluate.name + ' ' + studentToEvaluate.surname + ' HA PERDIDO EL LOGRO ' + achievement.name,
+            'message' : 'EL ALUMNO ' + studentToEvaluate.name + ' ' + studentToEvaluate.surname + ' HA PERDIDO EL LOGRO ' + achievement.name,
             'date' : Date.now(),
           });
         }
@@ -4315,8 +4290,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     });
   }
 
-  $scope.deleteNotifications = function(userId) {
-
+  $scope.deleteNotifications = function() {
+    var notificationToDeleteRef = firebase.database().ref('teachers/' + $scope.teacher.$id + '/notifications/' + $scope.classroom.id);
+    notificationToDeleteRef.remove();
+    $scope.closeNotificationsModal();
+    $scope.getNotifications();
   }
 
   /*
@@ -4359,6 +4337,19 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       return 1;
     }
     //levels must be equal
+    return 0;
+  }
+
+  var sortByDate = function(a, b) {
+    var dateA = a.date;
+    var dateB = b.date;
+    if (dateA > dateB) {
+      return -1;
+    }
+    if (dateA < dateB) {
+      return 1;
+    }
+    //dates must be equal
     return 0;
   }
 
