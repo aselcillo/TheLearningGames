@@ -1,9 +1,9 @@
 angular.module('app.signUpController', ['pascalprecht.translate'])
 
-.controller('signUpCtrl', ['$scope', '$stateParams', '$http', '$state', 'sharedData', '$ionicLoading',  // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('signUpCtrl', ['$scope', '$stateParams', '$http', '$state', 'sharedData', '$ionicLoading', '$translate', '$rootScope',
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading) {
+function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading, $translate, $rootScope) {
 
   /*
     *************************************CLEAN FORM FUNCTIONS GOES HERE*******************************
@@ -23,6 +23,15 @@ function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading) {
   if (signUpType != 'teacher' && signUpType != 'student') {
     $state.go('login');
   }
+
+  $translate(['CHECK_EMAIL_TO_VERIFY', 'EMAIL_INVALID', 'ERROR_ACCESS_UNKNOW', 'ERROR_EMAIL_ALREADY_USED', 'ERROR_WEAK_PASSWORD', 'SCHOOL_NOT_ESTABLISHED']).then(function(translations) {
+    $scope.checkEmailToVerify = translations.CHECK_EMAIL_TO_VERIFY;
+    $scope.emailInvalidAlert = translations.EMAIL_INVALID;
+    $scope.errorEmailUsedAlert = translations.ERROR_EMAIL_ALREADY_USED;
+    $scope.errorUnknowAlert = translations.ERROR_ACCESS_UNKNOW;
+    $scope.schholNotEstablished = translations.SCHOOL_NOT_ESTABLISHED;
+    $scope.weakPasswordAlert = translations.ERROR_WEAK_PASSWORD;
+  });
 
   $scope.modelSignUp = {};
 
@@ -57,7 +66,7 @@ function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading) {
           avatar = $scope.defaultAvatar;
         }
         if (school === ' ' || school === '' || school == null) {
-          school = 'Not established';
+          school = $scope.schholNotEstablished;
         }
         sessionUser.updateProfile({
           displayName : name + ' ' + surname,
@@ -65,7 +74,7 @@ function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading) {
         }).then(function() {
           //Update successful.
           if (signUpType === 'teacher') { //TEACHER
-            var newTeacherRef = firebase.database().ref('teachers/'+sessionUser.uid);
+            var newTeacherRef = firebase.database().ref('teachers/' + sessionUser.uid);
             newTeacherRef.set({
               'name' : CryptoJS.AES.encrypt(name, sessionUser.uid).toString(),
               'surname' : CryptoJS.AES.encrypt(surname, sessionUser.uid).toString(),
@@ -74,14 +83,14 @@ function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading) {
               'avatar' : avatar,
             }).then(function() {
               sessionUser.sendEmailVerification();
-              alert('VERIFIQUE SU CORREO PARA PODER ACTIVAR SU CUENTA');
+              alert($scope.checkEmailToVerify);
               $state.go('login');
               firebase.auth().signOut();
               $scope.modelSignUp = {};
               $ionicLoading.hide();
             });
           } else if (signUpType === 'student') { //STUDENT
-            var newStudentRef = firebase.database().ref('students/'+sessionUser.uid);
+            var newStudentRef = firebase.database().ref('students/' + sessionUser.uid);
             newStudentRef.set({
               'id' : sessionUser.uid,
               'name' : CryptoJS.AES.encrypt(name, sessionUser.uid).toString(),
@@ -92,7 +101,7 @@ function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading) {
               'emailVerified' : false,
             }).then(function() {
               sessionUser.sendEmailVerification();
-              alert('VERIFIQUE SU CORREO PARA PODER ACTIVAR SU CUENTA');
+              alert($scope.checkEmailToVerify);
               $state.go('login');
               firebase.auth().signOut();
               $scope.modelSignUp = {};
@@ -105,20 +114,33 @@ function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading) {
       if (error) {
         switch (error.code) {
     			case "auth/weak-password":
-    				alert("LA CONTRASEÑA DEBE SER DE AL MENOS 6 CARACTERES");
+    				alert($scope.weakPasswordAlert);
     				break;
     			case "auth/email-already-in-use":
-    				alert("EL CORREO INDICADO YA SE ENCUETNRA EN USO");
+    				alert($scope.errorEmailUsedAlert);
     				break;
     			case "auth/invalid-email":
-    				alert("EL CORREO INDICADO NO ES VALIDO");
+    				alert($scope.emailInvalidAlert);
     				break;
     			default:
-    				alert("ERROR DESCONOCIDO");
+    				alert($scope.errorUnknowAlert);
         }
         $ionicLoading.hide();
 		  }
     });
   }
+
+  $rootScope.$on('$translateChangeSuccess', function () {
+    $scope.checkEmailToVerify = $translate.instant('CHECK_EMAIL_TO_VERIFY');
+    $scope.emailInvalidAlert = $translate.instant('EMAIL_INVALID');
+    $scope.errorEmailUsedAlert = $translate.instant('ERROR_EMAIL_ALREADY_USED');
+    $scope.errorUnknowAlert = $translate.instant('ERROR_ACCESS_UNKNOW');
+    $scope.schholNotEstablished = $translate.instant('SCHOOL_NOT_ESTABLISHED');
+    $scope.weakPasswordAlert = $translate.instant('ERROR_WEAK_PASSWORD');
+  });
+ 
+  $scope.changeLanguage = function (langKey) {
+    $translate.use(langKey);
+  };
 
 }])
