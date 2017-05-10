@@ -1,9 +1,9 @@
 angular.module('app.loginController', ['pascalprecht.translate'])
      
-.controller('loginCtrl', ['$scope', '$stateParams', '$http', '$state', 'sharedData', '$firebaseArray', '$ionicPopup', '$ionicLoading',// The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('loginCtrl', ['$scope', '$stateParams', '$http', '$state', 'sharedData', '$firebaseArray', '$ionicPopup', '$ionicLoading', '$translate', '$rootScope',
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ionicPopup, $ionicLoading) {
+function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ionicPopup, $ionicLoading, $translate, $rootScope) {
 
   /*
     *************************************DECLARE FUNCTIONS FOR NG-SHOW********************************
@@ -33,6 +33,21 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
   /*
     *************************************DECLARE VARIABLES & GIVE TO $SCOPE ALL THE VALUES WE NEED****
   */
+
+  $translate(['ACCEPT', 'ACCOUNT_STUDENT_NOT_EXIST', 'ACCOUNT_TEACHER_NOT_EXIST', 'CANCEL', 'CHECK_EMAIL_TO_VERIFY', 'EMAIL_INVALID', 'EMAIL_OF_ACCOUNT', 'ERROR_ACCESS_UNKNOW', 'INSERT_EMAIL_CORRECT', 'USER_NOT_FOUND', 'VERIFY_EMAIL', 'WRONG_CREDENTIALS']).then(function(translations) {
+    $scope.acceptText = translations.ACCEPT;
+    $scope.accountStudentNotExistAlert = translations.ACCOUNT_STUDENT_NOT_EXIST;
+    $scope.accountTeacherNotExistAlert = translations.ACCOUNT_TEACHER_NOT_EXIST;
+    $scope.cancelText = translations.CANCEL;
+    $scope.checkEmailToVerify = translations.CHECK_EMAIL_TO_VERIFY;
+    $scope.emailInvalidAlert = translations.EMAIL_INVALID;
+    $scope.emailOfAccountText = translations.EMAIL_OF_ACCOUNT;
+    $scope.errorUnknowAlert = translations.ERROR_ACCESS_UNKNOW;
+    $scope.insertEmailValidAlert = translations.INSERT_EMAIL_CORRECT;
+    $scope.userNotFoundAlert = translations.USER_NOT_FOUND;
+    $scope.verifyEmailAlert = translations.VERIFY_EMAIL;
+    $scope.wronCredentialsAlert = translations.WRONG_CREDENTIALS;
+  });
 
   var rootRef = firebase.database().ref();
 
@@ -66,11 +81,11 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
             $scope.allFalseForm();
             $ionicLoading.hide();
           } else if (sessionUser.emailVerified == false){
-            alert('VERIFIQUE SU CORREO PARA PODER ACCEDER A SU CUENTA');
+            alert($scope.verifyEmailAlert);
             firebase.auth().signOut();
             $ionicLoading.hide();
           } else {
-            alert('NO EXISTE ESA CUENTA DE PROFESOR');
+            alert($scope.accountTeacherNotExistAlert);
             $ionicLoading.hide();
           }
         });
@@ -82,16 +97,16 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
       if (error) {
         switch (error.code) {
     			case "auth/wrong-password":
-    				alert("EL EMAIL O CONTRASEÑA SON INCORRECTOS");
+    				alert($scope.wronCredentialsAlert);
     				break;
     			case "auth/user-not-found":
-    				alert("EL EMAIL O CONTRASEÑA NO SON INCORRECTOS");
+    				alert($scope.userNotFoundAlert);
     				break;
     			case "auth/invalid-email":
-    				alert("EMAIL INVALIDO");
+    				alert($scope.emailInvalidAlert);
     				break;
     			default:
-    				alert("ERROR DESCONOCIDO");
+    				alert($scope.errorUnknowAlert);
     				break;
   			}
         $ionicLoading.hide();
@@ -124,12 +139,12 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
               $scope.allFalseForm();
               $ionicLoading.hide();
             } else {
-              alert('VERIFIQUE SU CORREO PARA PODER ACCEDER A SU CUENTA');
+              alert($scope.verifyEmailAlert);
               firebase.auth().signOut();
               $ionicLoading.hide();
             }
           } else {
-            alert('NO EXISTE ESA CUENTA DE ALUMNO');
+            alert($scope.accountStudentNotExistAlert);
             $ionicLoading.hide();
           }
         });
@@ -141,16 +156,16 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
       if (error) {
         switch (error.code) {
     			case "auth/wrong-password":
-    				alert("EL EMAIL O CONTRASEÑA SON INCORRECTOS");
+    				alert($scope.wronCredentialsAlert);
     				break;
     			case "auth/user-not-found":
-    				alert("EL EMAIL O CONTRASEÑA NO SON INCORRECTOS");
+    				alert($scope.userNotFoundAlert);
     				break;
     			case "auth/invalid-email":
-    				alert("EMAIL INVALIDO");
+    				alert($scope.emailInvalidAlert);
     				break;
     			default:
-    				alert("ERROR DESCONOCIDO");
+    				alert($scope.errorUnknowAlert);
     				break;
     		}
         $ionicLoading.hide();
@@ -161,24 +176,24 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
   $scope.showResetPasswordPopup = function() {
     $scope.emailUser = {};
     var ressetPasswordPopup = $ionicPopup.alert({
-      title: 'CODIGO DE LA CLASE',
+      title: $scope.emailOfAccountText,
       template: '<input type="text" ng-model="emailUser.mail">',
       scope : $scope,
 
       buttons : [
-        {text: 'CANCELAR'},
-        {text: 'ACEPTAR',
+        {text: $scope.cancelText},
+        {text: $scope.acceptText,
           onTap: function(e) {
             firebase.auth().sendPasswordResetEmail($scope.emailUser.mail).then(function() {
-              alert('REVISA TU CORREO ELECTRONICO PARA RESTABLECER TU CONTRASEÑA');
+              alert($scope.checkEmailToVerify);
             }).catch(function(error) {
               if (error) {
                 switch (error.code) {
                   case "auth/argument-error":
-                    alert("INTRODUZCA UN EMAIL CORRECTO");
+                    alert($scope.insertEmailValidAlert);
                     break;
                   default:
-                    alert("INTRODUZCA UN EMAIL CORRECTO");
+                    alert($scope.insertEmailValidAlert);
                     break;
                 }
               }
@@ -188,5 +203,20 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
       ] 
     });     
   };
+
+  $rootScope.$on('$translateChangeSuccess', function () {
+    $scope.acceptText = $translate.instant('ACCEPT');
+    $scope.accountStudentNotExistAlert = $translate.instant('ACCOUNT_STUDENT_NOT_EXIST');
+    $scope.accountTeacherNotExistAlert = $translate.instant('ACCOUNT_TEACHER_NOT_EXIST');
+    $scope.cancelText = $translate.instant('CANCEL');
+    $scope.checkEmailToVerify = $translate.instant('CHECK_EMAIL_TO_VERIFY');
+    $scope.emailInvalidAlert = $translate.instant('EMAIL_INVALID');
+    $scope.emailOfAccountText = $translate.instant('EMAIL_OF_ACCOUNT');
+    $scope.errorUnknowAlert = $translate.instant('ERROR_ACCESS_UNKNOW');
+    $scope.insertEmailValidAlert = $translate.instant('INSERT_EMAIL_CORRECT');
+    $scope.userNotFoundAlert = $translate.instant('USER_NOT_FOUND');
+    $scope.verifyEmailAlert = $translate.instant('VERIFY_EMAIL');
+    $scope.wronCredentialsAlert = $translate.instant('WRONG_CREDENTIALS');
+  });
 
 }])
