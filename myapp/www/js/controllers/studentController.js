@@ -1,8 +1,8 @@
 angular.module('app.studentController', ['pascalprecht.translate'])
 
-.controller('studentHomeCtrl', ['$scope', '$stateParams', '$http', '$state', '$ionicModal', '$ionicActionSheet', '$ionicPopover', '$firebaseArray', 'sharedData', '$ionicLoading',
+.controller('studentHomeCtrl', ['$scope', '$stateParams', '$http', '$state', '$ionicModal', '$ionicActionSheet', '$ionicPopover', '$firebaseArray', 'sharedData', '$ionicLoading', '$translate', '$rootScope',
 
-function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $ionicPopover, $firebaseArray, sharedData, $ionicLoading) {
+function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $ionicPopover, $firebaseArray, sharedData, $ionicLoading, $translate, $rootScope) {
 
   /*
     *************************************DECLARE FUNCTIONS FOR NG-SHOW********************************
@@ -114,17 +114,17 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
   $scope.templateStudentHomePopover = '<ion-popover-view>'+
     '<ion-list class="list-elements">'+
-      '<ion-item class="itemPopover" ng-hide="archivedClassroomsToShow" ng-click="showArchivedClassrooms(true)">VER ARCHIVADAS</ion-item>'+
-      '<ion-item class="itemPopover" ng-show="archivedClassroomsToShow" ng-click="showArchivedClassrooms(false)">OCULTAR ARCHIVADAS</ion-item>'+
+      '<ion-item class="itemPopover" ng-hide="archivedClassroomsToShow" ng-click="showArchivedClassrooms(true)">{{ \'SEE_ARCHIVED_CLASSES\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-show="archivedClassroomsToShow" ng-click="showArchivedClassrooms(false)">{{ \'HIDE_ARCHIVED_CLASSES\' | translate }}</ion-item>'+
       '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverStudentHome()">{{ \'SETTINGS\' | translate }}</ion-item>'+
     '</ion-list>'+
   '</ion-popover-view>';
 
   $scope.templateStudentDefaultPopover = '<ion-popover-view>'+
     '<ion-list class="list-elements">'+
-      '<ion-item class="itemPopover" ng-click="teamsForm(); closePopoverStudentDefault()">VER EQUIPOS</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverStudentDefault()">VER TIENDA DE CLASE</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverStudentDefault()">VER MISIONES</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="teamsForm(); closePopoverStudentDefault()">{{ \'SEE_TEAMS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverStudentDefault()">{{ \'SEE_CLASS_SHOP\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverStudentDefault()">{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
       '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverStudentDefault()">{{ \'SETTINGS\' | translate }}</ion-item>'+
     '</ion-list>'+
   '</ion-popover-view>';
@@ -202,28 +202,28 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
   $scope.selectRewardsModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
-      '<h3 id="attendance-heading3" class="attendance-hdg3">SELECCIONA RECOMPENSAS</h3>'+
+      '<h3 id="attendance-heading3" class="attendance-hdg3">{{ \'SELECT_REWARDS\' | translate }}</h3>'+
       '<ion-list id="attendance-list7" class="list-elements">'+
         '<ion-checkbox id="attendance-checkbox2" name="checkReward" ng-repeat="rewardForSelection in rewardsForSelection" ng-click="changeSelectedReward(rewardForSelection)" ng-checked="rewardForSelection.selected">{{rewardForSelection.name}}</ion-checkbox>'+
       '</ion-list>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm  button-block" ng-click="closeSelectRewardsModal()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button id="attendance-button123" ng-click="selectRewards()" id="attendance-btn123" class="button button-calm  button-block">SELECCIONAR RECOMPENSAS</button>'+
+        '<button id="attendance-button123" ng-click="selectRewards()" id="attendance-btn123" class="button button-calm  button-block">{{ \'SELECT\' | translate }}</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
 
   $scope.addClassModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
-      '<h3 id="attendance-heading3" class="attendance-hdg3">INTRODUCE UN CODIGO DE CLASE</h3>'+
+      '<h3 id="attendance-heading3" class="attendance-hdg3">{{ \'INSERT_CLASS_CODE\' | translate }}</h3>'+
       '<form id="addClassHashCodeForm" class="list">'+
         '<label class="item item-input">'+
-          '<input type="text" ng-model="modelAddClass.hashCode" placeholder="CODIGO DE CLASE">'+
+          '<input type="text" ng-model="modelAddClass.hashCode" placeholder="{{ \'CLASS_CODE\' | translate }}">'+
         '</label>'+
       '</form>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm  button-block" ng-click="closeModalAddClass()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button class="button button-calm  button-block" ng-disabled="!modelAddClass.hashCode" ng-click="addClass(modelAddClass.hashCode)">AÑADIR CLASE</button>'+
+        '<button class="button button-calm  button-block" ng-disabled="!modelAddClass.hashCode" ng-click="addClass(modelAddClass.hashCode)">{{ \'ADD_CLASS\' | translate }}</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -249,13 +249,13 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
         '</label>'+
         '<label class="item item-input list-elements" id="signUp-input3" ng-show="unlockedAchievement">'+
           '<span class="inputLabelProfile">'+
-            '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;TU NIVEL ACTUAL'+
+            '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;{{ \'YOUR_ACTUAL_LEVEL\' | translate }}'+
             '<p>{{achievement.level}}</p>'+
           '</span>'+
         '</label>'+
         '<label class="item item-input list-elements" id="signUp-input3">'+
           '<span class="inputLabelProfile">'+
-            '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;MAXIMO NIVEL'+
+            '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;{{ \'MAX_LEVEL\' | translate }}'+
             '<p>{{achievement.maxLevel}}</p>'+
           '</span>'+
         '</label>'+
@@ -275,7 +275,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
           '<button class="button button-light  button-block button-outline">{{ \'CHANGE_AVATAR\' | translate }}</button>'+
           '<label class="item item-input list-elements">'+
             '<span class="input-label">'+
-              'OBJETIVO'+
+              '{{ \'TEAM_OBJECTIVE\' | translate }}'+
               '<p>{{team.objective}}</p>'+
             '</span>'+
           '</label>'+
@@ -303,23 +303,23 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       '</label>'+
       '<label class="item item-input list-elements">'+
         '<span class="inputLabelProfile">'+
-          '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;PERMISO'+
+          '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;{{ \'PERMISSION\' | translate }}'+
           '<p>{{reward.permission}}</p>'+
         '</span>'+
       '</label>'+
       '<label class="item item-input list-elements">'+
         '<span class="inputLabelProfile">'+
-          '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;PRECIO'+
+          '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;{{ \'PRICE\' | translate }}'+
           '<p>{{reward.price}}</p>'+
         '</span>'+
       '</label>'+
       '<label class="item item-input list-elements">'+
         '<span class="inputLabelProfile">'+
-          '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;CANTIDAD'+
+          '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;{{ \'QUANTITY\' | translate }}'+
           '<p>{{(student.rewards[reward.id].amount != undefined) ? student.rewards[reward.id].amount : 0}}</p>'+
         '</span>'+
       '</label>'+
-      '<button class="button button-positive button-block" ng-show="possessedReward" ng-click="consumeReward(reward)">USAR RECOMPENSA</button>'+
+      '<button class="button button-positive button-block" ng-show="possessedReward" ng-click="consumeReward(reward)">{{ \'USE_REWARD\' | translate }}</button>'+
       '<button ng-click="closeModalRewardDialog()" class="button button-positive button-block icon ion-arrow-return-left"></button>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -330,11 +330,11 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
         '<form class="list">'+
           '<ion-list>'+
             '<label class="item item-input list-elements">'+
-              '<span class="input-label">{{ \'NAME\' | translate }} </span>'+
+              '<span class="input-label">{{ \'NAME\' | translate }}:</span>'+
               '<p>{{mission.name}}</p>'+
             '</label>'+
             '<label class="item item-input list-elements">'+
-              '<span class="input-label">PUNTOS ADICIONALES (OPCIONAL)</span>'+
+              '<span class="input-label">{{ \'ADDITIONAL_POINTS_MISSION\' | translate }}:</span>'+
               '<p>{{mission.additionalPoints}}</p>'+
             '</label>'+
           '</ion-list>'+
@@ -343,14 +343,14 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       '<ion-list id="items-list9">'+
         '<ion-item id="items-list-item15" class="list-student" ng-repeat="item in missionItems">'+
           '{{item.name}}'+
-          '<p>PUNTOS NECESARIOS: {{item.neededPoints}}</p>'+
+          '<p>{{ \'NEEDED_POINTS\' | translate }}: {{item.neededPoints}}</p>'+
         '</ion-item>'+
       '</ion-list>'+
-      '<h3 id="teams-heading5" class="teams-hdg5">RECOMPENSAS</h3>'+
+      '<h3 id="teams-heading5" class="teams-hdg5">{{ \'REWARDS\' | translate }}</h3>'+
       '<ion-list id="items-list9">'+
         '<ion-item id="items-list-item15" class="list-student" ng-repeat="reward in missionRewards">{{reward.name}}</ion-item>'+
       '</ion-list>'+
-      '<h3 id="teams-heading5" class="teams-hdg5">ESTUDIANTES</h3>'+
+      '<h3 id="teams-heading5" class="teams-hdg5">{{ \'STUDENTS\' | translate }}</h3>'+
       '<ion-list id="items-list9">'+
         '<ion-item id="items-list-item15" class="list-student" ng-repeat="student in missionStudents">{{student.name}}  {{student.surname}}</ion-item>'+
       '</ion-list>'+
@@ -360,7 +360,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
   $scope.notificationsModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
-      '<h3 id="attendance-heading3" class="attendance-hdg3">NOTIFICACIONES</h3>'+
+      '<h3 id="attendance-heading3" class="attendance-hdg3">{{ \'NOTIFICATIONS\' | translate }}</h3>'+
       '<ion-list id="attendance-list7">'+
         '<ion-item id="attendance-checkbox2" ng-repeat="notification in notifications">{{notification.message}}'+
           '<p>{{notification.type}}</p>'+
@@ -368,7 +368,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       '</ion-list>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm  button-block" ng-click="closeNotificationsModal()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button class="button button-calm  button-block" ng-click="deleteNotifications()">LIMPIAR NOTIFICACIONES</button>'+
+        '<button class="button button-calm  button-block" ng-click="deleteNotifications()">{{ \'CLEAR_NOTIFICATIONS\' | translate }}</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -511,6 +511,18 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       })
     }
   });
+
+  $translate(['CLASS_CLOSED', 'DATA_CHANGED', 'EMAIL_CHANGED', 'NOT_ENOUGH_POINTS', 'NOTIFICATION_OF_STUDENT', 'NOTIFICATION_REWARD_OBTAINED', 'NOTIFICATION_REWARD_SPENT', 'PASSWORD_CHANGED', 'REWARD']).then(function(translations) {
+    $scope.classroomClosedAlert = translations.CLASS_CLOSED;
+    $scope.dataChangedAlert = translations.DATA_CHANGED;
+    $scope.emailChangedAlert = translations.EMAIL_CHANGED;
+    $scope.notEnoughPointsAlert = translations.NOT_ENOUGH_POINTS;
+    $scope.notificationOfStudent = translations.NOTIFICATION_OF_STUDENT;
+    $scope.notificationRewardObtained = translations.NOTIFICATION_REWARD_OBTAINED;
+    $scope.notificationRewardSpent = translations.NOTIFICATION_REWARD_SPENT;
+    $scope.passwordChangedAlert = translations.PASSWORD_CHANGED;
+    $scope.rewardNotificationType = translations.REWARD;
+  });
   
   var itemModal;
   var sessionUser
@@ -565,13 +577,13 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       });
     }
     $scope.settingsForm();
-    alert('DATOS CAMBIADOS');
+    alert($scope.dataChangedAlert);
   }
 
   $scope.updateStudentPassword = function(newPassword) {
     sessionUser.updatePassword(newPassword).then(function() {
       $scope.settingsForm();
-      alert('CONTRASEÑA CAMBIADA');
+      alert($scope.passwordChangedAlert);
     });
   }
 
@@ -580,7 +592,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       var studentEmailRef = firebase.database().ref('students/' + sessionUser.uid + '/email');
       studentEmailRef.set(email);
       $scope.settingsForm();
-      alert('EMAIL CAMBIADO');
+      alert($scope.emailChangedAlert);
     });
   }
 
@@ -653,7 +665,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
           var classToEditRef = firebase.database().ref('classrooms/' + classToAdd.id + '/students/' + $scope.student.$id);
           classToEditRef.set(true);
         } else {
-          alert('LA CLASE SE ENCUENTRA CERRADA');
+          alert($scope.classroomClosedAlert);
         }
       }).then(function() {
         $scope.getClassrooms();
@@ -1049,7 +1061,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
       $scope.getRewards();
     } else {
-      alert('NO TIENES PUNTOS SUFICIENTES PARA COMPRAR ' + reward.name);
+      alert($scope.notEnoughPointsAlert + ' ' + reward.name);
     }
   }
 
@@ -1237,14 +1249,14 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     teacherNotificationsArray.$loaded(function() {
       if (operationType == 'buy') {
         teacherNotificationsArray.$add({
-          'type' : 'RECOMPENSA',
-          'message' : 'EL ALUMNO ' + CryptoJS.AES.decrypt(student.name, student.id).toString(CryptoJS.enc.Utf8) + ' ' + CryptoJS.AES.decrypt(student.surname, student.id).toString(CryptoJS.enc.Utf8) + ' HA OBTENIDO LA RECOMPENSA ' + reward.name,
+          'type' : $scope.rewardNotificationType,
+          'message' : $scope.notificationOfStudent + ' ' + CryptoJS.AES.decrypt(student.name, student.id).toString(CryptoJS.enc.Utf8) + ' ' + CryptoJS.AES.decrypt(student.surname, student.id).toString(CryptoJS.enc.Utf8) + ' ' + $scope.notificationRewardObtained + ' \"' + reward.name + '\"',
           'date' : Date.now(),
         });
       } else if (operationType == 'consume') {
         teacherNotificationsArray.$add({
-          'type' : 'RECOMPENSA',
-          'message' : 'EL ALUMNO ' + CryptoJS.AES.decrypt(student.name, student.id).toString(CryptoJS.enc.Utf8) + ' ' + CryptoJS.AES.decrypt(student.surname, student.id).toString(CryptoJS.enc.Utf8) + ' HA USADO LA RECOMPENSA ' + reward.name + ' x1',
+          'type' : $scope.rewardNotificationType,
+          'message' : $scope.notificationOfStudent + ' ' + CryptoJS.AES.decrypt(student.name, student.id).toString(CryptoJS.enc.Utf8) + ' ' + CryptoJS.AES.decrypt(student.surname, student.id).toString(CryptoJS.enc.Utf8) + ' ' + $scope.notificationRewardSpent + ' \"' + reward.name + '\" x1',
           'date' : Date.now(),
         });
       }
@@ -1300,5 +1312,17 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     //dates must be equal
     return 0;
   }
+
+  $rootScope.$on('$translateChangeSuccess', function () {
+    $scope.classroomClosedAlert = $translate.instant('CLASS_CLOSED');
+    $scope.dataChangedAlert = $translate.instant('DATA_CHANGED');
+    $scope.emailChangedAlert = $translate.instant('EMAIL_CHANGED');
+    $scope.notEnoughPointsAlert = $translate.instant('NOT_ENOUGH_POINTS');
+    $scope.notificationOfStudent = $translate.instant('NOTIFICATION_OF_STUDENT');
+    $scope.notificationRewardObtained = $translate.instant('NOTIFICATION_REWARD_OBTAINED');
+    $scope.notificationRewardSpent = $translate.instant('NOTIFICATION_REWARD_SPENT');
+    $scope.passwordChangedAlert = $translate.instant('PASSWORD_CHANGED');
+    $scope.rewardNotificationType = $translate.instant('REWARD');
+  });
   
 }])
