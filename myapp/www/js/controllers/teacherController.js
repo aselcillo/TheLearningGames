@@ -148,6 +148,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         { text: 'TOMAR ASISTENCIA' },
         { text: 'EVALUAR ESTUDIANTE(S)' },
         { text: 'ENVIAR MENSAJE' },
+        { text: 'ALUMNO ALEATORIO' },
       ],
       destructiveText: 'BORRAR ESTUDIANTE(S)',
       cancelText: 'CANCELAR',
@@ -165,6 +166,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           $scope.showSelectStudentsModal();
         } else if (index === 2) {
           //SEND MESSAGE ACTION
+          $scope.showInputMessage = true;
+          $scope.showSelectStudentsModal();
+        } else if (index === 3) {
+          //RANDOM STUDENT
+          $scope.getRandomStudent();
         }
         return true;
       },
@@ -185,6 +191,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       buttons: [
         { text: 'EVALUAR EQUIPO(S)' },
         { text: 'ENVIAR MENSAJE' },
+        { text: 'EQUIPO ALEATORIO' },
       ],
       destructiveText: 'BORRAR EQUIPO(S)',
       cancelText: 'CANCELAR',
@@ -198,6 +205,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           $scope.showSelectTeamsModal();
         } else if (index === 1) {
           //SEND MESSAGE ACTION
+          $scope.showInputMessage = true;
+          $scope.showSelectTeamsModal();
+        } else if (index === 2) {
+          //RANDOM TEAM
+          $scope.getRandomTeam();
         }
         return true;
       },
@@ -537,6 +549,15 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.selectStudentsModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3 id="attendance-heading3" class="attendance-hdg3">{{classroomName}}</h3>'+
+      '<div ng-show="showInputMessage">'+
+        '<h3>ENVIAR MENSAJE</h3>'+
+        '<label class="item item-input" id="signUp-input3">'+
+          '<span class="inputLabelProfile">'+
+            '<i class="icon ion-paper-airplane"></i>&nbsp;&nbsp;MENSAJE:'+
+            '<input id="inputMessage" type="text" ng-model="modelSelectStudents.message">'+
+          '</span>'+
+        '</label>'+
+      '</div>'+
       '<h3 id="attendance-heading3" class="attendance-hdg3">SELECCIONA ESTUDIANTES</h3>'+
       '<ion-list id="attendance-list7" class="list-elements">'+
         '<ion-checkbox id="attendance-checkbox2" name="checkStudent" class="list-student" ng-repeat="studentForSelection in studentsForSelection" ng-click="changeSelectedStudent(studentForSelection)" ng-checked="studentForSelection.selected">'+
@@ -546,7 +567,8 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       '</ion-list>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm  button-block" ng-click="closeSelectStudentsModal()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button id="attendance-button123" ng-click="selectStudents()" id="attendance-btn123" class="button button-calm  button-block">SELECCIONAR ALUMNOS</button>'+
+        '<button ng-hide="showInputMessage" id="attendance-button123" ng-click="selectStudents()" id="attendance-btn123" class="button button-calm  button-block">SELECCIONAR ALUMNOS</button>'+
+        '<button ng-show="showInputMessage" id="attendance-button124" ng-click="selectStudentsForMessage(modelSelectStudents.message)" id="attendance-btn123" class="button button-calm  button-block">ENVIAR MENSAJE</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -567,6 +589,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   $scope.selectAchievementsModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
+    '<h3 id="attendance-heading3" class="attendance-hdg3">{{classroomName}}</h3>'+
       '<h3 id="attendance-heading3" class="attendance-hdg3">SELECCIONA LOGROS</h3>'+
       '<ion-list id="attendance-list7" class="list-elements">'+
         '<ion-checkbox id="attendance-checkbox2" name="checkAchievement" ng-repeat="achievementForSelection in achievementsForSelection" ng-click="changeSelectedAchievement(achievementForSelection)" ng-checked="achievementForSelection.selected">{{achievementForSelection.name}}</ion-checkbox>'+
@@ -580,19 +603,31 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   $scope.selectTeamsModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
+    '<h3 id="attendance-heading3" class="attendance-hdg3">{{classroomName}}</h3>'+
+      '<div ng-show="showInputMessage">'+
+        '<h3>ENVIAR MENSAJE</h3>'+
+        '<label class="item item-input" id="signUp-input3">'+
+          '<span class="inputLabelProfile">'+
+            '<i class="icon ion-paper-airplane"></i>&nbsp;&nbsp;MENSAJE:'+
+            '<input id="inputMessage" type="text" ng-model="modelSelectTeams.message">'+
+          '</span>'+
+        '</label>'+
+      '</div>'+
       '<h3 id="attendance-heading3" class="attendance-hdg3">SELECCIONA EQUIPOS</h3>'+
       '<ion-list id="attendance-list7" class="list-elements">'+
         '<ion-checkbox id="attendance-checkbox2" name="checkTeam" ng-repeat="teamForSelection in teamsForSelection" ng-click="changeSelectedTeam(teamForSelection)" ng-checked="teamForSelection.selected">{{teamForSelection.name}}</ion-checkbox>'+
       '</ion-list>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm  button-block" ng-click="closeSelectTeamsModal()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button id="attendance-button123" ng-click="selectTeams()" id="attendance-btn123" class="button button-calm  button-block">SELECCIONAR EQUIPOS</button>'+
+        '<button ng-hide="showInputMessage" id="attendance-button123" ng-click="selectTeams()" id="attendance-btn123" class="button button-calm  button-block">SELECCIONAR EQUIPOS</button>'+
+        '<button ng-show="showInputMessage" id="attendance-button124" ng-click="sendMessageTeams(modelSelectTeams.message)" id="attendance-btn123" class="button button-calm  button-block">ENVIAR MENSAJE</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
 
   $scope.selectRewardsModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
+    '<h3 id="attendance-heading3" class="attendance-hdg3">{{classroomName}}</h3>'+
       '<h3 id="attendance-heading3" class="attendance-hdg3">SELECCIONA RECOMPENSAS</h3>'+
       '<ion-list id="attendance-list7" class="list-elements">'+
         '<ion-checkbox id="attendance-checkbox2" name="checkReward" ng-repeat="rewardForSelection in rewardsForSelection" ng-click="changeSelectedReward(rewardForSelection)" ng-checked="rewardForSelection.selected">{{rewardForSelection.name}}</ion-checkbox>'+
@@ -606,6 +641,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   $scope.selectMissionsModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
+    '<h3 id="attendance-heading3" class="attendance-hdg3">{{classroomName}}</h3>'+
       '<h3 id="attendance-heading3" class="attendance-hdg3">SELECCIONA MISIONES</h3>'+
       '<ion-list id="attendance-list7" class="list-elements">'+
         '<ion-checkbox id="attendance-checkbox2" name="checkMission" ng-repeat="missionForSelection in missionsForSelection" ng-click="changeSelectedMission(missionForSelection)" ng-checked="missionForSelection.selected">{{missionForSelection.name}}</ion-checkbox>'+
@@ -1231,11 +1267,13 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     animation: 'slide-in-up'
   })
   $scope.showSelectStudentsModal = function() {
+    $scope.modelSelectStudents = {};
     $scope.getStudentsForSelection();
     $scope.selectStudentsModal.show();
   }
   $scope.closeSelectStudentsModal = function() {
     $scope.selectStudentsModal.hide();
+    $scope.showInputMessage = false;
   }
 
                                         /* SELECT ITEMS MODAL */
@@ -1294,11 +1332,13 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     animation: 'slide-in-up'
   })
   $scope.showSelectTeamsModal = function() {
+    $scope.modelSelectTeams = {};
     $scope.getTeamsForSelection();
     $scope.selectTeamsModal.show();
   } 
   $scope.closeSelectTeamsModal = function() {
     $scope.selectTeamsModal.hide();
+    $scope.showInputMessage = false;
   }
 
                                         /* SELECT REWARDS MODAL */
@@ -2273,10 +2313,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             } else {
               $scope.students[index] = student
             }
+            $scope.students.sort(sortBySurname);
             if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
               $scope.$apply();
             }
-            $scope.students.sort(sortBySurname);
           }
         });
         $scope.getStudentsForSelection();
@@ -2533,6 +2573,27 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       $scope.showSelectRewardsModal();
     }
   }
+
+  $scope.selectStudentsForMessage = function(message) {
+    $scope.closeSelectStudentsModal();
+    for (var element in $scope.studentsForSelection) {
+      if ($scope.studentsForSelection[element].selected === true) {
+        $scope.sendMessageStudents($scope.studentsForSelection[element].id, message);
+      }
+    }
+  }
+
+  $scope.sendMessageStudents = function(studentId, message) {
+    var studentNotificationsRef = firebase.database().ref('students/' + studentId + '/notifications/' + $scope.classroom.id);
+    var studentNoticationsArray = $firebaseArray(studentNotificationsRef);
+    studentNoticationsArray.$loaded(function() {
+      studentNoticationsArray.$add({
+        'type' : 'MENSAJE DE PROFESOR',
+        'message' : message,
+        'date' : Date.now(),
+      });
+    });
+  }
   
   $scope.changeSelectedStudent = function(student) {
     if (student.selected === false) {
@@ -2553,7 +2614,19 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.editStudentsAttendance = function(student) {
     var studentAttendanceRef = firebase.database().ref('students/' + student.id + '/classrooms/' + $scope.classroom.id + '/inClass');
     studentAttendanceRef.set(student.classrooms[$scope.classroom.id].inClass);
-  }  
+  }
+
+  $scope.getRandomStudent = function() {
+    var randomStudent = Math.trunc(Math.random()*$scope.students.length);
+    
+    var alertPopup = $ionicPopup.alert({
+      title: 'ALUMNO ALEATORIO',
+      template: $scope.students[randomStudent].name + ' ' + $scope.students[randomStudent].surname,
+    });
+
+    alertPopup.then(function(res) {
+    });
+  }
   
   
 
@@ -3485,6 +3558,21 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
 
+  $scope.sendMessageTeams = function(message) {
+    $scope.closeSelectTeamsModal();
+    for (var teamForSelection in $scope.teamsForSelection) {
+      if ($scope.teamsForSelection[teamForSelection].selected === true) {
+        for (var team in $scope.teams) {
+          if ($scope.teams[team].id == $scope.teamsForSelection[teamForSelection].id) {
+            for (var student in $scope.teams[team].students) {
+              $scope.sendMessageStudents(student, message);
+            }
+          }
+        }
+      }
+    }
+  }
+
   $scope.changeSelectedStudentForTeam = function(student) {
     if (student.selected === false) {
       student.selected = true;
@@ -3508,6 +3596,18 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     } else {
       team.selected = false;
     }
+  }
+
+  $scope.getRandomTeam = function() {
+    var randomTeam = Math.trunc(Math.random()*$scope.teams.length);
+    
+    var alertPopup = $ionicPopup.alert({
+      title: 'EQUIPO ALEATORIO',
+      template: $scope.teams[randomTeam].name,
+    });
+
+    alertPopup.then(function(res) {
+    });
   }
 
   
@@ -4204,7 +4304,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           'date' : Date.now(),
         });
       }
-    });  
+    });
   }
 
   $scope.createNotificationAchievements = function(userId, userType, achievement, operationType, levelAchievementReached, studentToEvaluate) {
