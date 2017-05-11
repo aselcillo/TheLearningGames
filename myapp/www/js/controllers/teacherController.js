@@ -558,7 +558,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           '</span>'+
         '</label>'+
       '</div>'+
-      '<h3 id="attendance-heading3" class="attendance-hdg3">SELECCIONA ESTUDIANTES</h3>'+
+      '<h3 id="attendance-heading3" class="attendance-hdg3">{{ \'MESSAGE\' | translate }}</h3>'+
       '<ion-list id="attendance-list7" class="list-elements">'+
         '<ion-checkbox id="attendance-checkbox2" name="checkStudent" class="list-student" ng-repeat="studentForSelection in studentsForSelection" ng-click="changeSelectedStudent(studentForSelection)" ng-checked="studentForSelection.selected">'+
           '<p>{{studentForSelection.name}}</p>'+
@@ -576,13 +576,13 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.selectItemsModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3 id="attendance-heading3" class="attendance-hdg3">{{classroomName}}</h3>'+
-      '<h3 id="attendance-heading3" class="attendance-hdg3">SELECCIONA ITEMS</h3>'+
+      '<h3 id="attendance-heading3" class="attendance-hdg3">{{ \'SELECT_ITEMS\' | translate }}</h3>'+
       '<ion-list id="attendance-list7" class="list-elements">'+
         '<ion-checkbox id="attendance-checkbox2" name="checkItem" ng-repeat="itemForSelection in itemsForSelection" ng-click="changeSelectedItem(itemForSelection)" ng-checked="itemForSelection.selected">{{itemForSelection.name}} {{itemForSelection.score}}</ion-checkbox>'+
       '</ion-list>'+
       '<div class="button-bar action_buttons">'+
       '<button class="button button-calm  button-block" ng-click="closeSelectItemsModal()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button id="attendance-button123" ng-click="selectItems()" id="attendance-btn123" class="button button-calm  button-block">SELECCIONAR ITEMS</button>'+
+        '<button id="attendance-button123" ng-click="selectItems()" id="attendance-btn123" class="button button-calm  button-block"{{ \'SELECT\' | translate }}</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -590,13 +590,13 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.selectAchievementsModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
     '<h3 id="attendance-heading3" class="attendance-hdg3">{{classroomName}}</h3>'+
-      '<h3 id="attendance-heading3" class="attendance-hdg3">SELECCIONA LOGROS</h3>'+
+      '<h3 id="attendance-heading3" class="attendance-hdg3">{{ \'SELECT_ACHIEVEMENTS\' | translate }}</h3>'+
       '<ion-list id="attendance-list7" class="list-elements">'+
         '<ion-checkbox id="attendance-checkbox2" name="checkAchievement" ng-repeat="achievementForSelection in achievementsForSelection" ng-click="changeSelectedAchievement(achievementForSelection)" ng-checked="achievementForSelection.selected">{{achievementForSelection.name}}</ion-checkbox>'+
       '</ion-list>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm  button-block" ng-click="closeSelectAchievementsModal()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button id="attendance-button123" ng-click="selectAchievements()" id="attendance-btn123" class="button button-calm  button-block">SELECCIONAR LOGROS</button>'+
+        '<button id="attendance-button123" ng-click="selectAchievements()" id="attendance-btn123" class="button button-calm  button-block">{{ \'SELECT\' | translate }}</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -605,22 +605,22 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
     '<h3 id="attendance-heading3" class="attendance-hdg3">{{classroomName}}</h3>'+
       '<div ng-show="showInputMessage">'+
-        '<h3>ENVIAR MENSAJE</h3>'+
+        '<h3>{{ \'SEND_MESSAGE\' | translate }}</h3>'+
         '<label class="item item-input" id="signUp-input3">'+
           '<span class="inputLabelProfile">'+
-            '<i class="icon ion-paper-airplane"></i>&nbsp;&nbsp;MENSAJE:'+
+            '<i class="icon ion-paper-airplane"></i>&nbsp;&nbsp;{{ \'MESSAGE\' | translate }}:'+
             '<input id="inputMessage" type="text" ng-model="modelSelectTeams.message">'+
           '</span>'+
         '</label>'+
       '</div>'+
-      '<h3 id="attendance-heading3" class="attendance-hdg3">SELECCIONA EQUIPOS</h3>'+
+      '<h3 id="attendance-heading3" class="attendance-hdg3">{{ \'SELECT_TEAMS\' | translate }}</h3>'+
       '<ion-list id="attendance-list7" class="list-elements">'+
         '<ion-checkbox id="attendance-checkbox2" name="checkTeam" ng-repeat="teamForSelection in teamsForSelection" ng-click="changeSelectedTeam(teamForSelection)" ng-checked="teamForSelection.selected">{{teamForSelection.name}}</ion-checkbox>'+
       '</ion-list>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm  button-block" ng-click="closeSelectTeamsModal()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button ng-hide="showInputMessage" id="attendance-button123" ng-click="selectTeams()" id="attendance-btn123" class="button button-calm  button-block">SELECCIONAR EQUIPOS</button>'+
-        '<button ng-show="showInputMessage" id="attendance-button124" ng-click="sendMessageTeams(modelSelectTeams.message)" id="attendance-btn123" class="button button-calm  button-block">ENVIAR MENSAJE</button>'+
+        '<button ng-hide="showInputMessage" id="attendance-button123" ng-click="selectTeams()" id="attendance-btn123" class="button button-calm  button-block">{{ \'SELECT\' | translate }}</button>'+
+        '<button ng-show="showInputMessage" id="attendance-button124" ng-click="sendMessageTeams(modelSelectTeams.message)" id="attendance-btn123" class="button button-calm  button-block">{{ \'SEND_MESSAGE\' | translate }}</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -628,13 +628,13 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.selectRewardsModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
     '<h3 id="attendance-heading3" class="attendance-hdg3">{{classroomName}}</h3>'+
-      '<h3 id="attendance-heading3" class="attendance-hdg3">SELECCIONA RECOMPENSAS</h3>'+
+      '<h3 id="attendance-heading3" class="attendance-hdg3">{{ \'SELECT_REWARDS\' | translate }}</h3>'+
       '<ion-list id="attendance-list7" class="list-elements">'+
         '<ion-checkbox id="attendance-checkbox2" name="checkReward" ng-repeat="rewardForSelection in rewardsForSelection" ng-click="changeSelectedReward(rewardForSelection)" ng-checked="rewardForSelection.selected">{{rewardForSelection.name}}</ion-checkbox>'+
       '</ion-list>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm  button-block" ng-click="closeSelectRewardsModal()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button id="attendance-button123" ng-click="selectRewards()" id="attendance-btn123" class="button button-calm  button-block">SELECCIONAR RECOMPENSAS</button>'+
+        '<button id="attendance-button123" ng-click="selectRewards()" id="attendance-btn123" class="button button-calm  button-block">{{ \'SELECT\' | translate }}</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -642,13 +642,13 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.selectMissionsModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
     '<h3 id="attendance-heading3" class="attendance-hdg3">{{classroomName}}</h3>'+
-      '<h3 id="attendance-heading3" class="attendance-hdg3">SELECCIONA MISIONES</h3>'+
+      '<h3 id="attendance-heading3" class="attendance-hdg3">{{ \'SELECT_MISIONS\' | translate }}</h3>'+
       '<ion-list id="attendance-list7" class="list-elements">'+
         '<ion-checkbox id="attendance-checkbox2" name="checkMission" ng-repeat="missionForSelection in missionsForSelection" ng-click="changeSelectedMission(missionForSelection)" ng-checked="missionForSelection.selected">{{missionForSelection.name}}</ion-checkbox>'+
       '</ion-list>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm  button-block" ng-click="closeSelectMissionsModal()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button id="attendance-button123" ng-click="selectMissions()" id="attendance-btn123" class="button button-calm  button-block">SELECCIONAR MISIONES</button>'+
+        '<button id="attendance-button123" ng-click="selectMissions()" id="attendance-btn123" class="button button-calm  button-block">{{ \'SELECT\' | translate }}</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -683,7 +683,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.configureLevelsModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3 id="attendance-heading3" class="attendance-hdg3">{{classroomName}}</h3>'+
-      '<h3 id="attendance-heading3" class="attendance-hdg3">CONFIGURACION DE NIVELES</h3>'+
+      '<h3 id="attendance-heading3" class="attendance-hdg3">{{ \'LEVELS_CONFIGURATION\' | translate }}</h3>'+
       '<ion-list id="attendance-list7" class="list-elements">'+
         '<ion-item id="attendance-checkbox2" name="checkItem" ng-repeat="level in levels" ng-click="setLevel(level)">{{level.level}}. {{level.title}}'+
           '<ion-option-button class="button-assertive" ng-click="deleteLevel(level)">{{ \'DELETE\' | translate }}</ion-option-button>'+
@@ -691,59 +691,59 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       '</ion-list>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm button-block" ng-click="closeConfigureLevelsModal()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button id="attendance-button123" id="attendance-btn123" class="button button-calm button-block" ng-click="showNewLevelModal()">AÑADIR NIVELES</button>'+
+        '<button id="attendance-button123" id="attendance-btn123" class="button button-calm button-block" ng-click="showNewLevelModal()">{{ \'ADD_LEVEL\' | translate }}</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
 
   $scope.newLevelModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
-     '<h3>NUEVO NIVEL</h3>'+
+     '<h3>{{ \'NEW_LEVEL\' | translate }}</h3>'+
       '<form id="newItemForm" class="list list-student fullScreen">'+
         '<ion-list>'+
           '<label class="item item-input list-elements">'+
-            '<span class="input-label">TITULO</span>'+
-            '<input type="text" placeholder="TITULO" ng-model="modelNewLevel.title">'+
+            '<span class="input-label">{{ \'LEVEL_TITLE\' | translate }}</span>'+
+            '<input type="text" placeholder="{{ \'LEVEL_TITLE\' | translate }}" ng-model="modelNewLevel.title">'+
           '</label>'+
           '<label class="item item-input list-elements">'+
-            '<span class="input-label">NIVEL</span>'+
-            '<input type="number" placeholder="NIVEL" ng-model="modelNewLevel.level">'+
+            '<span class="input-label">{{ \'LEVEL_LEVEL\' | translate }}</span>'+
+            '<input type="number" placeholder="{{ \'LEVEL_LEVEL\' | translate }}" ng-model="modelNewLevel.level">'+
           '</label>'+
           '<label class="item item-input list-elements">'+
-            '<span class="input-label">PUNTOS REQUERIDOS</span>'+
-            '<input type="number" placeholder="PUNTOS REQUERIDOS" ng-model="modelNewLevel.requiredPoints">'+
+            '<span class="input-label">{{ \'LEVEL_REQUIRED_POINTS\' | translate }}</span>'+
+            '<input type="number" placeholder="{{ \'LEVEL_REQUIRED_POINTS\' | translate }}" ng-model="modelNewLevel.requiredPoints">'+
           '</label>'+
         '</ion-list>'+
       '</form>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm  button-block" ng-click="closeNewLevelModal()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button class="button button-calm  button-block" ng-click="createLevel(modelNewLevel.title, modelNewLevel.level, modelNewLevel.requiredPoints)" ng-disabled="!modelNewLevel.title || !modelNewLevel.level || !modelNewLevel.requiredPoints">AÑADIR NIVEL</button>'+
+        '<button class="button button-calm  button-block" ng-click="createLevel(modelNewLevel.title, modelNewLevel.level, modelNewLevel.requiredPoints)" ng-disabled="!modelNewLevel.title || !modelNewLevel.level || !modelNewLevel.requiredPoints">{{ \'ADD_LEVEL\' | translate }}</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
 
   $scope.editLevelModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
-     '<h3>EDITAR NIVEL</h3>'+
+     '<h3>{{ \'EDIT_LEVEL\' | translate }}</h3>'+
       '<form id="newItemForm" class="list list-student fullScreen">'+
         '<ion-list>'+
           '<label class="item item-input list-elements">'+
-            '<span class="input-label">TITULO</span>'+
+            '<span class="input-label">{{ \'LEVEL_TITLE\' | translate }}</span>'+
             '<input type="text" placeholder="{{level.title}}" ng-model="modelEditLevel.title">'+
           '</label>'+
           '<label class="item item-input list-elements">'+
-            '<span class="input-label">NIVEL</span>'+
+            '<span class="input-label">{{ \'LEVEL_LEVEL\' | translate }}</span>'+
             '<input type="number" placeholder="{{level.level}}" ng-model="modelEditLevel.level">'+
           '</label>'+
           '<label class="item item-input list-elements">'+
-            '<span class="input-label">PUNTOS REQUERIDOS</span>'+
+            '<span class="input-label">{{ \'LEVEL_REQUIRED_POINTS\' | translate }}</span>'+
             '<input type="number" placeholder="{{level.requiredPoints}}" ng-model="modelEditLevel.requiredPoints">'+
           '</label>'+
         '</ion-list>'+
       '</form>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm  button-block" ng-click="closeEditLevelModal()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button class="button button-calm  button-block" ng-click="editLevel(modelEditLevel.title, modelEditLevel.level, modelEditLevel.requiredPoints)" ng-disabled="!modelEditLevel.title && !modelEditLevel.level && !modelEditLevel.requiredPoints">EDITAR NIVEL</button>'+
+        '<button class="button button-calm  button-block" ng-click="editLevel(modelEditLevel.title, modelEditLevel.level, modelEditLevel.requiredPoints)" ng-disabled="!modelEditLevel.title && !modelEditLevel.level && !modelEditLevel.requiredPoints">{{ \'EDIT_LEVEL\' | translate }}</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
