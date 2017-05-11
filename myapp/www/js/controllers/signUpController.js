@@ -138,9 +138,5 @@ function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading, $trans
     $scope.schholNotEstablished = $translate.instant('SCHOOL_NOT_ESTABLISHED');
     $scope.weakPasswordAlert = $translate.instant('ERROR_WEAK_PASSWORD');
   });
- 
-  $scope.changeLanguage = function (langKey) {
-    $translate.use(langKey);
-  };
 
 }])

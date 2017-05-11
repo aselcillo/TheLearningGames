@@ -1,8 +1,8 @@
 angular.module('app.teacherController', ['pascalprecht.translate'])
 
-.controller('teacherHomeCtrl', ['$scope', '$stateParams', '$ionicModal', '$http', '$state', '$ionicPopover', '$ionicActionSheet', '$firebaseObject', '$firebaseArray', '$ionicPopup', 'sharedData',
+.controller('teacherHomeCtrl', ['$scope', '$stateParams', '$ionicModal', '$http', '$state', '$ionicPopover', '$ionicActionSheet', '$firebaseObject', '$firebaseArray', '$ionicPopup', 'sharedData', '$translate', '$rootScope',
 
-function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ionicActionSheet, $firebaseObject, $firebaseArray, $ionicPopup, sharedData) {
+function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ionicActionSheet, $firebaseObject, $firebaseArray, $ionicPopup, sharedData, $translate, $rootScope) {
 
   /*
     *************************************DECLARE FUNCTIONS FOR NG-SHOW********************************
@@ -102,14 +102,14 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   $scope.showActionsheetTeacherHome = function() {
     $ionicActionSheet.show({
-      titleText: 'ACCIONES TEACHERHOME',
+      titleText: $scope.actionTeacherHomePopover,
       buttons: [
-        { text: 'ARCHIVAR CLASES' },
-        { text: 'DESARCHIVAR CLASES' },
-        { text: 'COPIA DE SEGURIDAD' },
+        { text: $scope.archiveClassroomsActionSheetOption },
+        { text: $scope.unarchiveClassroomsActionSheetOption },
+        { text: $scope.backupActionSheetOption },
       ],
-      destructiveText: 'BORRAR CLASE(S)',
-      cancelText: 'CANCELAR',
+      destructiveText: $scope.deleteClassroomsActionSheetOption,
+      cancelText: $scope.cancelText,
       cancel: function() {
         //CANCEL ACTION
       },
@@ -143,15 +143,15 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   $scope.showActionsheetClassStudents = function() {
     $ionicActionSheet.show({
-      titleText: 'ACCIONES CLASS STUDENTS',
+      titleText: $scope.actionClassroomStudentsPopover,
       buttons: [
-        { text: 'TOMAR ASISTENCIA' },
-        { text: 'EVALUAR ESTUDIANTE(S)' },
-        { text: 'ENVIAR MENSAJE' },
-        { text: 'ALUMNO ALEATORIO' },
+        { text: $scope.takeAttendanceActionSheetOption },
+        { text: $scope.evaluateStudentsActionSheetOption },
+        { text: $scope.sendMessageActionSheetOption },
+        { text: $scope.randomStudentActionSheetOption },
       ],
-      destructiveText: 'BORRAR ESTUDIANTE(S)',
-      cancelText: 'CANCELAR',
+      destructiveText: $scope.deleteStudentsActionSheetOption,
+      cancelText: $scope.cancelText,
       cancel: function() {
         //CANCEL ACTION
       },
@@ -187,14 +187,14 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   $scope.showActionsheetClassTeams = function() {
     $ionicActionSheet.show({
-      titleText: 'ACCIONES CLASS TEAMS',
+      titleText: $scope.actionClassroomStudentsActionSheet,
       buttons: [
-        { text: 'EVALUAR EQUIPO(S)' },
-        { text: 'ENVIAR MENSAJE' },
-        { text: 'EQUIPO ALEATORIO' },
+        { text: $scope.evaluateTeamsActionSheetoption },
+        { text: $scope.sendMessageActionSheetOption },
+        { text: $scope.randomTeamActionSheetOption },
       ],
-      destructiveText: 'BORRAR EQUIPO(S)',
-      cancelText: 'CANCELAR',
+      destructiveText: $scope.deleteTeamsActionSheetOption,
+      cancelText: $scope.cancelText,
       cancel: function() {
         //CANCEL ACTION
       },
@@ -226,9 +226,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   $scope.showActionsheetItems = function() {
     $ionicActionSheet.show({
-      titleText: 'ACCIONES ITEMS',
-      destructiveText: 'BORRAR ITEM(S)',
-      cancelText: 'CANCELAR',
+      titleText: $scope.actionItemsActionSheet,
+      destructiveText: $scope.deleteItemsActionSheetOption,
+      cancelText: $scope.cancelText,
       cancel: function() {
         //CANCEL ACTION
       },
@@ -245,9 +245,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   $scope.showActionsheetAchievements = function() {
     $ionicActionSheet.show({
-      titleText: 'ACCIONES LOGROS',
-      destructiveText: 'BORRAR LOGRO(S)',
-      cancelText: 'CANCELAR',
+      titleText: $scope.actionAchievementsActionSheet,
+      destructiveText: $scope.deleteAchievementsActionSheetOption,
+      cancelText: $scope.cancelText,
       cancel: function() {
         //CANCEL ACTION
       },
@@ -264,9 +264,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   $scope.showActionsheetRewards = function() {
     $ionicActionSheet.show({
-      titleText: 'ACCIONES RECOMPENSAS',
-      destructiveText: 'BORRAR RECOMPENSA(S)',
-      cancelText: 'CANCELAR',
+      titleText: $scope.actionRewardsActionSheet,
+      destructiveText: $scope.deleteRewardsActionSheetOption,
+      cancelText: $scope.cancelText,
       cancel: function() {
         //CANCEL ACTION
       },
@@ -283,9 +283,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   $scope.showActionsheetMissions = function() {
     $ionicActionSheet.show({
-      titleText: 'ACCIONES MISIONES',
-      destructiveText: 'BORRAR MISION(S)',
-      cancelText: 'CANCELAR',
+      titleText: $scope.actionMissionsActionSheet,
+      destructiveText: $scope.deleteMissionsActionSheetOption,
+      cancelText: $scope.cancelText,
       cancel: function() {
         //CANCEL ACTION
       },
@@ -318,70 +318,70 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   $scope.templateTeacherHomePopover = '<ion-popover-view>'+
     '<ion-list class="list-elements">'+
-      '<ion-item class="itemPopover" ng-click="createDemoClassroom()">CREAR CLASE DEMO</ion-item>'+
-      '<ion-item class="itemPopover">IMPORTAR</ion-item>'+
-      '<ion-item class="itemPopover">EXPORTAR</ion-item>'+
-      '<ion-item class="itemPopover" ng-hide="archivedClassroomsToShow" ng-click="showArchivedClassrooms(true)">VER ARCHIVADAS</ion-item>'+
-      '<ion-item class="itemPopover" ng-show="archivedClassroomsToShow" ng-click="showArchivedClassrooms(false)">OCULTAR ARCHIVADAS</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="createDemoClassroom()">{{ \'CREATE_DEMO_CLASS\' | translate}}</ion-item>'+
+      '<ion-item class="itemPopover">{{ \'IMPORT\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover">{{ \'EXPORT\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-hide="archivedClassroomsToShow" ng-click="showArchivedClassrooms(true)">{{ \'SEE_ARCHIVED_CLASSES\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-show="archivedClassroomsToShow" ng-click="showArchivedClassrooms(false)">{{ \'HIDE_ARCHIVED_CLASSES\' | translate }}</ion-item>'+
       '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverTeacherHome()">{{ \'SETTINGS\' | translate }}</ion-item>'+
     '</ion-list>'+
   '</ion-popover-view>';
 
   $scope.templateClassStudentsPopover = '<ion-popover-view>'+
     '<ion-list class="list-elements">'+
-      '<ion-item class="itemPopover" ng-click="closePopoverClassStudents()">IMPORTAR</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="closePopoverClassStudents()">EXPORTAR</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="showConfigureLevelsModal()">CONFIGURAR NIVELES</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverClassStudents()">{{ \'IMPORT\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverClassStudents()">{{ \'EXPORT\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="showConfigureLevelsModal()">{{ \'CONFIGURE_LEVELS\' | translate }}</ion-item>'+
       '<ion-item class="itemPopover item item-input item-select">'+
-        '<div class="input-label">VISTA DE ALUMNOS'+
+        '<div class="input-label">{{ \'STUDENTS_VIEW\' | translate }}'+
         '</div>'+
         '<select>'+
-          '<option selected>AVATAR</option>'+
-          '<option>IMAGEN</option>'+
+          '<option selected>{{ \'AVATAR\' | translate }}</option>'+
+          '<option>{{ \'IMAGE\' | translate }}</option>'+
         '</select>'+
       '</ion-item>'+
-      '<ion-toggle class="itemPopover" ng-model="checkboxNotifications" ng-checked="classroom.notifications" ng-click="setNotifications(checkboxNotifications)" toggle-class="toggle-calm">NOTIFICACIONES</ion-toggle>'+
-      '<ion-toggle class="itemPopover" ng-model="checkboxOpening" ng-checked="classroom.open" ng-click="setOpening(checkboxOpening)" toggle-class="toggle-calm">APERTURA</ion-toggle>'+
-      '<ion-item class="itemPopover" ng-click="showHashcodePopup()">VER HASHCODE DE LA CLASE</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="rulesForm(); closePopoverClassStudents()">VER REGLAS</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverClassStudents()">VER TIENDA DE CLASE</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverClassStudents()">VER MISIONES</ion-item>'+
+      '<ion-toggle class="itemPopover" ng-model="checkboxNotifications" ng-checked="classroom.notifications" ng-click="setNotifications(checkboxNotifications)" toggle-class="toggle-calm">{{ \'NOTIFICATIONS\' | translate }}</ion-toggle>'+
+      '<ion-toggle class="itemPopover" ng-model="checkboxOpening" ng-checked="classroom.open" ng-click="setOpening(checkboxOpening)" toggle-class="toggle-calm">{{ \'OPENING\' | translate }}</ion-toggle>'+
+      '<ion-item class="itemPopover" ng-click="showHashcodePopup()">{{ \'SEE_CLASS_HASHCODE\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="rulesForm(); closePopoverClassStudents()">{{ \'SEE_RULES\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverClassStudents()">{{ \'SEE_CLASS_SHOP\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverClassStudents()">{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
       '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverClassStudents()">{{ \'SETTINGS\' | translate }}</ion-item>'+
     '</ion-list>'+
   '</ion-popover-view>';
 
   $scope.templateClassTeamsPopover = '<ion-popover-view>'+
     '<ion-list class="list-elements">'+
-      '<ion-item class="itemPopover" ng-click="closePopoverClassTeams()">IMPORTAR</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="closePopoverClassTeams()">EXPORTAR</ion-item>'+
-      '<ion-toggle class="itemPopover" ng-model="modelcheckboxotifications" ng-checked="classroom.notifications" ng-click="setNotifications(checkboxNotifications)" toggle-class="toggle-calm">NOTIFICACIONES</ion-toggle>'+
-      '<ion-item class="itemPopover" ng-click="rulesForm(); closePopoverClassTeams()">VER REGLAS</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverClassTeams()">VER TIENDA DE CLASE</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverClassTeams()">VER MISIONES</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverClassTeams()">{{ \'IMPORT\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverClassTeams()">{{ \'EXPORT\' | translate }}</ion-item>'+
+      '<ion-toggle class="itemPopover" ng-model="modelcheckboxotifications" ng-checked="classroom.notifications" ng-click="setNotifications(checkboxNotifications)" toggle-class="toggle-calm">{{ \'NOTIFICATIONS\' | translate }}</ion-toggle>'+
+      '<ion-item class="itemPopover" ng-click="rulesForm(); closePopoverClassTeams()">{{ \'SEE_RULES\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverClassTeams()">{{ \'SEE_CLASS_SHOP\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverClassTeams()">{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
       '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverClassTeams()">{{ \'SETTINGS\' | translate }}</ion-item>'+
     '</ion-list>'+
   '</ion-popover-view>';
 
   $scope.templateMissionsPopover = '<ion-popover-view>'+
     '<ion-list class="list-elements">'+
-      '<ion-item class="itemPopover" ng-click="closePopoverMissions()">IMPORTAR</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="closePopoverMissions()">EXPORTAR</ion-item>'+
-      '<ion-item class="itemPopover" ng-hide="finishedMissionsToShow" ng-click="showFinishedMissions(true)">VER FINALIZADAS</ion-item>'+
-      '<ion-item class="itemPopover" ng-show="finishedMissionsToShow" ng-click="showFinishedMissions(false)">OCULTAR FINALIZADAS</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="rulesForm(); closePopoverMissions()">VER REGLAS</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverMissions()">VER TIENDA DE CLASE</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverMissions()">VER MISIONES</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverMissions()">{{ \'IMPORT\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverMissions()">{{ \'EXPORT\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-hide="finishedMissionsToShow" ng-click="showFinishedMissions(true)">{{ \'SEE_MISSIONS_ENDED\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-show="finishedMissionsToShow" ng-click="showFinishedMissions(false)">{{ \'HIDE_MISSIONS_ENDED\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="rulesForm(); closePopoverMissions()">{{ \'SEE_RULES\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverMissions()">{{ \'SEE_CLASS_SHOP\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverMissions()">{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
       '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverMissions()">{{ \'SETTINGS\' | translate }}</ion-item>'+
     '</ion-list>'+
   '</ion-popover-view>';
 
   $scope.templateTeacherDefaultPopover = '<ion-popover-view>'+
     '<ion-list class="list-elements">'+
-      '<ion-item class="itemPopover" ng-click="closePopoverTeacherDefault()">IMPORTAR</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="closePopoverTeacherDefault()">EXPORTAR</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="rulesForm(); closePopoverTeacherDefault()">VER REGLAS</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverTeacherDefault()">VER TIENDA DE CLASE</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverTeacherDefault()">VER MISIONES</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverTeacherDefault()">{{ \'IMPORT\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverTeacherDefault()">{{ \'EXPORT\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="rulesForm(); closePopoverTeacherDefault()">{{ \'SEE_RULES\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverTeacherDefault()">{{ \'SEE_CLASS_SHOP\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverTeacherDefault()">{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
       '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverTeacherDefault()">{{ \'SETTINGS\' | translate }}</ion-item>'+
     '</ion-list>'+
   '</ion-popover-view>';
@@ -535,13 +535,13 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   $scope.selectClassroomsModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
-      '<h3 id="attendance-heading3" class="attendance-hdg3">SELECCIONA CLASES</h3>'+
+      '<h3 id="attendance-heading3" class="attendance-hdg3">{{ \'SELECT_CLASSROOMS\' | translate }}</h3>'+
       '<ion-list id="attendance-list7" class="list-elements">'+
         '<ion-checkbox id="attendance-checkbox2" name="checkClassroom" ng-repeat="classForSelection in classroomsForSelection" ng-click="changeSelectedClassroom(classForSelection)" ng-checked="classForSelection.selected" ng-hide="classForSelection.archived === toShow">{{classForSelection.name}}</ion-checkbox>'+
       '</ion-list>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm  button-block" ng-click="closeSelectClassroomsModal()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button id="attendance-button123" ng-click="selectClassrooms()" id="attendance-btn123" class="button button-calm  button-block">SELECCIONAR CLASES</button>'+
+        '<button id="attendance-button123" ng-click="selectClassrooms()" id="attendance-btn123" class="button button-calm  button-block">{{ \'SELECT\' | translate }}</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -550,10 +550,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3 id="attendance-heading3" class="attendance-hdg3">{{classroomName}}</h3>'+
       '<div ng-show="showInputMessage">'+
-        '<h3>ENVIAR MENSAJE</h3>'+
+        '<h3>{{ \'SEND_MESSAGE\' | translate }}</h3>'+
         '<label class="item item-input" id="signUp-input3">'+
           '<span class="inputLabelProfile">'+
-            '<i class="icon ion-paper-airplane"></i>&nbsp;&nbsp;MENSAJE:'+
+            '<i class="icon ion-paper-airplane"></i>&nbsp;&nbsp;{{ \'MESSAGE\' | translate }}:'+
             '<input id="inputMessage" type="text" ng-model="modelSelectStudents.message">'+
           '</span>'+
         '</label>'+
@@ -567,8 +567,8 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       '</ion-list>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm  button-block" ng-click="closeSelectStudentsModal()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button ng-hide="showInputMessage" id="attendance-button123" ng-click="selectStudents()" id="attendance-btn123" class="button button-calm  button-block">SELECCIONAR ALUMNOS</button>'+
-        '<button ng-show="showInputMessage" id="attendance-button124" ng-click="selectStudentsForMessage(modelSelectStudents.message)" id="attendance-btn123" class="button button-calm  button-block">ENVIAR MENSAJE</button>'+
+        '<button ng-hide="showInputMessage" id="attendance-button123" ng-click="selectStudents()" id="attendance-btn123" class="button button-calm  button-block">{{ \'SELECT\' | translate }}</button>'+
+        '<button ng-show="showInputMessage" id="attendance-button124" ng-click="selectStudentsForMessage(modelSelectStudents.message)" id="attendance-btn123" class="button button-calm  button-block">{{ \'SEND_MESSAGE\' | translate }}</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -1660,6 +1660,42 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         $scope.getClassrooms();
       })
     }
+  });
+
+  //TRADUCE ESTA MAMON
+  $translate(['ACTIONS_ACHIEVEMENTS', 'ACTIONS_CLASSROOM_STUDENTS', 'ACTIONS_CLASSROOM_TEAMS', 
+    'ACTIONS_ITEMS', 'ACTION_MISSIONS', 'ACTIONS_REWARDS', 'ACTIONS_TEACHER_HOME', 'ARCHIVE_CLASSES', 
+    'BACKUP', 'CANCEL', 'DELETE_ACHIEVEMENTS', 'DELETE_CLASSROOMS', 
+    'DELETE_ITEMS', 'DELETE_REWARDS', 'DELETE_STUDENTS', 'DELETE_TEAMS', 
+    'EVALUATE_STUDENTS', 'EVALUATE_TEAMS', 'EXPORT', 'FILE_INVALID', 'IMPORT', 'RANDOM_STUDENT', 
+    'RANDOM_TEAM', 'SEND_MESSAGE', 'TAKE_ATTENDANCE', 'UNARCHIVE_CLASSES']).then(function(translations) {
+    $scope.actionAchievementsActionSheet = translations.ACTIONS_ACHIEVEMENTS;
+    $scope.actionClassroomStudentsActionSheet = translations.ACTIONS_CLASSROOM_STUDENTS;
+    $scope.actionClassroomTeamsActionSheet = translations.ACTIONS_CLASSROOM_TEAMS;
+    $scope.actionItemsActionSheet = translations.ACTIONS_ITEMS;
+    $scope.actionMissionsActionSheet = translations.ACTION_MISSIONS;
+    $scope.actionRewardsActionSheet = translations.ACTIONS_REWARDS;
+    $scope.actionTeacherHomeActionSheet = translations.ACTIONS_TEACHER_HOME;
+    $scope.archiveClassroomsActionSheetOption = translations.ARCHIVE_CLASSES;
+    $scope.backupActionSheetOption = translations.BACKUP;
+    $scope.cancelText = translations.CANCEL;
+    $scope.deleteAchievementsActionSheetOption = translations.DELETE_ACHIEVEMENTS;
+    $scope.deleteClassroomsActionSheetOption = translations.DELETE_CLASSROOMS;
+    $scope.deleteItemsActionSheetOption = translations.DELETE_ITEMS;
+    $scope.deleteMissionsActionSheetOption = translations.DELETE_MISSIONS;
+    $scope.deleteRewardsActionSheetOption = translations.DELETE_REWARDS;
+    $scope.deleteStudentsActionSheetOption = translations.DELETE_STUDENTS;
+    $scope.deleteTeamsActionSheetOption = translations.DELETE_TEAMS;
+    $scope.evaluateStudentsActionSheetOption = translations.EVALUATE_STUDENTS;
+    $scope.evaluateTeamsActionSheetoption = translations.EVALUATE_TEAMS;
+    $scope.exportPopoverOption = translations.EXPORT;
+    $scope.fileInvalidAlert = translations.FILE_INVALID;
+    $scope.importPopoverOption = translations.IMPORT;
+    $scope.randomStudentActionSheetOption = translations.RANDOM_STUDENT;
+    $scope.randomTeamActionSheetOption = translations.RANDOM_TEAM;
+    $scope.sendMessageActionSheetOption = translations.SEND_MESSAGE;
+    $scope.takeAttendanceActionSheetOption = translations.TAKE_ATTENDANCE;
+    $scope.unarchiveClassroomsActionSheetOption = translations.UNARCHIVE_CLASSES;
   });
 
   $scope.defaultAvatar = 'https://cdn3.iconfinder.com/data/icons/black-easy/512/538474-user_512x512.png';
