@@ -43,8 +43,16 @@
             </h3>
           </header>
           <ion-item class ="teacherAvatar">
-            <img src={{teacher.avatar}} class="avatar">
+            <img ng-click="showUpdateTeacherAvatar()" src={{teacher.avatar}} class="avatar">
           </ion-item>
+          <div ng-show="uploadPicture">
+            <label class="item item-input list-elements" id="signUp-input3">
+              <span class="inputLabelProfile">
+                <i class="icon ion-image"></i>&nbsp;&nbsp;{{ 'AVATAR' | translate }}<br/>
+                <input type="file" name="upload" id="inputAvatar" ng-click="updateTeacherAvatar()">
+              </span>
+            </label>
+          </div>
           <label class="item item-input list-elements" id="signUp-input3">
             <span class="inputLabelProfile">
               <i class="icon ion-person"></i>&nbsp;&nbsp;{{ 'NAME' | translate }}
@@ -63,15 +71,9 @@
               <input id="inputAvatar" type="text" placeholder="{{teacher.school}}" ng-model="modelProfile.school">
             </span>
           </label>
-          <label class="item item-input list-elements" id="signUp-input3">
-            <span class="inputLabelProfile">
-              <i class="icon ion-image"></i>&nbsp;&nbsp;{{ 'AVATAR' | translate }}
-              <input id="inputAvatar" type="text" placeholder="{{teacher.avatar}}" ng-model="modelProfile.avatar">
-            </span>
-          </label>
           <div class="button-bar action_buttons">
             <button id="signUp-button8" class="button button-calm button-block" ng-click="settingsForm()">{{ 'CANCEL' | translate }}</button>
-            <button id="signUp-button9" ng-disabled="!modelProfile.name && !modelProfile.surname && !modelProfile.school && !modelProfile.avatar" id="signUp-btn9" class="button button-calm button-block" ng-click="editTeacherData(modelProfile.name, modelProfile.surname, modelProfile.school, modelProfile.avatar)">{{ 'SAVE_CHANGES' | translate }}</button>
+            <button id="signUp-button9" ng-disabled="!modelProfile.name && !modelProfile.surname && !modelProfile.school" id="signUp-btn9" class="button button-calm button-block" ng-click="editTeacherData(modelProfile.name, modelProfile.surname, modelProfile.school)">{{ 'SAVE_CHANGES' | translate }}</button>
           </div>
         </ion-list>
       </form>
