@@ -778,8 +778,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.newStudentModal = '<ion-modal-view class="fondo">'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3>{{ \'NEW_STUDENT\' | translate }}</h3>'+
-      '<div class="teacherAvatar">'+
-        '<img src={{defaultAvatar}} class="avatar">'+
+      '<div class="avatar_margen">'+
+        '<div class="teacherAvatar">'+
+          '<img src={{defaultAvatar}} class="avatar">'+
+        '</div>'+
       '</div>'+
       '<button  class="button button-light  button-block button-outline">{{ \'TAKE_PICTURE\' | translate }}</button>'+
       '<div>'+
@@ -815,9 +817,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3>{{student.name}} {{student.surname}}</h3>'+
       '<div>'+
+      '<div class="avatar_margen">'+
         '<div class="teacherAvatar">'+
           '<img src={{student.avatar}} class="avatar">'+
         '</div>'+
+      '</div>'+
         '<form id="studentProfileFormData" class="list">'+
           '<ion-list id="signUp-list2">'+
             '<label class="item item-input list-elements" id="signUp-input3">'+
@@ -871,9 +875,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3>{{team.name}}</h3>'+
       '<div class="list-student">'+
+      '<div class="avatar_margen">'+
         '<div class="teacherAvatar">'+
           '<img src={{team.picture}} class="avatar">'+
         '</div>'+
+      '</div>'+
         '<form id="teamDialogForm">'+
           '<button class="button button-light  button-block button-outline">{{ \'CHANGE_AVATAR\' | translate }}</button>'+
           '<label class="item item-input list-elements">'+

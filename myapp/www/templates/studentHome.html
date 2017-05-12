@@ -6,6 +6,7 @@
     <div ng-show="studentHomeView">
       <header id="pageHeader">
         <h3 id="teacherHome-heading1"  class="margin-top-null">
+          <a id="teacherHome-dropdown" class="button button-light icon ion-home homeButton" ng-click="studentHomeForm()"></a>
           {{ 'SELECT_YOUR_CLASS' | translate }}
           <a id="menu" class="button button-light icon ion-drag" ng-click="openPopoverStudentHome($event)"></a>
         </h3>
@@ -35,7 +36,7 @@
         <ion-list id="signUp-list2">
           <header id="pageHeader">
             <h3 id="teams-heading5" class="teams-hdg5">
-              <a id="teacherHome-dropdown" class="button button-light icon ion-home" ng-click="studentHomeForm()"></a>
+              <a id="teacherHome-dropdown" class="button button-light icon ion-home homeButton" ng-click="studentHomeForm()"></a>
               <span>{{ 'PROFILE' | translate }}</span>
             </h3>
           </header>
@@ -127,7 +128,7 @@
         </ion-list>
       </div>
       <div class="button-bar action_buttons">
-        <a id="teacherSettings-button81" id="teacherSettings-btn81" class="button button-assertive  button-block button-clear icon ion-ios-close-empty logout" ng-click="logOut()">&nbsp;{{ 'LOG_OUT' | translate }}</a>
+        <a id="teacherSettings-button81" id="teacherSettings-btn81" class="button button-assertive  button-block button-clear icon" ng-click="logOut()">{{ 'LOG_OUT' | translate }}&nbsp;&nbsp;<span class="icon ion-log-out"></span></a>
       </div>
     </div>
 
