@@ -19,7 +19,7 @@
         <button id="teacherHome-button12" ng-click="showModalNewClass()" class="button button-calm  button-block bold-font">{{ 'ADD_CLASS' | translate }}</button>
       </div>
       <div ng-show="archivedClassroomsToShow">
-        <h3 id="teacherHome-heading1" class="margin-top-null">CLASES ARCHIVADAS</h3>
+        <h3 id="teacherHome-heading1" class="margin-top-null">{{ 'CLASSES_ARCHIVED' | translate }}</h3>
         <ion-list id="teacherHome-list16" class="list-elements align-text-center">
           <ion-item id="teacherHome-list-item47" ng-repeat="class in classrooms" ng-click="setClassroom(class)" ng-show="class.archived">
             <span class="ion-university"></span><br>{{class.name}}
@@ -42,6 +42,7 @@
               <span>{{ 'PROFILE' | translate }}</span>
             </h3>
           </header>
+          <div class="avatar_margen">
           <ion-item class ="teacherAvatar">
             <img src={{teacher.avatar}} class="avatar">
           </ion-item>
@@ -60,7 +61,7 @@
           </label>
           <label class="item item-input list-elements" id="signUp-input3">
             <span class="inputLabelProfile">
-              <i class="icon ion-clipboard"></i>&nbsp;&nbsp;ESCUELA
+              <i class="icon ion-clipboard"></i>&nbsp;&nbsp;{{ 'SCHOOL' | translate }}
               <input id="inputAvatar" type="text" placeholder="{{teacher.school}}" ng-model="modelProfile.school">
             </span>
           </label>
@@ -86,7 +87,7 @@
           </label>
           <div class="button-bar action_buttons">
             <button id="signUp-button8" class="button button-calm button-block" ng-click="settingsForm()">{{ 'CANCEL' | translate }}</button>
-            <button id="signUp-button9" ng-disabled="!modelProfile.password || !modelProfile.passwordRepeat || !modelProfile.password == modelProfile.passwordRepeat" id="signUp-btn9" class="button button-calm button-block" ng-click="updateTeacherPassword(modelProfile.password)">CONFIRMAR</button>
+            <button id="signUp-button9" ng-disabled="!modelProfile.password || !modelProfile.passwordRepeat || !modelProfile.password == modelProfile.passwordRepeat" id="signUp-btn9" class="button button-calm button-block" ng-click="updateTeacherPassword(modelProfile.password)">{{ 'SAVE_CHANGES' | translate }}</button>
           </div>
         </ion-list>
       </form>
@@ -100,7 +101,7 @@
           </label>
           <div class="button-bar action_buttons">
             <button id="signUp-button8" class="button button-calm button-block" ng-click="settingsForm()">{{ 'CANCEL' | translate }}</button>
-            <button id="signUp-button9" ng-disabled="!modelProfile.email" id="signUp-btn9" class="button button-calm button-block" ng-click="updateTeacherEmail(modelProfile.email)">CONFIRMAR EMAIL</button>
+            <button id="signUp-button9" ng-disabled="!modelProfile.email" id="signUp-btn9" class="button button-calm button-block" ng-click="updateTeacherEmail(modelProfile.email)">{{ 'SAVE_CHANGES' | translate }}</button>
           </div>
         </ion-list>
       </form>
@@ -119,13 +120,13 @@
         <ion-list class="list-elements align-text-center">
           <ion-item ng-click="profileForm()">{{'PROFILE'| translate}}</ion-item>
           <ion-item ng-click="openPopoverLanguages($event)">{{'LANGUAGES'| translate}}</ion-item>
-          <ion-item ng-controller="settingsCtrl" ng-click="showHelpPopup()">AYUDA</ion-item>
-          <ion-item ng-controller="settingsCtrl" ng-click="showTermsPopup()">TERMINOS Y CONDICIONES</ion-item>
-          <ion-item ng-controller="settingsCtrl" ng-click="showAboutPopup()">ACERCA DE</ion-item>
+          <ion-item ng-controller="settingsCtrl" ng-click="showHelpPopup()">{{'HELP'| translate}}</ion-item>
+          <ion-item ng-controller="settingsCtrl" ng-click="showTermsPopup()">{{'TERMS_CONDITIONS'| translate}}</ion-item>
+          <ion-item ng-controller="settingsCtrl" ng-click="showAboutPopup()">{{'ABOUT'| translate}}</ion-item>
         </ion-list>
       </div>
       <div class="button-bar action_buttons">
-        <a id="teacherSettings-button81" id="teacherSettings-btn81" class="button button-assertive  button-block button-clear icon ion-ios-close-empty logout" ng-click="logOut()">&nbsp;{{ 'LOG_OUT' | translate }}</a>
+        <a id="teacherSettings-button81" id="teacherSettings-btn81" class="button button-assertive  button-block button-clear logout" ng-click="logOut()">{{ 'LOG_OUT' | translate }}&nbsp;&nbsp;<span class="icon ion-log-out"></span></a>
       </div>
     </div>
 
@@ -139,15 +140,15 @@
           <a id="menu" class="button button-light icon ion-drag" ng-click="openPopoverClassStudents($event)"></a>
           <div class="subheader">
             <br/>
-            <p>ESTUDIANTES</p>
+            <p>{{'STUDENTS'| translate}}</p>
           </div>
         </h3>
       </header>
       <div id="class-button-bar5" class="button-bar">
-        <button id="class-button26" ng-click="classForm()"  class="button button-light  button-outline">ESTUDIANTES</button>
+        <button id="class-button26" ng-click="classForm()"  class="button button-light  button-outline">{{'STUDENTS'| translate}}</button>
         <button id="class-button29" ng-click="teamsForm()"  class="button button-light  button-outline">{{ 'TEAMS' | translate }}</button>
       </div>
-      <button class="button button-calm  button-block" ng-click="showNotificationsModal()" ng-show="notifications.length > 0">TIENES NOTIFICACIONES</button>
+      <button class="button button-calm  button-block" ng-click="showNotificationsModal()" ng-show="notifications.length > 0">{{'YOU_HAVE_NOTIFICATIONS'| translate}}</button>
       <ion-list id="class-list5" class="list-elements">
         <ion-item class="list-student item item-avatar" id="class-list-item7" ng-repeat="student in students" ng-show="student.classrooms[classroom.id].inClass" ng-click="setStudent(student)">
           <img src="{{student.avatar}}">
@@ -178,7 +179,7 @@
         </h3>
       </header>
       <div id="class-button-bar5" class="button-bar">
-        <button id="class-button26" ng-click="classForm()"  class="button button-light  button-outline">ESTUDIANTES</button>
+        <button id="class-button26" ng-click="classForm()"  class="button button-light  button-outline">{{'STUDENTS'| translate}}</button>
         <button id="class-button29" ng-click="teamsForm()"  class="button button-light  button-outline">{{ 'TEAMS' | translate }}</button>
       </div>
       <ion-list id="teams-list10" class="list-elements">
@@ -191,7 +192,7 @@
         <button id="teams-button44" ng-click="showModalNewTeamDialog()" id="teams-btn44" class="button button-calm  button-block">{{ 'ADD_TEAM' | translate }}</button>
       </div>
       <div class="button-bar action_buttons">
-        <button id="teams-button44" ng-click="showModalQuantityRandomTeams()" id="teams-btn44" class="button button-calm  button-block">CREAR EQUIPOS ALEATORIOS</button>
+        <button id="teams-button44" ng-click="showModalQuantityRandomTeams()" id="teams-btn44" class="button button-calm  button-block">{{ 'CREATE_RANDOM_TEAMS' | translate }}</button>
       </div>
       <button class="button button-positive button-float addButton" ng-click="showActionsheetClassTeams()">
         <i class="icon ion-plus"></i>
@@ -208,7 +209,7 @@
           <a id="menu" class="button button-light icon ion-drag" ng-click="openPopoverTeacherDefault($event)"></a>
           <div class="subheader">
             <br/>
-            <p>RULES</p>
+            <p>{{ 'RULES' | translate }}</p>
           </div>
         </h3>
       </header>
@@ -240,19 +241,7 @@
           </div>
         </h3>
       </header>
-      <div class="list-student list-elements">
-        <div class="avatar_content">
-          <img src={{item.picture}} class="avatar">
-        </div>
-        <button  class="button button-light  button-block button-outline">{{ 'TAKE_PICTURE' | translate }}</button>
-        <form class="list">
-          <div class="button-bar action_buttons">
-            <button class="button button-calm  button-block" ng-click="rulesForm()">{{ 'CANCEL' | translate }}</button>
-            <button class="button button-calm  button-block" ng-click="editItem(modelItem.name, modelItem.description, modelItem.requirements, modelItem.score, modelItem.maxScore, modelItem.useForLevel)" ng-disabled="!modelItem.name && !modelItem.description && !modelItem.requirements && !modelItem.maxScore && !modelItem.score && !modelItem.useForLevel">EDITAR</button>
-          </div>
-        </form>
-      </div>
-      <div class="list-team list-elements">
+      <div>
         <form id="editItemForm" class="list list-student fullScreen">
           <ion-list>
             <label class="item item-input list-elements">
@@ -275,13 +264,21 @@
               <span class="input-label">{{ 'SCORE' | translate }}</span>
               <input type="number" placeholder="{{item.score}}" ng-model="modelItem.score">
             </label>
-            <ion-toggle toggle-class="toggle-calm" ng-model="modelItem.useForLevel" ng-checked="item.useForLevel">USAR PARA NIVEL</ion-toggle>
+            <ion-toggle toggle-class="toggle-calm" ng-model="modelItem.useForLevel" ng-checked="item.useForLevel">{{ 'USE_FOR_LEVEL' | translate }}</ion-toggle>
           </ion-list>
         </form>
       </div>
+      <div>
+        <form class="list">
+          <div class="button-bar action_buttons">
+            <button class="button button-calm  button-block" ng-click="rulesForm()">{{ 'CANCEL' | translate }}</button>
+            <button class="button button-calm  button-block" ng-click="editItem(modelItem.name, modelItem.description, modelItem.requirements, modelItem.score, modelItem.maxScore, modelItem.useForLevel)" ng-disabled="!modelItem.name && !modelItem.description && !modelItem.requirements && !modelItem.maxScore && !modelItem.score && !modelItem.useForLevel">EDITAR</button>
+          </div>
+        </form>
+      </div>      
       <h3 id="teams-heading5" class="teams-hdg5">{{ 'ACHIEVEMENTS' | translate }}</h3>
-      <ion-list id="items-list9" class="list-elements align-text-center">
-        <ion-item id="items-list-item15" class="list-item" ng-click="setAchievement(achievement)" ng-repeat="achievement in achievements">
+      <ion-list id="items-list9" class="list-elements align-text-center list-student list-elements">
+        <ion-item id="items-list-item15" ng-click="setAchievement(achievement)" ng-repeat="achievement in achievements">
           <h2>{{achievement.name}}</h2>
         </ion-item>
       </ion-list>
@@ -309,9 +306,11 @@
               </div>
             </h3>
           </header>
+          <div class="avatar_margen">
           <ion-item class ="teacherAvatar">
             <img src={{achievement.badge}} class="avatar">
           </ion-item>
+          </div>
           <label class="item item-input list-elements">
             <span class="input-label">{{ 'NAME' | translate }} </span>
             <input type="text" placeholder="{{achievement.name}}" ng-model="modelAchievement.name">
@@ -325,18 +324,18 @@
             <input type="number" placeholder="{{achievement.requirements}}" ng-model="modelAchievement.requirements">
           </label>
           <label class="item item-input list-elements">
-            <span class="input-label">MÁXIMO NIVEL</span>
+            <span class="input-label">{{ 'MAX_LEVEL' | translate }}</span>
             <input type="number" placeholder="{{achievement.maxLevel}}" ng-model="modelAchievement.maxLevel">
           </label>
           <label class="item item-input list-elements">
-            <span class="input-label">MEDALLA</span>
+            <span class="input-label">{{ 'BADGE' | translate }}</span>
             <input type="text" placeholder="{{achievement.badge}}" ng-model="modelAchievement.badge">
           </label>
         </ion-list>
       </form>
       <div class="button-bar action_buttons">
         <button class="button button-calm  button-block" ng-click="itemsForm()">{{ 'CANCEL' | translate }}</button>
-        <button class="button button-calm  button-block" ng-click="editAchievement(modelAchievement.name, modelAchievement.description, modelAchievement.requirements, modelAchievement.pointsToLevel, modelAchievement.maxLevel, modelAchievement.badge)" ng-disabled="!modelAchievement.name && !modelAchievement.description && !modelAchievement.requirements && !modelAchievement.pointsToLevel && !modelAchievement.maxLevel && !modelAchievement.badge">EDITAR LOGRO</button>
+        <button class="button button-calm  button-block" ng-click="editAchievement(modelAchievement.name, modelAchievement.description, modelAchievement.requirements, modelAchievement.pointsToLevel, modelAchievement.maxLevel, modelAchievement.badge)" ng-disabled="!modelAchievement.name && !modelAchievement.description && !modelAchievement.requirements && !modelAchievement.pointsToLevel && !modelAchievement.maxLevel && !modelAchievement.badge">{{ 'EDIT_ACHIEVEMENT' | translate }}</button>
       </div>
     </div>
 
@@ -350,7 +349,7 @@
           <a id="menu" class="button button-light icon ion-drag" ng-click="openPopoverMissions($event)"></a>
           <div class="subheader">
             <br/>
-            <p>MISIONES</p>
+            <p>{{ 'MISSIONS' | translate }}</p>
           </div>
         </h3>
       </header>
@@ -365,7 +364,7 @@
         <button id="class-button31" ng-click="setNewMissionNamePopup()" class="button button-calm  button-block">AÑADIR MISIÓN</button>
       </div>
       <div ng-show="finishedMissionsToShow">
-        <h3 class="margin-top-null">MISIONES FINALIZADAS</h3>
+        <h3 class="margin-top-null">{{ 'MISSIONS_ENDED' | translate }}</h3>
         <ion-list class="list-elements">
           <ion-item class="list-student" ng-click="setMission(mission)" ng-repeat="mission in missions" ng-show="mission.finished">
             <h2>{{mission.name}}</h2>
@@ -387,24 +386,22 @@
           <a id="menu" class="button button-light icon ion-drag" ng-click="openPopoverTeacherDefault($event)"></a>
           <div class="subheader">
             <br/>
-            <p>TIENDA DE RECOMPENSAS</p>
+            <p>{{ 'REWARD_SHOP' | translate }}</p>
           </div>
         </h3>
       </header>
       <ion-list id="class-list5" class="list-elements">
-        <ion-item class="list-student" id="class-list-item7" ng-repeat="reward in rewards" ng-click="setReward(reward)">
+        <ion-item id="class-list-item7" ng-repeat="reward in rewards" ng-click="setReward(reward)">
           <h2>{{reward.name}}</h2>
         </ion-item>
       </ion-list>
       <div class="button-bar action_buttons">
-        <button id="class-button31" ng-click="showModalNewReward()" class="button button-calm  button-block">AÑADIR RECOMPENSA</button>
+        <button id="class-button31" ng-click="showModalNewReward()" class="button button-calm  button-block">{{ 'ADD_REWARD' | translate }}</button>
       </div>
       <button class="button button-positive button-float addButton" ng-click="showActionsheetRewards()">
         <i class="icon ion-plus"></i>
       </button>
     </div>
-
-    <!--  -->
 
   </ion-content>
 </ion-view>

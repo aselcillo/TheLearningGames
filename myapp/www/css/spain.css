@@ -24,26 +24,52 @@ ion-view, ion-modal-view{ background:url('../img/bg.jpg') no-repeat; background-
 /* Login Screen */
 .login_screen .button{ background: none !important;}
 
-#login-button-bar1 .button{ background-color: rgba(17, 193, 243, 0.7) !important;}
-#login-button-bar1 .button:hover{ background-color: rgba(17, 193, 243, 0.5) !important; color: white  !important; }
+#login-button-bar1 .button{ background-color: rgba(0, 0, 0, .3) !important;}
+#login-button-bar1 .button:hover{ background-color: rgba(0, 0, 0, .5) !important; color: white  !important; }
 
 #login-button2{ background: none !important;}
-.button.button-calm, .logout { background-color: rgba(17, 193, 243, .7) !important;}
-.button.button-calm:hover, .button.button-calm:focus { background-color: rgba(17, 193, 243, 1) !important; color: white !important;}
+.button.button-calm, .logout { background-color: rgba(0, 0, 0, .3) !important;}
+.button.button-calm:hover, .button.button-calm:focus { background-color: rgba(0, 0, 0, .5) !important; color: white !important;}
 
-.verPass{ color: rgba(17, 193, 243, 0.7) !important;}
+.verPass{ color: rgba(0, 0, 0, 0.7) !important;}
 
 /* Top Menu */
-.button-bar a, .button-bar button{ border: none !important;	background-color: #17498B !important; border-bottom: 2px solid #f9f9f9 !important; color: white !important;}
-.button-bar a:hover, button:hover{ background-color: #153E74 !important;} 
+.button-bar a, .button-bar button{ border: none !important;	background-color: rgba(0,0,0,.3) !important; border-bottom: 2px solid #f9f9f9 !important; color: white !important;}
+.button-bar a:hover, button:hover{ background-color: rgba(0,0,0,.7)  !important;} 
 
 /* Missions */
 .list-mission{ background: #f9f9f9;}
 
 /* Lists */
 .list-elements { background: rgba(255, 255, 255, 0.8) none repeat scroll 0 0;}
-.list-elements:hover, .list-elements:focus { background: rgba(255, 255, 255, 1) none repeat scroll 0 0;}
-.button#login-button6, .button#login-button7{ background-color: rgba(224,133,15,1) !important; }
+
+/* PopUp */
+.popup{ border-radius: 10px !important; background: rgba(255, 255, 255, 0.83); }
+	.popup h3{ color: black; font-size: 1.3em; text-transform: uppercase;}
+
+	.popup .button{ background-color: rgba(0, 0, 0, .3) !important; color: white; height: 40px !important; border-radius: 5px !important;}
+	.popup .button:hover{ background-color: rgba(0, 0, 0, .5) !important; color: white  !important; }	
+	.popup input{ border:1px solid #cdcdcd; border-radius: 5px; text-indent: 10px; }	
+
+/* Menú desplegable */
+.popover{ 
+		border-radius: 4px !important; background: rgba(0, 0, 0, 0.85); 
+		width: 60%; max-width: 100%; 
+		text-transform: uppercase;
+	}
+	.popover .itemPopover { border-radius: 4px !important; border:none; background: none; color: white !important; }
+	.popover .itemPopover:hover { background: rgba(0, 0, 0, 0.5);}
+	.popover .input-label{ color: white; }
+	.popover .item-select select { background: rgba(0,0,0,.5) !important; color: white;}
+	.popover .item-select option { padding: 10px 10px 10px 0; }
+
+/* Ventanas de cuando pulsas boton ADD del botton */
+.action-sheet .action-sheet-group{ background: rgba(0, 0, 0, 0.95);}
+.action-sheet .action-sheet-group .action-sheet-title{ color: white; font-size: 1.3em; text-transform: uppercase; }
+.action-sheet .action-sheet-group button{ font-size: 1em; }
+
+/* Botones Activar / Desactivar */
+
 
 ion-modal-view h2, h3{ color: white;}
 
