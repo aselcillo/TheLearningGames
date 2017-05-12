@@ -43,16 +43,9 @@
             </h3>
           </header>
           <ion-item class ="teacherAvatar">
-            <img ng-click="showUpdateTeacherAvatar()" src={{teacher.avatar}} class="avatar">
+            <img src={{teacher.avatar}} class="avatar">
           </ion-item>
-          <div ng-show="uploadPicture">
-            <label class="item item-input list-elements" id="signUp-input3">
-              <span class="inputLabelProfile">
-                <i class="icon ion-image"></i>&nbsp;&nbsp;{{ 'AVATAR' | translate }}<br/>
-                <input type="file" name="upload" id="inputAvatar" ng-click="updateTeacherAvatar()">
-              </span>
-            </label>
-          </div>
+          <input class="button button-light button-block button-outline" type="file" id="inputAvatar" ng-click="updateTeacherAvatar()">
           <label class="item item-input list-elements" id="signUp-input3">
             <span class="inputLabelProfile">
               <i class="icon ion-person"></i>&nbsp;&nbsp;{{ 'NAME' | translate }}

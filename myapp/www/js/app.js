@@ -36,8 +36,12 @@ angular.module('app', ['ionic', 'app.loginController', 'app.settingsController',
       cordova.plugins.Keyboard.disableScroll(true);
     }
   });
-})
 
+  $ionicPlatform.registerBackButtonAction(function(event) {
+    event.preventDefault();
+  }, 800);//registerBackButton
+
+})
 /*
   This directive is used to open regular and dynamic href links inside of inappbrowser.
 */

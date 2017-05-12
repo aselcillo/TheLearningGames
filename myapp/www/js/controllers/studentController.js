@@ -553,14 +553,6 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
                                           /* FUNCTIONS IN PROFILE */
 
-  $scope.showUpdateStudentAvatar = function() {
-    if ($scope.uploadPicture === true) {
-      $scope.uploadPicture = false;
-    } else {
-      $scope.uploadPicture = true;
-    }
-  }
-
   $scope.updateStudentAvatar = function() {
     var downloadURL;
     var uploader = document.getElementById('uploader');
@@ -580,7 +572,6 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
           }, function error(error) {
             $ionicLoading.hide();
           }, function complete() {
-            $scope.uploadPicture = false;
             downloadURL = task.snapshot.downloadURL;
               
             $scope.student.avatar = downloadURL;

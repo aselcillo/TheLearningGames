@@ -1672,8 +1672,8 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   });
 
-  $scope.defaultAvatar = 'https://cdn3.iconfinder.com/data/icons/black-easy/512/538474-user_512x512.png';
-  $scope.defaultTeamAvatar = 'https://www.ecrconsultoria.com.br/temp/backyard/images/icon_team.png';
+  $scope.defaultAvatar = 'img/userDefaultAvatar.png';
+  $scope.defaultTeamAvatar = 'img/teamDefaultAvatar.png';
 
   var modalFirst;
   var modalMissions = 0;
@@ -1761,7 +1761,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             if ($scope.classroom != undefined) {
               $scope.getLevels();
             }
-            
             $scope.classrooms.sort(sortByName);
             if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
               $scope.$apply();
@@ -1922,6 +1921,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.getRewards();
     $scope.getMissions();
     $scope.getNotifications();
+    $scope.classForm();
   }
 
   $scope.archiveClassroom = function(classroom) {
@@ -2123,14 +2123,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
                                         /* FUNCTIONS IN TEACHER PROFILE */
 
-  $scope.showUpdateTeacherAvatar = function() {
-    if ($scope.uploadPicture === true) {
-      $scope.uploadPicture = false;
-    } else {
-      $scope.uploadPicture = true;
-    }
-  }
-
   $scope.updateTeacherAvatar = function() {
     var downloadURL;
     var fileButton = document.getElementById('inputAvatar');
@@ -2149,7 +2141,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           }, function error(error) {
             $ionicLoading.hide();
           }, function complete() {
-            $scope.uploadPicture = false;
             downloadURL = task.snapshot.downloadURL;
               
             $scope.teacher.avatar = downloadURL;
@@ -2248,10 +2239,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               } else {
                 $scope.levels[index] = level
               }
+              $scope.levels.sort(sortByLevel);
               if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
                 $scope.$apply();
               }
-              $scope.levels.sort(sortByLevel);
             }
           });
         }
@@ -2370,8 +2361,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         });
         $scope.getStudentsForSelection();
       }
-    }).then(function() {
-      $scope.classForm();
     });
   }
 
@@ -2707,6 +2696,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               $scope.items[index] = item;
             }
             $scope.items.sort(sortByName);
+            if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+              $scope.$apply();
+            }
             $scope.getItemsForSelection();
           }
         });
@@ -2901,10 +2893,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         } else {
           studentClassroomTotalPointsRef.set(pointsAdded);  
         }
-      }
-          
+      }     
     }
-       
+    $scope.getNotifications();
   }
 
   $scope.evaluateTeams = function(item) {
@@ -2967,6 +2958,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               $scope.checkAchievements(item, $scope.students[studentPos], item.score);
               $scope.checkMissions(item, $scope.students[studentPos], item.score);
             }
+
             if (item.useForLevel) {
               var pointsAdded = Number($scope.students[studentPos].classrooms[$scope.classroom.id].totalPoints) + Number(item.score);
               var studentClassroomTotalPointsRef = firebase.database().ref('students/' + $scope.students[studentPos].id + '/classrooms/' + $scope.classroom.id + '/totalPoints');
@@ -2975,11 +2967,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               } else {
                 studentClassroomTotalPointsRef.set(pointsAdded);
               }
-            }
+            }  
           }
         }
       }
     }
+    $scope.getNotifications();
   }
 
   $scope.selectItems = function() {
@@ -3015,7 +3008,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.changeSelectedItem = function(item) {
       if (item.selected === false) {
         item.selected = true;
-
         if ($scope.actionSheetItemsType === 'evaluateStudents' || $scope.actionSheetItemsType === 'evaluateTeams' || $scope.actionSheetItemsType == 'newMissionCreation') { 
         $scope.points = item.score;
         $scope.popupChooseScore = $ionicPopup.show({
@@ -3146,10 +3138,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             } else {
               $scope.achievements[index] = achievement;
             }
+            $scope.achievements.sort(sortByName);
             if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
               $scope.$apply();
             }
-            $scope.achievements.sort(sortByName);
             $scope.getAchievementsForSelection();
           }
         });
@@ -3358,10 +3350,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             } else {
               $scope.teams[index] = team;
             }
+            $scope.teams.sort(sortByName);
             if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
               $scope.$apply();
             }
-            $scope.teams.sort(sortByName);
             $scope.getTeamsForSelection();
           }
         });
@@ -3689,6 +3681,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               $scope.rewards[index] = reward;
             }
             $scope.rewards.sort(sortByName);
+            if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+              $scope.$apply();
+            }
             $scope.getRewardsForSelection();
           }
         });
@@ -3844,6 +3839,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               $scope.missions[index] = mission;
             }
             $scope.missions.sort(sortByName);
+            if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+              $scope.$apply();
+            }
             $scope.getMissionsForSelection();
           }
         });
@@ -4323,10 +4321,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               var notification = snapshot.val();
               $scope.notifications.push(notification);
 
+              $scope.notifications.sort(sortByDate);
               if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
                 $scope.$apply();
               }
-              $scope.notifications.sort(sortByDate);
             }
           });
         }

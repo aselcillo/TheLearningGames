@@ -51,6 +51,7 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
 
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
+      userData = localStorageService.get('userCredentials');
       if (userData.type === 'teacher') {
         $state.go('teacherHome');
       } else if (userData.type === 'student') {
