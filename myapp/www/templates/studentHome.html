@@ -109,7 +109,9 @@
     <div ng-show="settingsView">
       <header id="pageHeader">
         <h3 id="studentHome-heading1"  class="margin-top-null">
-          <a id="studentHome-dropdown" class="button button-light icon ion-home" ng-click="studentHomeForm()"></a>
+
+          <a id="teacherHome-dropdown" class="button button-light icon ion-home homeButton" ng-click="studentHomeForm()"></a>
+
           <span>{{ 'SETTINGS' | translate }}</span>
         </h3>
       </header>
@@ -141,6 +143,7 @@
           </div>
         </h3>
       </header>
+      
       <div>
         <label class="item item-input list-elements" id="signUp-input3">
           <span class="inputLabelProfile">
@@ -155,7 +158,9 @@
           </span>
         </label>
       </div>
+
       <button class="button button-calm  button-block" ng-click="showNotificationsModal()" ng-show="notifications.length > 0">{{ 'YOU_HAVE_NOTIFICATIONS' | translate }}</button>
+
       <div ng-show="unlockedItemsExist">
         <h3 id="teacherHome-heading1" class="margin-top-null">{{ 'UNLOCKED_ITEMS' | translate }}</h3>
         <ion-list id="class-list5" class="list-elements">
@@ -165,6 +170,7 @@
           </ion-item>
         </ion-list>
       </div>
+
       <div ng-show="lockedItemsExist">
         <h3 id="teacherHome-heading1" class="margin-top-null">{{ 'LOCKED_ITEMS' | translate }}</h3>
         <ion-list id="teacherHome-list16" class="list-elements">
@@ -190,7 +196,7 @@
           </div>
         </h3>
       </header>
-      <div>
+      <div class="">
         <label class="item item-input list-elements" id="signUp-input3">
           <span class="inputLabelProfile">
             <i class="icon ion-thumbsup"></i>&nbsp;&nbsp;{{ 'POINTS_IN_ITEM' | translate }}:
@@ -198,13 +204,13 @@
           </span>
         </label>
       </div>
-      <div class="list-student list-elements">
+      <div>
         <div class="avatar_content">
           <img src={{team.picture}} class="avatar">
         </div>
       </div>
-      <div class="list-team list-elements">
-        <form id="editItemForm" class="list list-student fullScreen">
+      <div>
+        <form id="editItemForm" class="list fullScreen">
           <ion-list>
             <label class="item item-input list-elements">
               <span class="input-label">{{ 'NAME' | translate }}</span>
@@ -232,16 +238,16 @@
       </div>
       <div ng-show="unlockedAchievementsExist">
         <h3 id="teams-heading5" class="teams-hdg5">{{ 'UNLOCKED_ACHIEVEMENTS' | translate }}</h3>
-        <ion-list id="items-list9" class="list-elements align-text-center">
-          <ion-item id="items-list-item15" class="list-item" ng-click="setAchievement(achievement)" ng-repeat="achievement in achievementsUnlocked">
+        <ion-list id="items-list9" class="list-student">
+          <ion-item id="items-list-item15" ng-click="setAchievement(achievement)" ng-repeat="achievement in achievementsUnlocked">
             <h2>{{achievement.name}}</h2>
           </ion-item>
         </ion-list>
       </div>
       <div ng-show="lockedAchievementsExist">
         <h3 id="teams-heading5" class="teams-hdg5">{{ 'LOCKED_ACHIEVEMENTS' | translate }}</h3>
-        <ion-list id="items-list9" class="list-elements align-text-center">
-          <ion-item id="items-list-item15" class="list-item" ng-click="setAchievement(achievement)" ng-repeat="achievement in achievementsLocked">
+        <ion-list id="items-list9" class="list-student">
+          <ion-item id="items-list-item15" ng-click="setAchievement(achievement)" ng-repeat="achievement in achievementsLocked">
             <h2>{{achievement.name}}</h2>
           </ion-item>
         </ion-list>
@@ -294,7 +300,7 @@
       <div ng-show="unlockedRewardsExist">
         <h3 id="teacherHome-heading1" class="margin-top-null">{{ 'UNLOCKED_REWARDS' | translate }}</h3>
         <ion-list id="class-list5" class="list-elements">
-          <ion-item class="list-student" id="class-list-item7" ng-repeat="reward in rewardsUnlocked" ng-click="setReward(reward)">
+          <ion-item id="class-list-item7" ng-repeat="reward in rewardsUnlocked" ng-click="setReward(reward)">
             <h2>{{reward.name}}</h2>
             <p>({{reward.price}})</p>
           </ion-item>
@@ -303,7 +309,7 @@
       <div ng-show="lockedRewardsExist">
         <h3 id="teacherHome-heading1" class="margin-top-null">{{ 'LOCKED_REWARDS' | translate }}</h3>
         <ion-list id="class-list5" class="list-elements">
-          <ion-item class="list-student" id="class-list-item7" ng-repeat="reward in rewardsLocked" ng-click="setReward(reward)">
+          <ion-item id="class-list-item7" ng-repeat="reward in rewardsLocked" ng-click="setReward(reward)">
             <h2>{{reward.name}}</h2>
             <p>({{reward.price}})</p>
           </ion-item>
