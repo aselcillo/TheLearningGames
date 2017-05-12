@@ -874,7 +874,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.teamDialogModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3>{{team.name}}</h3>'+
-      '<div class="list-student">'+
+      '<div>'+
       '<div class="avatar_margen">'+
         '<div class="teacherAvatar">'+
           '<img src={{team.picture}} class="avatar">'+
@@ -900,9 +900,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           '</div>'+
         '</form>'+
       '</div>'+
-      '<div class="list-team">'+
+      '<div>'+
         '<ion-list>'+
-          '<ion-item class="list-student-team" ng-repeat="teamMember in teamMembers">{{teamMember.name}} {{teamMember.surname}}</ion-item>'+
+          '<ion-item class="list-student" ng-repeat="teamMember in teamMembers">{{teamMember.name}} {{teamMember.surname}}</ion-item>'+
         '</ion-list>'+
         '<button ng-click="showModalEditMembers()" class="button button-calm  button-block">{{ \'EDIT_MEMBERS\' | translate }}</button>'+
       '</div>'+
