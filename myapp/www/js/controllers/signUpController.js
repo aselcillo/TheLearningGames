@@ -24,10 +24,10 @@ function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading, $trans
     $state.go('login');
   }
 
-  $translate(['CHECK_EMAIL_TO_VERIFY', 'EMAIL_INVALID', 'ERROR_ACCESS_UNKNOW', 'ERROR_EMAIL_ALREADY_USED', 'ERROR_WEAK_PASSWORD', 'SCHOOL_NOT_ESTABLISHED']).then(function(translations) {
+  $translate(['CHECK_EMAIL_TO_VERIFY', 'EMAIL_INVALID', 'ERROR_ACCESS_UNKNOW', 'EMAIL_ALREADY_USED', 'ERROR_WEAK_PASSWORD', 'SCHOOL_NOT_ESTABLISHED']).then(function(translations) {
     $scope.checkEmailToVerify = translations.CHECK_EMAIL_TO_VERIFY;
     $scope.emailInvalidAlert = translations.EMAIL_INVALID;
-    $scope.errorEmailUsedAlert = translations.ERROR_EMAIL_ALREADY_USED;
+    $scope.errorEmailUsedAlert = translations.EMAIL_ALREADY_USED;
     $scope.errorUnknowAlert = translations.ERROR_ACCESS_UNKNOW;
     $scope.schholNotEstablished = translations.SCHOOL_NOT_ESTABLISHED;
     $scope.weakPasswordAlert = translations.ERROR_WEAK_PASSWORD;
@@ -133,14 +133,10 @@ function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading, $trans
   $rootScope.$on('$translateChangeSuccess', function () {
     $scope.checkEmailToVerify = $translate.instant('CHECK_EMAIL_TO_VERIFY');
     $scope.emailInvalidAlert = $translate.instant('EMAIL_INVALID');
-    $scope.errorEmailUsedAlert = $translate.instant('ERROR_EMAIL_ALREADY_USED');
+    $scope.errorEmailUsedAlert = $translate.instant('EMAIL_ALREADY_USED');
     $scope.errorUnknowAlert = $translate.instant('ERROR_ACCESS_UNKNOW');
     $scope.schholNotEstablished = $translate.instant('SCHOOL_NOT_ESTABLISHED');
     $scope.weakPasswordAlert = $translate.instant('ERROR_WEAK_PASSWORD');
   });
- 
-  $scope.changeLanguage = function (langKey) {
-    $translate.use(langKey);
-  };
 
 }])

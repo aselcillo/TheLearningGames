@@ -102,7 +102,7 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
             $scope.modelLoginTeacher = {};
             $scope.allFalseForm();
             $ionicLoading.hide();
-          } else if (sessionUser.emailVerified == false){
+          } else if (sessionUser.emailVerified == false && teachersArray.$getRecord(sessionUser.uid)){
             alert($scope.verifyEmailAlert);
             firebase.auth().signOut();
             $ionicLoading.hide();
