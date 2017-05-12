@@ -1,9 +1,9 @@
 angular.module('app.loginController', ['pascalprecht.translate'])
      
-.controller('loginCtrl', ['$scope', '$stateParams', '$http', '$state', 'sharedData', '$firebaseArray', '$ionicPopup', '$ionicLoading', '$translate', '$rootScope',
+.controller('loginCtrl', ['$scope', '$stateParams', '$http', '$state', 'sharedData', '$firebaseArray', '$ionicPopup', '$ionicLoading', '$translate', '$rootScope', 'localStorageService',
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ionicPopup, $ionicLoading, $translate, $rootScope) {
+function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ionicPopup, $ionicLoading, $translate, $rootScope, localStorageService) {
 
   /*
     *************************************DECLARE FUNCTIONS FOR NG-SHOW********************************
@@ -48,6 +48,28 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
     $scope.verifyEmailAlert = translations.VERIFY_EMAIL;
     $scope.wronCredentialsAlert = translations.WRONG_CREDENTIALS;
   });
+
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      userData = localStorageService.get('userCredentials');
+      if (userData.type === 'teacher') {
+        $state.go('teacherHome');
+      } else if (userData.type === 'student') {
+        $state.go('studentHome');
+      }
+      $ionicLoading.hide();
+    }
+  });
+
+  var userData = localStorageService.get('userCredentials');
+  if (userData != null && Object.keys(userData).length > 0) {
+    $ionicLoading.show();
+    sharedData.setData(userData.type);
+    firebase.auth().signInWithCustomToken(userData.token).catch(function(error) {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+    });
+  }
 
   var rootRef = firebase.database().ref();
 

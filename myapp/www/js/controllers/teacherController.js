@@ -1,8 +1,8 @@
 angular.module('app.teacherController', ['pascalprecht.translate'])
 
-.controller('teacherHomeCtrl', ['$scope', '$stateParams', '$ionicModal', '$http', '$state', '$ionicPopover', '$ionicActionSheet', '$firebaseObject', '$firebaseArray', '$ionicPopup', 'sharedData',
+.controller('teacherHomeCtrl', ['$scope', '$stateParams', '$ionicModal', '$http', '$state', '$ionicPopover', '$ionicActionSheet', '$firebaseObject', '$firebaseArray', '$ionicPopup', 'sharedData', '$ionicLoading', 'localStorageService',
 
-function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ionicActionSheet, $firebaseObject, $firebaseArray, $ionicPopup, sharedData) {
+function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ionicActionSheet, $firebaseObject, $firebaseArray, $ionicPopup, sharedData, $ionicLoading, localStorageService) {
 
   /*
     *************************************DECLARE FUNCTIONS FOR NG-SHOW********************************
@@ -1658,6 +1658,16 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   firebase.auth().onAuthStateChanged(function(user) {
     if (user && sharedData.getData() === 'teacher') {
       sessionUser = firebase.auth().currentUser;
+      firebase.auth().currentUser.getToken(true).then(function(idToken) {
+        var userData = {
+          'sessionUserId' : sessionUser.uid,
+          'token' : idToken,
+          'type' : 'teacher',
+        };
+
+        localStorageService.set('userCredentials', userData);
+      });
+
       var teachersArray = $firebaseArray(teachersRef);
       teachersArray.$loaded(function() {
         $scope.teacher = teachersArray.$getRecord(sessionUser.uid);
@@ -1668,8 +1678,8 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   });
 
-  $scope.defaultAvatar = 'https://cdn3.iconfinder.com/data/icons/black-easy/512/538474-user_512x512.png';
-  $scope.defaultTeamAvatar = 'https://www.ecrconsultoria.com.br/temp/backyard/images/icon_team.png';
+  $scope.defaultAvatar = 'img/userDefaultAvatar.png';
+  $scope.defaultTeamAvatar = 'img/teamDefaultAvatar.png';
 
   var modalFirst;
   var modalMissions = 0;
@@ -1717,6 +1727,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   $scope.logOut = function() {
     if (firebase.auth().currentUser) {
+      var userData = {};
+      localStorageService.set('userCredentials', userData);
+
       firebase.auth().signOut();
       $state.go('login');
       $scope.teacherHomeForm();
@@ -1754,10 +1767,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             if ($scope.classroom != undefined) {
               $scope.getLevels();
             }
+            $scope.classrooms.sort(sortByName);
             if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
               $scope.$apply();
             }
-            $scope.classrooms.sort(sortByName);
             $scope.getClassroomsForSelection();
           }
         });
@@ -1810,12 +1823,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           $scope.copyPreferencesFromClassroom(classroom, newClassroomId);
         } else if (demoClassroom) {
 
-          //EN PROCESO (CREATE DEMO CLASSROOM)
-          /*LA IDEA ES CREAR UNA CLASE, RELLENARLA CON INFORMACION DE DEMO. Y LUEGO CAMBIAR EL ID DE ESA CLASE
-            PARA QUE NINGUN PROFESOR LA RECIBA. Y RECIBIRLA JUSTO AQUI, ANTES DE CREAR UNA NUEVA CLASE, COPIANDO
-            LAS PREFERENCIAS DE ESA CLASE DE DEMO.
-          */
-
+          //DEMO CLASSROOM
           $scope.demoClassrooms = [];
           var loopClassroom = firebase.database().ref('classrooms/demoClassroomKey');
           loopClassroom.on('value', function(snapshot) {
@@ -1825,8 +1833,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               demoClassroom = false;
             }
           });
-
-          //EN PROCESO
 
         } else {
           //CREATE DEMO LEVEL
@@ -1921,6 +1927,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.getRewards();
     $scope.getMissions();
     $scope.getNotifications();
+    $scope.classForm();
   }
 
   $scope.archiveClassroom = function(classroom) {
@@ -2122,7 +2129,48 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
                                         /* FUNCTIONS IN TEACHER PROFILE */
 
-  $scope.editTeacherData = function(name, surname, school, avatar) {
+  $scope.updateTeacherAvatar = function() {
+    var downloadURL;
+    var fileButton = document.getElementById('inputAvatar');
+    
+    fileButton.addEventListener('change',function(e) {
+      $scope.uploadingPicture = true;
+      if (e.target.files.length > 0) {
+        $ionicLoading.show();
+        var file = e.target.files[0];
+        var fileExtension = file.name.split('.').pop();
+        if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
+          var storageRef = firebase.storage().ref('Profile_Pictures/' + sessionUser.uid + '/profilePicture');
+          var task = storageRef.put(file);
+          task.on('state_changed', function progress(snapshot) {
+
+          }, function error(error) {
+            $ionicLoading.hide();
+          }, function complete() {
+            downloadURL = task.snapshot.downloadURL;
+              
+            $scope.teacher.avatar = downloadURL;
+            var teacherAvatarToUpdateRef = firebase.database().ref('teachers/' + sessionUser.uid + '/avatar/');
+            teacherAvatarToUpdateRef.set(downloadURL);
+            sessionUser.updateProfile ({
+              photoURL : downloadURL,
+            });
+            $scope.teacher.name = CryptoJS.AES.decrypt($scope.teacher.name, sessionUser.uid).toString(CryptoJS.enc.Utf8);
+            $scope.teacher.surname = CryptoJS.AES.decrypt($scope.teacher.surname, sessionUser.uid).toString(CryptoJS.enc.Utf8);
+            $ionicLoading.hide();
+
+            if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+              $scope.$apply();
+            }
+          });
+        } else {
+          alert($scope.fileInvalidAlert);
+        }
+      }
+    });
+  }
+
+  $scope.editTeacherData = function(name, surname, school) {
     if (name != undefined) {
       $scope.teacher.name = name;
       var teacherNameRef = firebase.database().ref('teachers/' + sessionUser.uid + '/name');
@@ -2147,14 +2195,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       teacherSchoolRef.set(school);
     }
 
-    if (avatar != undefined) {
-      $scope.teacher.avatar = avatar;
-      var teacherAvatarRef = firebase.database().ref('teachers/' + sessionUser.uid + '/avatar');
-      teacherAvatarRef.set(avatar);
-      sessionUser.updateProfile ({
-        photoURL : avatar,
-      });
-    }
     $scope.settingsForm();
     alert('DATOS CAMBIADOS');
   }
@@ -2205,10 +2245,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               } else {
                 $scope.levels[index] = level
               }
+              $scope.levels.sort(sortByLevel);
               if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
                 $scope.$apply();
               }
-              $scope.levels.sort(sortByLevel);
             }
           });
         }
@@ -2327,8 +2367,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         });
         $scope.getStudentsForSelection();
       }
-    }).then(function() {
-      $scope.classForm();
     });
   }
 
@@ -2664,6 +2702,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               $scope.items[index] = item;
             }
             $scope.items.sort(sortByName);
+            if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+              $scope.$apply();
+            }
             $scope.getItemsForSelection();
           }
         });
@@ -2858,10 +2899,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         } else {
           studentClassroomTotalPointsRef.set(pointsAdded);  
         }
-      }
-          
+      }     
     }
-       
+    $scope.getNotifications();
   }
 
   $scope.evaluateTeams = function(item) {
@@ -2924,6 +2964,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               $scope.checkAchievements(item, $scope.students[studentPos], item.score);
               $scope.checkMissions(item, $scope.students[studentPos], item.score);
             }
+
             if (item.useForLevel) {
               var pointsAdded = Number($scope.students[studentPos].classrooms[$scope.classroom.id].totalPoints) + Number(item.score);
               var studentClassroomTotalPointsRef = firebase.database().ref('students/' + $scope.students[studentPos].id + '/classrooms/' + $scope.classroom.id + '/totalPoints');
@@ -2932,11 +2973,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               } else {
                 studentClassroomTotalPointsRef.set(pointsAdded);
               }
-            }
+            }  
           }
         }
       }
     }
+    $scope.getNotifications();
   }
 
   $scope.selectItems = function() {
@@ -2972,7 +3014,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.changeSelectedItem = function(item) {
       if (item.selected === false) {
         item.selected = true;
-
         if ($scope.actionSheetItemsType === 'evaluateStudents' || $scope.actionSheetItemsType === 'evaluateTeams' || $scope.actionSheetItemsType == 'newMissionCreation') { 
         $scope.points = item.score;
         $scope.popupChooseScore = $ionicPopup.show({
@@ -3103,10 +3144,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             } else {
               $scope.achievements[index] = achievement;
             }
+            $scope.achievements.sort(sortByName);
             if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
               $scope.$apply();
             }
-            $scope.achievements.sort(sortByName);
             $scope.getAchievementsForSelection();
           }
         });
@@ -3315,10 +3356,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             } else {
               $scope.teams[index] = team;
             }
+            $scope.teams.sort(sortByName);
             if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
               $scope.$apply();
             }
-            $scope.teams.sort(sortByName);
             $scope.getTeamsForSelection();
           }
         });
@@ -3646,6 +3687,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               $scope.rewards[index] = reward;
             }
             $scope.rewards.sort(sortByName);
+            if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+              $scope.$apply();
+            }
             $scope.getRewardsForSelection();
           }
         });
@@ -3801,6 +3845,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               $scope.missions[index] = mission;
             }
             $scope.missions.sort(sortByName);
+            if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+              $scope.$apply();
+            }
             $scope.getMissionsForSelection();
           }
         });
@@ -4280,10 +4327,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               var notification = snapshot.val();
               $scope.notifications.push(notification);
 
+              $scope.notifications.sort(sortByDate);
               if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
                 $scope.$apply();
               }
-              $scope.notifications.sort(sortByDate);
             }
           });
         }

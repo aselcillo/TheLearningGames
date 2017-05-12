@@ -1,8 +1,8 @@
 angular.module('app.studentController', ['pascalprecht.translate'])
 
-.controller('studentHomeCtrl', ['$scope', '$stateParams', '$http', '$state', '$ionicModal', '$ionicActionSheet', '$ionicPopover', '$firebaseArray', 'sharedData', '$ionicLoading', '$translate', '$rootScope',
+.controller('studentHomeCtrl', ['$scope', '$stateParams', '$http', '$state', '$ionicModal', '$ionicActionSheet', '$ionicPopover', '$firebaseArray', 'sharedData', '$ionicLoading', '$translate', '$rootScope', '$ionicLoading', 'localStorageService',
 
-function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $ionicPopover, $firebaseArray, sharedData, $ionicLoading, $translate, $rootScope) {
+function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $ionicPopover, $firebaseArray, sharedData, $ionicLoading, $translate, $rootScope, $ionicLoading, localStorageService) {
 
   /*
     *************************************DECLARE FUNCTIONS FOR NG-SHOW********************************
@@ -502,6 +502,16 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   firebase.auth().onAuthStateChanged(function(user) {
     if (user && sharedData.getData() === 'student') {
       sessionUser = firebase.auth().currentUser;
+      firebase.auth().currentUser.getToken(true).then(function(idToken) {
+        var userData = {
+          'sessionUserId' : sessionUser.uid,
+          'token' : idToken,
+          'type' : 'student',
+        };
+
+        localStorageService.set('userCredentials', userData);
+      });
+
       var studentsArray = $firebaseArray(studentsRef);
       studentsArray.$loaded(function() {
         $scope.student = studentsArray.$getRecord(sessionUser.uid);
@@ -543,7 +553,49 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
                                           /* FUNCTIONS IN PROFILE */
 
-  $scope.editStudentData = function(name, surname, school, avatar) {
+  $scope.updateStudentAvatar = function() {
+    var downloadURL;
+    var uploader = document.getElementById('uploader');
+    var fileButton = document.getElementById('inputAvatar');
+    
+    fileButton.addEventListener('change',function(e) {
+      $scope.uploadingPicture = true;
+      if (e.target.files.length > 0) {
+        $ionicLoading.show();
+        var file = e.target.files[0];
+        var fileExtension = file.name.split('.').pop();
+        if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
+          var storageRef = firebase.storage().ref('Profile_Pictures/' + sessionUser.uid + '/profilePicture');
+          var task = storageRef.put(file);
+          task.on('state_changed', function progress(snapshot) {
+            uploader.value = (snapshot.bytesTransferred/ snapshot.totalBytes)*100;
+          }, function error(error) {
+            $ionicLoading.hide();
+          }, function complete() {
+            downloadURL = task.snapshot.downloadURL;
+              
+            $scope.student.avatar = downloadURL;
+            var studentAvatarToUpdateRef = firebase.database().ref('students/' + sessionUser.uid + '/avatar/');
+            studentAvatarToUpdateRef.set(downloadURL);
+            sessionUser.updateProfile ({
+              photoURL : downloadURL,
+            });
+            $scope.student.name = CryptoJS.AES.decrypt($scope.student.name, sessionUser.uid).toString(CryptoJS.enc.Utf8);
+            $scope.student.surname = CryptoJS.AES.decrypt($scope.student.surname, sessionUser.uid).toString(CryptoJS.enc.Utf8);
+            $ionicLoading.hide();
+
+            if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+              $scope.$apply();
+            }
+          });
+        } else {
+          alert($scope.fileInvalidAlert);
+        }
+      }
+    });
+  }
+
+  $scope.editStudentData = function(name, surname, school) {
     if (name != undefined) {
       $scope.student.name = name;
       var studentNameRef = firebase.database().ref('students/' + sessionUser.uid + '/name');
@@ -568,14 +620,6 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       studentSchoolRef.set(school);
     }
 
-    if (avatar != undefined) {
-      $scope.student.avatar = avatar;
-      var studentAvatarRef = firebase.database().ref('students/' + sessionUser.uid + '/avatar');
-      studentAvatarRef.set(avatar);
-      sessionUser.updateProfile ({
-        photoURL : avatar,
-      });
-    }
     $scope.settingsForm();
     alert($scope.dataChangedAlert);
   }
@@ -603,6 +647,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
   $scope.logOut = function() {
     if (firebase.auth().currentUser) {
+      var userData = {};
+      localStorageService.set('userCredentials', userData);
+      
       firebase.auth().signOut();
       $state.go('login');
       $scope.studentHomeForm();
@@ -638,6 +685,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
               $scope.classrooms[index] = snapshot.val();
             }
             $scope.classrooms.sort(sortByName);
+            if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+              $scope.$apply();
+            }
           }
         });
       }
