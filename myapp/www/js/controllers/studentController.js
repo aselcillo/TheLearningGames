@@ -76,11 +76,11 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
   $scope.showActionsheetRewards = function() {
     $ionicActionSheet.show({
-      titleText: 'ACCIONES RECOMPENSAS',
+      titleText: $scope.actionsRewardsActionSheet,
       buttons: [
-        { text: 'COMPRAR RECOMPENSA(S)' },
+        { text: $scope.buyRewardsActionSheetOption },
       ],
-      cancelText: 'CANCELAR',
+      cancelText: $scope.cancelText,
       cancel: function() {
         //CANCEL ACTION
       },
@@ -368,7 +368,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       '</ion-list>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm  button-block" ng-click="closeNotificationsModal()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button class="button button-calm  button-block" ng-click="deleteNotifications()">{{ \'CLEAR_NOTIFICATIONS\' | translate }}</button>'+
+        '<button class="button button-calm  button-block" ng-click="deleteNotifications()">{{ \'CLEAN_NOTIFICATIONS\' | translate }}</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -522,7 +522,10 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     }
   });
 
-  $translate(['CLASS_CLOSED', 'DATA_CHANGED', 'EMAIL_CHANGED', 'NOT_ENOUGH_POINTS', 'NOTIFICATION_OF_STUDENT', 'NOTIFICATION_REWARD_OBTAINED', 'NOTIFICATION_REWARD_SPENT', 'PASSWORD_CHANGED', 'REWARD']).then(function(translations) {
+  $translate(['ACTIONS_REWARDS', 'BUY_REWARDS', 'CANCEL', 'CLASS_CLOSED', 'DATA_CHANGED', 'EMAIL_CHANGED', 'NOT_ENOUGH_POINTS', 'NOTIFICATION_OF_STUDENT', 'NOTIFICATION_REWARD_OBTAINED', 'NOTIFICATION_REWARD_SPENT', 'PASSWORD_CHANGED', 'REWARD']).then(function(translations) {
+    $scope.actionsRewardsActionSheet = translations.ACTIONS_REWARDS;
+    $scope.buyRewardsActionSheetOption = translations.BUY_REWARDS;
+    $scope.cancelText = translations.CANCEL;
     $scope.classroomClosedAlert = translations.CLASS_CLOSED;
     $scope.dataChangedAlert = translations.DATA_CHANGED;
     $scope.emailChangedAlert = translations.EMAIL_CHANGED;
@@ -1364,6 +1367,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   }
 
   $rootScope.$on('$translateChangeSuccess', function () {
+    $scope.actionsRewardsActionSheet = $translate.instant('ACTIONS_REWARDS');
+    $scope.buyRewardsActionSheetOption = $translate.instant('BUY_REWARDS');
+    $scope.cancelText = $translate.instant('CANCEL');
     $scope.classroomClosedAlert = $translate.instant('CLASS_CLOSED');
     $scope.dataChangedAlert = $translate.instant('DATA_CHANGED');
     $scope.emailChangedAlert = $translate.instant('EMAIL_CHANGED');
