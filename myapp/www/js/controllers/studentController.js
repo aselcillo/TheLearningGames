@@ -368,7 +368,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       '</ion-list>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm  button-block" ng-click="closeNotificationsModal()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button class="button button-calm  button-block" ng-click="deleteNotifications()">{{ \'CLEAR_NOTIFICATIONS\' | translate }}</button>'+
+        '<button class="button button-calm  button-block" ng-click="deleteNotifications()">{{ \'CLEAN_NOTIFICATIONS\' | translate }}</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
