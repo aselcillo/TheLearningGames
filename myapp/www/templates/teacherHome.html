@@ -43,9 +43,10 @@
             </h3>
           </header>
           <div class="avatar_margen">
-          <ion-item class ="teacherAvatar">
-            <img src={{teacher.avatar}} class="avatar">
-          </ion-item>
+            <ion-item class ="teacherAvatar">
+              <img src={{teacher.avatar}} class="avatar">
+            </ion-item>
+          </div>
           <input class="button button-light button-block button-outline" type="file" id="inputAvatar" ng-click="updateTeacherAvatar()">
           <label class="item item-input list-elements" id="signUp-input3">
             <span class="inputLabelProfile">
@@ -277,7 +278,7 @@
         </form>
       </div>      
       <h3 id="teams-heading5" class="teams-hdg5">{{ 'ACHIEVEMENTS' | translate }}</h3>
-      <ion-list id="items-list9" class="list-elements align-text-center list-student list-elements">
+      <ion-list id="items-list9" class="align-text-center list-student">
         <ion-item id="items-list-item15" ng-click="setAchievement(achievement)" ng-repeat="achievement in achievements">
           <h2>{{achievement.name}}</h2>
         </ion-item>
@@ -307,9 +308,9 @@
             </h3>
           </header>
           <div class="avatar_margen">
-          <ion-item class ="teacherAvatar">
-            <img src={{achievement.badge}} class="avatar">
-          </ion-item>
+            <ion-item class ="teacherAvatar">
+              <img src={{achievement.badge}} class="avatar">
+            </ion-item>
           </div>
           <label class="item item-input list-elements">
             <span class="input-label">{{ 'NAME' | translate }} </span>
