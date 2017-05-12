@@ -35,7 +35,7 @@ function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading, $trans
 
   $scope.modelSignUp = {};
 
-  $scope.defaultAvatar = 'https://cdn3.iconfinder.com/data/icons/black-easy/512/538474-user_512x512.png';
+  $scope.defaultAvatar = 'img/userDefaultAvatar.png';
 
   var rootRef = firebase.database().ref();
 

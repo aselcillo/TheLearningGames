@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic', 'app.loginController', 'app.settingsController', 'app.signUpController', 'app.studentController', 'app.teacherController', 'app.translationsController', 'app.routes', 'app.directives', 'app.services', 'ngCookies', 'pascalprecht.translate', 'ui.router', 'firebase', 'firebaseConfig'])
+angular.module('app', ['ionic', 'app.loginController', 'app.settingsController', 'app.signUpController', 'app.studentController', 'app.teacherController', 'app.translationsController', 'app.routes', 'app.directives', 'app.services', 'ngCookies', 'pascalprecht.translate', 'ui.router', 'firebase', 'firebaseConfig', 'LocalStorageModule'])
 
 .config(function($ionicConfigProvider, $sceDelegateProvider, $translateProvider){
   
@@ -36,8 +36,12 @@ angular.module('app', ['ionic', 'app.loginController', 'app.settingsController',
       cordova.plugins.Keyboard.disableScroll(true);
     }
   });
-})
 
+  $ionicPlatform.registerBackButtonAction(function(event) {
+    event.preventDefault();
+  }, 800);//registerBackButton
+
+})
 /*
   This directive is used to open regular and dynamic href links inside of inappbrowser.
 */
