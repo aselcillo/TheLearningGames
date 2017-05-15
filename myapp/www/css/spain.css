@@ -44,12 +44,14 @@ ion-view, ion-modal-view{ background:url('../img/bg.jpg') no-repeat; background-
 .list-elements { background: rgba(255, 255, 255, 0.8) none repeat scroll 0 0;}
 
 /* PopUp */
-.popup{ border-radius: 10px !important; background: rgba(255, 255, 255, 0.83); }
+.popup{ border-radius: 10px !important; background: rgba(255, 255, 255, 0.83); text-align: justify; }
 	.popup h3{ color: white; font-size: 1.3em; text-transform: uppercase;}
 
-	.popup .button{ background-color: rgba(0, 0, 0, .3) !important; color: white; height: 40px !important; border-radius: 5px !important;}
+	.popup .button{ background-color: rgba(0, 0, 0, .3) !important; color: white; border-radius: 5px !important;}
 	.popup .button:hover{ background-color: rgba(0, 0, 0, .5) !important; color: white  !important; }	
-	.popup input{ border:1px solid #cdcdcd; border-radius: 5px; text-indent: 10px; }	
+	.popup input{ border:1px solid #cdcdcd; border-radius: 5px; text-indent: 10px; }
+
+.popup-container .popup { width: auto; max-width: 90% }
 
 /* Menú desplegable */
 .platform-browser .popover{ 
@@ -94,4 +96,9 @@ ion-modal-view h2{ background-color: #387ef5;}
 .item-options {
 	white-space: nowrap;
 	background: none;
+}
+
+.item-option-button {
+	min-width: none !important;
+	min-height: none !important; 
 }

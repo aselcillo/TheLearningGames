@@ -836,7 +836,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     var classroomLevelsArray = $firebaseArray(classroomLevelsRef);
     classroomLevelsArray.$loaded(function() {
       for (var element in classroomLevelsArray) {
-        if ($scope.student.classrooms[$scope.classroom.id].totalPoints > classroomLevelsArray[element].requiredPoints) {
+        if ($scope.student.classrooms[$scope.classroom.id].totalPoints >= classroomLevelsArray[element].requiredPoints) {
           $scope.studentLevel = classroomLevelsArray[element];
         }
       }

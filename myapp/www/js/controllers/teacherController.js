@@ -845,10 +845,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           '<ion-item class="list-student-dialog" ng-repeat="item in studentItems">'+
             '<i class="icon ion-clipboard"></i>&nbsp;&nbsp;{{item.name}}'+
             '<span class="item-note">{{item.points}} / {{item.maxScore}}</span>'+
-            '<ion-option-button class="button-assertive" ng-click="removePoints(item)">'+
+            '<ion-option-button class="button-assertive item-option-button" ng-click="removePoints(item)">'+
               '<i class="icon ion-minus-round"></i>'+
             '</ion-option-button>'+
-            '<ion-option-button class="button-calm" ng-click="addPoints(item)">'+
+            '<ion-option-button class="button-calm item-option-button" ng-click="addPoints(item)">'+
               '<i class="icon ion-plus-round"></i>'+
             '</ion-option-button>'+
         '</ion-list>'+
@@ -880,8 +880,8 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           '<img src={{team.picture}} class="avatar">'+
         '</div>'+
       '</div>'+
+      '<input class="button button-light button-block button-outline" type="file" id="inputTeamPicture" ng-click="updateTeamPicture()">'+
         '<form id="teamDialogForm">'+
-          '<button class="button button-light  button-block button-outline">{{ \'CHANGE_AVATAR\' | translate }}</button>'+
           '<label class="item item-input list-elements">'+
             '<span class="input-label">{{ \'NAME\' | translate }}</span>'+
             '<input type="text" placeholder="{{team.name}}" ng-model="modelTeamDialog.name">'+
@@ -890,13 +890,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             '<span class="input-label">{{ \'TEAM_OBJECTIVE\' | translate }}</span>'+
             '<input type="text" placeholder="{{team.objective}}" ng-model="modelTeamDialog.objective">'+
           '</label>'+
-          '<label class="item item-input list-elements">'+
-            '<span class="input-label">{{ \'IMAGE\' | translate }}</span>'+
-            '<input type="text" placeholder="{{team.picture}}" ng-model="modelTeamDialog.picture">'+
-          '</label>'+
           '<div class="button-bar action_buttons">'+
             '<button class="button button-calm  button-block" ng-click="closeModalTeamDialog()">{{ \'CANCEL\' | translate }}</button>'+
-            '<button class="button button-calm  button-block" ng-disabled="!modelTeamDialog.name && !modelTeamDialog.objective && !modelTeamDialog.picture" ng-click="editTeam(modelTeamDialog.name, modelTeamDialog.objective, modelTeamDialog.picture)">{{ \'EDIT_TEAM\' | translate }}</button>'+
+            '<button class="button button-calm  button-block" ng-disabled="!modelTeamDialog.name && !modelTeamDialog.objective" ng-click="editTeam(modelTeamDialog.name, modelTeamDialog.objective)">{{ \'EDIT_TEAM\' | translate }}</button>'+
           '</div>'+
         '</form>'+
       '</div>'+
@@ -905,7 +901,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           '<ion-item class="list-student" ng-repeat="teamMember in teamMembers">{{teamMember.name}} {{teamMember.surname}}</ion-item>'+
         '</ion-list>'+
       '</div>'+
-      '<button ng-click="showModalEditMembers()" class="button button-calm  button-block">{{ \'EDIT_MEMBERS\' | translate }}</button>'+
+      '<button ng-click="showModalEditMembers()" class="button button-calm button-block">{{ \'EDIT_MEMBERS\' | translate }}</button>'+
     '</ion-content>'+
   '</ion-modal-view>';
 
@@ -1762,6 +1758,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   $scope.defaultAvatar = 'img/userDefaultAvatar.png';
   $scope.defaultTeamAvatar = 'img/teamDefaultAvatar.png';
+  $scope.defaultAchievementAvatar = 'img/achievementDefaultBadge.png';
 
   var modalFirst;
   var modalMissions = 0;
@@ -3251,7 +3248,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       alert($scope.cantAskMoreScoreAlert);
     } else {
       if (badge == undefined) {
-        badge = $scope.defaultAvatar
+        badge = $scope.defaultAchievementAvatar;
       }
 
       var achievementsNode = $firebaseArray(achievementsRef);
@@ -3417,6 +3414,43 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
 
                                        /* FUNCTIONS IN TEAMS */
+
+  $scope.updateTeamPicture = function() {
+    var downloadURL;
+    var fileButton = document.getElementById('inputTeamPicture');
+    
+    fileButton.addEventListener('change',function(e) {
+      $scope.uploadingPicture = true;
+      if (e.target.files.length > 0) {
+        $ionicLoading.show();
+        var file = e.target.files[0];
+        var fileExtension = file.name.split('.').pop();
+        if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
+          var storageRef = firebase.storage().ref('Team_Pictures/' + $scope.team.id + '/teamPicture');
+          var task = storageRef.put(file);
+          task.on('state_changed', function progress(snapshot) {
+
+          }, function error(error) {
+            $ionicLoading.hide();
+          }, function complete() {
+            downloadURL = task.snapshot.downloadURL;
+              
+            $scope.team.picture = downloadURL;
+            var teamPictureToUpdateRef = firebase.database().ref('teams/' + $scope.team.id + '/picture/');
+            teamPictureToUpdateRef.set(downloadURL);
+            
+            $ionicLoading.hide();
+
+            if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+              $scope.$apply();
+            }
+          });
+        } else {
+          alert($scope.fileInvalidAlert);
+        }
+      }
+    });
+  }
 
   $scope.getTeams = function() {
     var classroomTeamsRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/teams');
@@ -3620,35 +3654,16 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.showModalTeamDialog();
   }
 
-  $scope.editTeam = function(name, objective, picture) {
-    if (name != undefined && objective != undefined && picture != undefined) {
-      var team = {
-        'id' : $scope.team.id,
-        'name' : name,
-        'objective' : objective,
-        'picture' : picture,
-        'students' : $scope.team.students,
-      }
-      var teamRef = firebase.database().ref('teams/' + $scope.team.id);
-      teamRef.set(team);
-    } else {
-      if (name != undefined) {
-        $scope.team.name = name;
-        var teamNameRef = firebase.database().ref('teams/' + $scope.team.id + '/name');
-        teamNameRef.set(name);
-      }
-
-      if (objective != undefined) {
-        $scope.team.objective = objective;
-        var teamObjectiveRef = firebase.database().ref('teams/' + $scope.team.id + '/objective');
-        teamObjectiveRef.set(objective);
-      }
-
-      if (picture != undefined) {
-        $scope.team.picture = picture;
-        var teamPictureRef = firebase.database().ref('teams/' + $scope.team.id + '/picture');
-        teamPictureRef.set(picture);
-      }
+  $scope.editTeam = function(name, objective) {
+    if (name != undefined) {
+      $scope.team.name = name;
+      var teamNameRef = firebase.database().ref('teams/' + $scope.team.id + '/name');
+      teamNameRef.set(name);
+    }
+    if (objective != undefined) {
+      $scope.team.objective = objective;
+      var teamObjectiveRef = firebase.database().ref('teams/' + $scope.team.id + '/objective');
+      teamObjectiveRef.set(objective);
     }
     $scope.closeModalTeamDialog();
     alert($scope.dataChangedAlert);
