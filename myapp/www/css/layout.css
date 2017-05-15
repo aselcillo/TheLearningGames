@@ -30,6 +30,8 @@ body .addButton{
 
 .puntuacion{ padding-left: 1%; text-transform: uppercase; color: white; font-weight: 400; }
 
+#quantityInput{ width: 100% !important; }
+
 /*
  * LOGIN SCREEN
  */
@@ -87,7 +89,7 @@ h3 .subheader p{ font-size: 0.9em; background: rgba(162, 180, 131, 0.2); padding
 /*
  * TEACHER PROFILE
  */
- .avatar_margen{ float: left; padding: 20px 0; width: 100%;}
+ .avatar_margen, .content_margen{ float: left; padding: 20px 0; width: 100%;}
  .teacherAvatar {
     border-radius: 100% !important;
     display: block;
@@ -113,6 +115,7 @@ h3 .subheader p{ font-size: 0.9em; background: rgba(162, 180, 131, 0.2); padding
 	    height: 200px;
 	    width: 200px;
 	    transition: all 1s;
+	    background: none;
 	 }
 
   }

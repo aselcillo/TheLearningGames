@@ -45,7 +45,7 @@ ion-view, ion-modal-view{ background:url('../img/bg.jpg') no-repeat; background-
 
 /* PopUp */
 .popup{ border-radius: 10px !important; background: rgba(255, 255, 255, 0.83); }
-	.popup h3{ color: black; font-size: 1.3em; text-transform: uppercase;}
+	.popup h3{ color: white; font-size: 1.3em; text-transform: uppercase;}
 
 	.popup .button{ background-color: rgba(0, 0, 0, .3) !important; color: white; height: 40px !important; border-radius: 5px !important;}
 	.popup .button:hover{ background-color: rgba(0, 0, 0, .5) !important; color: white  !important; }	
@@ -64,8 +64,8 @@ ion-view, ion-modal-view{ background:url('../img/bg.jpg') no-repeat; background-
 	.popover .item-select option { padding: 10px 10px 10px 0; }
 
 /* Ventanas de cuando pulsas boton ADD del botton */
-.action-sheet .action-sheet-group{ background: rgba(0, 0, 0, 0.95);}
-.action-sheet .action-sheet-group .action-sheet-title{ color: white; font-size: 1.3em; text-transform: uppercase; }
+.action-sheet .action-sheet-group{ background: rgba(255, 255, 255, 0.7);}
+.action-sheet .action-sheet-group .action-sheet-title{ color: black; font-size: 1.3em; text-transform: uppercase; }
 .action-sheet .action-sheet-group button{ font-size: 1em; }
 
 /* Botones Activar / Desactivar */
@@ -74,3 +74,7 @@ ion-view, ion-modal-view{ background:url('../img/bg.jpg') no-repeat; background-
 ion-modal-view h2, h3{ color: white;}
 
 ion-modal-view h2{ background-color: #387ef5;}
+
+.item, .item h1, .item h2, .item h3, .item h4, .item h5, .item h6, .item p, .item-content, .item-content h1, .item-content h2, .item-content h3, .item-content h4, .item-content h5, .item-content h6, .item-content p {
+    white-space: normal;
+}
