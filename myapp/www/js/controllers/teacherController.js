@@ -904,8 +904,8 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         '<ion-list>'+
           '<ion-item class="list-student" ng-repeat="teamMember in teamMembers">{{teamMember.name}} {{teamMember.surname}}</ion-item>'+
         '</ion-list>'+
-        '<button ng-click="showModalEditMembers()" class="button button-calm  button-block">{{ \'EDIT_MEMBERS\' | translate }}</button>'+
       '</div>'+
+      '<button ng-click="showModalEditMembers()" class="button button-calm  button-block">{{ \'EDIT_MEMBERS\' | translate }}</button>'+
     '</ion-content>'+
   '</ion-modal-view>';
 
@@ -950,9 +950,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       '<ion-list>'+
         '<ion-checkbox class="list-student-team" ng-repeat="studentForTeamSelection in studentsForTeamSelection" ng-checked="studentForTeamSelection.inTeam" ng-click="inTeam(studentForTeamSelection)">{{studentForTeamSelection.name}} {{studentForTeamSelection.surname}}</ion-checkbox>'+
       '</ion-list>'+
-      '<div class="list-student">'+
-        '<button ng-click="closeModalEditMembers()" class="button button-calm  button-block">{{ \'CANCEL\' | translate }}</button>'+
-        '<button ng-click="editTeamMembers()" class="button button-calm  button-block">{{ \'EDIT_MEMBERS\' | translate }}</button>'+
+      '<div>'+
+        '<button ng-click="closeModalEditMembers()" class="button button-calm button-block">{{ \'CANCEL\' | translate }}</button>'+
+        '<button ng-click="editTeamMembers()" class="button button-calm button-block">{{ \'EDIT_MEMBERS\' | translate }}</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
