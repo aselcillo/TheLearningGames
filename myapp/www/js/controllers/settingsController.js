@@ -3,7 +3,7 @@ angular.module('app.settingsController', ['pascalprecht.translate'])
 .controller('settingsCtrl', ['$scope', '$ionicPopup', '$translate', '$rootScope',
   function($scope, $ionicPopup, $translate, $rootScope) {
 
-    $translate(['HELP', 'OKAY', 'TERMS_CONDITIONS']).then(function(translations) {
+    $translate(['ABOUT', 'HELP', 'OKAY', 'TERMS_CONDITIONS']).then(function(translations) {
       $scope.about = translations.ABOUT;
       $scope.helpText = translations.HELP;
       $scope.okayText = translations.OKAY;

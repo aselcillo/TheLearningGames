@@ -680,6 +680,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
               if ($scope.classrooms[j].id == snapshot.val().id) {
                 change = true;
                 index = j;
+                break;
               }
             }
             if (!change) {
@@ -779,6 +780,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
                   change = true;
                   index = j;
                   item.studentPoints = 0;
+                  break;
                 }
               }
               if (!change) {
@@ -794,6 +796,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
                   change = true;
                   index = j;
                   item.studentPoints = $scope.student.items[item.id].points;
+                  break;
                 }
               }
               if (!change) {
@@ -867,6 +870,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
             for (h = 0 ; h < $scope.itemsLocked.length ; h++) {
               if ($scope.item.id == $scope.itemsLocked[h].id) {
                 toLock = true;
+                break;
               }
             }
             if (toLock) {
@@ -874,6 +878,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
                 if (achievement.id == $scope.achievementsLocked[j].id) {
                   change = true;
                   index = j;
+                  break;
                 }
               }
               if (!change) {
@@ -954,6 +959,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
                   if (team.id == $scope.teams[j].id) {
                     change = true;
                     index = j;
+                    break;
                   }
                 }
                 if (!change) {
@@ -1026,6 +1032,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
                 if (reward.id == $scope.rewardsLocked[j].id) {
                   change = true;
                   index = j;
+                  break;
                 }
               }
               if (!change) {
@@ -1039,6 +1046,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
                 if (reward.id == $scope.rewardsUnlocked[j].id) {
                   change = true;
                   index = j;
+                  break;
                 }
               }
               if (!change) {
@@ -1174,6 +1182,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
                   if (mission.id == $scope.missions[j].id) {
                     change = true;
                     index = j;
+                    break;
                   }
                 }
                 if (!change) {
@@ -1209,6 +1218,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
               if ($scope.students[j].id == student.id) {
                 change = true;
                 index = j;
+                break;
               }
             }
             if (!change) {
