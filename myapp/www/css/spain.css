@@ -97,8 +97,3 @@ ion-modal-view h2{ background-color: #387ef5;}
 	white-space: nowrap;
 	background: none;
 }
-
-.item-option-button {
-	min-width: none !important;
-	min-height: none !important; 
-}
