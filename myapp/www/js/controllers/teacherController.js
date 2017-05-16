@@ -822,6 +822,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           '<img src={{student.avatar}} class="avatar">'+
         '</div>'+
       '</div>'+
+      '<input class="button button-light button-block button-outline" type="file" id="inputStudentPicture" ng-click="updateStudentPicture()">'+
         '<form id="studentProfileFormData" class="list">'+
           '<ion-list id="signUp-list2">'+
             '<label class="item item-input list-elements" id="signUp-input3">'+
@@ -2230,7 +2231,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var fileButton = document.getElementById('inputAvatar');
     
     fileButton.addEventListener('change',function(e) {
-      $scope.uploadingPicture = true;
       if (e.target.files.length > 0) {
         $ionicLoading.show();
         var file = e.target.files[0];
@@ -2429,6 +2429,42 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
     $scope.closeEditLevelModal();
     alert($scope.dataChangedAlert);
+  }
+
+  $scope.updateStudentPicture = function() {
+    var downloadURL;
+    var fileButton = document.getElementById('inputStudentPicture');
+    
+    fileButton.addEventListener('change',function(e) {
+      if (e.target.files.length > 0) {
+        $ionicLoading.show();
+        var file = e.target.files[0];
+        var fileExtension = file.name.split('.').pop();
+        if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
+          var storageRef = firebase.storage().ref('Profile_Pictures/' + $scope.student.id + '/' + $scope.classroom.id + '/classroomPicture');
+          var task = storageRef.put(file);
+          task.on('state_changed', function progress(snapshot) {
+
+          }, function error(error) {
+            $ionicLoading.hide();
+          }, function complete() {
+            downloadURL = task.snapshot.downloadURL;
+              
+            $scope.student.picture = downloadURL;
+            var studentPictureToUpdateRef = firebase.database().ref('students/' + $scope.student.id + '/picture');
+            studentPictureToUpdateRef.set(downloadURL);
+            
+            $ionicLoading.hide();
+
+            if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+              $scope.$apply();
+            }
+          });
+        } else {
+          alert($scope.fileInvalidAlert);
+        }
+      }
+    });
   }
 
   $scope.getStudents = function() {
@@ -3227,6 +3263,42 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
                                         /* FUNCTIONS IN ACHIEVEMENTS */
 
+  $scope.updateAchievementPicture = function() {
+    var downloadURL;
+    var fileButton = document.getElementById('inputAchievementPicture');
+    
+    fileButton.addEventListener('change',function(e) {
+      if (e.target.files.length > 0) {
+        $ionicLoading.show();
+        var file = e.target.files[0];
+        var fileExtension = file.name.split('.').pop();
+        if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
+          var storageRef = firebase.storage().ref('Achievement_Pictures/' + $scope.achievement.id + '/achievementPicture');
+          var task = storageRef.put(file);
+          task.on('state_changed', function progress(snapshot) {
+
+          }, function error(error) {
+            $ionicLoading.hide();
+          }, function complete() {
+            downloadURL = task.snapshot.downloadURL;
+              
+            $scope.achievement.badge = downloadURL;
+            var achievementPictureToUpdateRef = firebase.database().ref('achievements/' + $scope.achievement.id + '/badge/');
+            achievementPictureToUpdateRef.set(downloadURL);
+            
+            $ionicLoading.hide();
+
+            if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+              $scope.$apply();
+            }
+          });
+        } else {
+          alert($scope.fileInvalidAlert);
+        }
+      }
+    });
+  }
+
   $scope.getAchievements = function() {
     var itemAchievementsRef = firebase.database().ref('items/' + $scope.item.id + '/achievements');
     var achievementKeys = $firebaseArray(itemAchievementsRef);
@@ -3324,8 +3396,8 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.achievementsForm();
   }
 
-  $scope.editAchievement = function(name, description, requirements, maxLevel, badge) {
-    if (name != undefined && description != undefined && requirements != undefined && maxLevel != undefined && badge != undefined) {
+  $scope.editAchievement = function(name, description, requirements, maxLevel) {
+    if (name != undefined && description != undefined && requirements != undefined && maxLevel != undefined) {
       var achievementRef = firebase.database().ref('achievements/' + $scope.achievement.id);
       var achievementEdit = {
         'id' : $scope.achievement.id,
@@ -3333,7 +3405,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         'description' : description,
         'requirements' : requirements,
         'maxLevel' : maxLevel,
-        'badge' : badge,
+        'badge' : $scope.achievement.badge,
       };
       achievementRef.set(achievementEdit);
     } else {
@@ -3355,11 +3427,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       if (maxLevel != undefined) {
         var achievementMaxLevelRef = firebase.database().ref('achievements/' + $scope.achievement.id + '/maxLevel');
         achievementMaxLevelRef.set(maxLevel);
-      }
-
-      if (badge != undefined) {
-        var achievementBadgeRef = firebase.database().ref('achievements/' + $scope.achievement.id + '/badge');
-        achievementBadgeRef.set(badge);
       }
     }
     $scope.itemsForm();
@@ -3447,7 +3514,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var fileButton = document.getElementById('inputTeamPicture');
     
     fileButton.addEventListener('change',function(e) {
-      $scope.uploadingPicture = true;
       if (e.target.files.length > 0) {
         $ionicLoading.show();
         var file = e.target.files[0];
@@ -3463,7 +3529,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             downloadURL = task.snapshot.downloadURL;
               
             $scope.team.picture = downloadURL;
-            var teamPictureToUpdateRef = firebase.database().ref('teams/' + $scope.team.id + '/picture/');
+            var teamPictureToUpdateRef = firebase.database().ref('teams/' + $scope.team.id + '/picture');
             teamPictureToUpdateRef.set(downloadURL);
             
             $ionicLoading.hide();
