@@ -311,6 +311,7 @@
               <img src={{achievement.badge}} class="avatar">
             </ion-item>
           </div>
+          <input class="button button-light button-block button-outline" type="file" id="inputAchievementPicture" ng-click="updateAchievementPicture()">
           <label class="item item-input list-elements">
             <span class="input-label">{{ 'NAME' | translate }} </span>
             <input type="text" placeholder="{{achievement.name}}" ng-model="modelAchievement.name">
@@ -327,15 +328,11 @@
             <span class="input-label">{{ 'MAX_LEVEL' | translate }}</span>
             <input type="number" placeholder="{{achievement.maxLevel}}" ng-model="modelAchievement.maxLevel">
           </label>
-          <label class="item item-input list-elements">
-            <span class="input-label">{{ 'BADGE' | translate }}</span>
-            <input type="text" placeholder="{{achievement.badge}}" ng-model="modelAchievement.badge">
-          </label>
         </ion-list>
       </form>
       <div class="button-bar action_buttons">
         <button class="button button-calm  button-block" ng-click="itemsForm()">{{ 'CANCEL' | translate }}</button>
-        <button class="button button-calm  button-block" ng-click="editAchievement(modelAchievement.name, modelAchievement.description, modelAchievement.requirements, modelAchievement.pointsToLevel, modelAchievement.maxLevel, modelAchievement.badge)" ng-disabled="!modelAchievement.name && !modelAchievement.description && !modelAchievement.requirements && !modelAchievement.pointsToLevel && !modelAchievement.maxLevel && !modelAchievement.badge">{{ 'EDIT_ACHIEVEMENT' | translate }}</button>
+        <button class="button button-calm  button-block" ng-click="editAchievement(modelAchievement.name, modelAchievement.description, modelAchievement.requirements, modelAchievement.pointsToLevel, modelAchievement.maxLevel)" ng-disabled="!modelAchievement.name && !modelAchievement.description && !modelAchievement.requirements && !modelAchievement.pointsToLevel && !modelAchievement.maxLevel">{{ 'EDIT_ACHIEVEMENT' | translate }}</button>
       </div>
     </div>
 

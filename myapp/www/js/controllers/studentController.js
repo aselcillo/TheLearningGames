@@ -561,11 +561,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
   $scope.updateStudentAvatar = function() {
     var downloadURL;
-    var uploader = document.getElementById('uploader');
     var fileButton = document.getElementById('inputAvatar');
     
     fileButton.addEventListener('change',function(e) {
-      $scope.uploadingPicture = true;
       if (e.target.files.length > 0) {
         $ionicLoading.show();
         var file = e.target.files[0];
@@ -574,7 +572,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
           var storageRef = firebase.storage().ref('Profile_Pictures/' + sessionUser.uid + '/profilePicture');
           var task = storageRef.put(file);
           task.on('state_changed', function progress(snapshot) {
-            uploader.value = (snapshot.bytesTransferred/ snapshot.totalBytes)*100;
+            
           }, function error(error) {
             $ionicLoading.hide();
           }, function complete() {
