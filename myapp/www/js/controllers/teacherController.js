@@ -783,7 +783,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           '<img src={{defaultAvatar}} class="avatar">'+
         '</div>'+
       '</div>'+
-      '<button  class="button button-light  button-block button-outline">{{ \'TAKE_PICTURE\' | translate }}</button>'+
+      '<input class="button button-light button-block button-outline" type="file" id="inputStudentPicture" ng-click="updateInputFile(\'inputStudentPicture\')">'+
       '<div>'+
         '<ion-list>'+
           '<form id="newStudentForm" class="list">'+
@@ -1803,6 +1803,21 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
 
 
+                                        /* UPDATE INpUT FILE */
+
+  $scope.updateInputFile = function(elementId) {
+    var fileButton = document.getElementById(elementId);
+    
+    fileButton.addEventListener('change',function(e) {
+      if (e.target.files.length > 0) {
+        $scope.file = e.target.files[0];
+      }
+    });
+  }
+
+
+
+
                                         /* HASHCODE POPUP */
 
   $scope.showHashcodePopup = function() {
@@ -2566,16 +2581,53 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             'avatar' : sessionStudent.photoURL,
             'emailVerified' : true,
           }).then(function() {
+            var downloadURL;
             var newClassStudentRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/students/' + sessionStudent.uid);
             newClassStudentRef.set(true);
+            $ionicLoading.show();
 
-            var newStudentClassRef = firebase.database().ref('students/' + sessionStudent.uid + '/classrooms/' + $scope.classroom.id);
-            newStudentClassRef.set({
-              'id' : $scope.classroom.id,
-              'totalPoints' : 0,
-              'usedPoints' : 0,
-              'inClass' : true,
-            });
+            if($scope.file != undefined || $scope.file != null)
+            {
+              var fileExtension = $scope.file.name.split('.').pop();
+              if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
+                var storageRef = firebase.storage().ref('Profile_Pictures/' + sessionStudent.uid + '/' + $scope.classroom.id + '/classroomPicture');
+                var task = storageRef.put($scope.file);
+                task.on('state_changed', function progress(snapshot) {
+
+                }, function error(error) {
+                  $ionicLoading.hide();
+                }, function complete() {
+                  downloadURL = task.snapshot.downloadURL;
+                  var newStudentClassRef = firebase.database().ref('students/' + sessionStudent.uid + '/classrooms/' + $scope.classroom.id);
+                  newStudentClassRef.set({
+                    'id' : $scope.classroom.id,
+                    'totalPoints' : 0,
+                    'usedPoints' : 0,
+                    'inClass' : true,
+                    'picture' : downloadURL,
+                  });
+                  $ionicLoading.hide();
+
+                  if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+                    $scope.$apply();
+                  }
+                });
+              } else {
+                alert($scope.fileInvalidAlert);
+              }
+            } else {
+              var newStudentClassRef = firebase.database().ref('students/' + sessionStudent.uid + '/classrooms/' + $scope.classroom.id);
+              newStudentClassRef.set({
+                'id' : $scope.classroom.id,
+                'totalPoints' : 0,
+                'usedPoints' : 0,
+                'inClass' : true,
+                'picture' : $scope.defaultAvatar,
+              });
+            }
+            
+
+            
 
             secondaryConnection.auth().signOut();
 
