@@ -522,7 +522,8 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     }
   });
 
-  $translate(['ACTIONS_REWARDS', 'BUY_REWARDS', 'CANCEL', 'CLASS_CLOSED', 'DATA_CHANGED', 'EMAIL_CHANGED', 'NOT_ENOUGH_POINTS', 'NOTIFICATION_OF_STUDENT', 'NOTIFICATION_REWARD_OBTAINED', 'NOTIFICATION_REWARD_SPENT', 'PASSWORD_CHANGED', 'REWARD']).then(function(translations) {
+  $translate(['ACTIONS_REWARDS', 'BUY_REWARDS', 'CANCEL', 'CLASS_CLOSED', 'DATA_CHANGED', 'EMAIL_CHANGED', 'NOT_ENOUGH_POINTS', 
+    'NOTIFICATION_OF_STUDENT', 'NOTIFICATION_REWARD_OBTAINED', 'NOTIFICATION_REWARD_SPENT', 'PASSWORD_CHANGED', 'REWARD']).then(function(translations) {
     $scope.actionsRewardsActionSheet = translations.ACTIONS_REWARDS;
     $scope.buyRewardsActionSheetOption = translations.BUY_REWARDS;
     $scope.cancelText = translations.CANCEL;
@@ -536,6 +537,8 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     $scope.passwordChangedAlert = translations.PASSWORD_CHANGED;
     $scope.rewardNotificationType = translations.REWARD;
   });
+
+  $scope.defaultAvatar = 'img/userDefaultAvatar.png';
   
   var itemModal;
   var sessionUser
@@ -714,6 +717,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
             'totalPoints' : 0,
             'usedPoints' : 0,
             'inClass' : true,
+            'picture': $scope.defaultAvatar,
           });
           
           var classToEditRef = firebase.database().ref('classrooms/' + classToAdd.id + '/students/' + $scope.student.$id);
