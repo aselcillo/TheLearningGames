@@ -490,7 +490,7 @@ var translationsES= {
   STUDENT: 'Estudiante',
   STUDENTS: 'Estudiantes',
   STUDENT_DOESNT_HAVE_ENOUGH_POINTS: 'El alumno no dispone de suficientes puntos en el item',
-  STUDENTS_VIEW: 'Viste de alumnos',
+  STUDENTS_VIEW: 'Vista de alumnos',
   SURNAME: 'Apellido',
   TAKE_ATTENDANCE: 'Tomar asistencia',
   TAKE_PICTURE: 'Seleccionar foto',
