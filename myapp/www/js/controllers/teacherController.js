@@ -332,14 +332,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       '<ion-item class="itemPopover" ng-click="closePopoverClassStudents()">{{ \'IMPORT\' | translate }}</ion-item>'+
       '<ion-item class="itemPopover" ng-click="closePopoverClassStudents()">{{ \'EXPORT\' | translate }}</ion-item>'+
       '<ion-item class="itemPopover" ng-click="showConfigureLevelsModal()">{{ \'CONFIGURE_LEVELS\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover item item-input item-select">'+
-        '<div class="input-label">{{ \'STUDENTS_VIEW\' | translate }}'+
-        '</div>'+
-        '<select>'+
-          '<option selected>{{ \'AVATAR\' | translate }}</option>'+
-          '<option>{{ \'IMAGE\' | translate }}</option>'+
-        '</select>'+
-      '</ion-item>'+
+      '<ion-toggle class="itemPopover" ng-model="checkboxStudentsView" ng-checked="classroom.studentsView" ng-click="setStudentsView(checkboxStudentsView)" toggle-class="toggle-calm">{{ \'AVATAR\' | translate }}<br />/ {{ \'IMAGE\' | translate }}</ion-toggle>'+
       '<ion-toggle class="itemPopover" ng-model="checkboxNotifications" ng-checked="classroom.notifications" ng-click="setNotifications(checkboxNotifications)" toggle-class="toggle-calm">{{ \'NOTIFICATIONS\' | translate }}</ion-toggle>'+
       '<ion-toggle class="itemPopover" ng-model="checkboxOpening" ng-checked="classroom.open" ng-click="setOpening(checkboxOpening)" toggle-class="toggle-calm">{{ \'OPENING\' | translate }}</ion-toggle>'+
       '<ion-item class="itemPopover" ng-click="showHashcodePopup()">{{ \'SEE_CLASS_HASHCODE\' | translate }}</ion-item>'+
@@ -783,7 +776,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           '<img src={{defaultAvatar}} class="avatar">'+
         '</div>'+
       '</div>'+
-      '<input class="button button-light button-block button-outline" type="file" id="inputStudentPicture" ng-click="updateInputFile(\'inputStudentPicture\')">'+
+      '<input class="button button-light button-block button-outline" type="file" id="inputNewStudentPicture" ng-click="updateInputFile(\'inputNewStudentPicture\')">'+
       '<div>'+
         '<ion-list>'+
           '<form id="newStudentForm" class="list">'+
@@ -819,10 +812,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       '<div>'+
       '<div class="avatar_margen">'+
         '<div class="teacherAvatar">'+
-          '<img src={{student.avatar}} class="avatar">'+
+          '<img src="{{!classroom.studentsView ? student.avatar : student.picture}}" class="avatar">'+
         '</div>'+
       '</div>'+
-      '<input class="button button-light button-block button-outline" type="file" id="inputStudentPicture" ng-click="updateStudentPicture()">'+
+      '<input class="button button-light button-block button-outline"  ng-show="classroom.studentsView" type="file" id="inputStudentPicture" ng-click="updateStudentPicture()">'+
         '<form id="studentProfileFormData" class="list">'+
           '<ion-list id="signUp-list2">'+
             '<label class="item item-input list-elements" id="signUp-input3">'+
@@ -911,7 +904,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       '</div>'+
       '<div>'+
         '<ion-list>'+
-          '<ion-item class="list-student" ng-repeat="teamMember in teamMembers">{{teamMember.name}} {{teamMember.surname}}</ion-item>'+
+          '<ion-item class="list-student item item-avatar" ng-repeat="teamMember in teamMembers">'+
+            '<img src="{{!classroom.studentsView ? teamMember.avatar : teamMember.picture}}">'+
+            '<p>{{teamMember.name}}</p>'+ 
+            '<p>{{teamMember.surname}}</p>'+
+          '</ion-item>'+
         '</ion-list>'+
       '</div>'+
       '<button ng-click="showModalEditMembers()" class="button button-calm button-block">{{ \'EDIT_MEMBERS\' | translate }}</button>'+
@@ -927,6 +924,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             '<img src={{defaultTeamAvatar}} class="avatar">'+
           '</div>'+
         '</div>'+
+        '<input class="button button-light button-block button-outline" type="file" id="inputNewTeamPicture" ng-click="updateInputFile(\'inputNewTeamPicture\')">'+
         '<form id="newTeamForm">'+
           '<button  class="button button-light  button-block button-outline">{{ \'UPLOAD_AVATAR\' | translate }}</button>'+
           '<label class="item item-input list-elements">'+
@@ -937,13 +935,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             '<span class="input-label">{{ \'TEAM_OBJECTIVE\' | translate }}</span>'+
             '<input type="text" placeholder="{{ \'TEAM_OBJECTIVE\' | translate }}" ng-model="modelNewTeamDialog.objective">'+
           '</label>'+
-          '<label class="item item-input list-elements">'+
-            '<span class="input-label">{{ \'IMAGE\' | translate }}</span>'+
-            '<input type="text" placeholder="{{ \'IMAGE\' | translate }}" ng-model="modelNewTeamDialog.picture">'+
-          '</label>'+
           '<div class="button-bar action_buttons">'+
             '<button class="button button-calm  button-block" ng-click="closeModalNewTeamDialog()">{{ \'CANCEL\' | translate }}</button>'+
-            '<button class="button button-calm  button-block" ng-disabled="!modelNewTeamDialog.name || !modelNewTeamDialog.objective" ng-click="createTeam(modelNewTeamDialog.name, modelNewTeamDialog.objective, modelNewTeamDialog.picture)">{{ \'CREATE\' | translate }}</button>'+
+            '<button class="button button-calm  button-block" ng-disabled="!modelNewTeamDialog.name || !modelNewTeamDialog.objective" ng-click="createTeam(modelNewTeamDialog.name, modelNewTeamDialog.objective)">{{ \'CREATE\' | translate }}</button>'+
           '</div>'+
         '</form>'+
       '</div>'+
@@ -1007,7 +1001,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       '</div>'+
       '<h3 id="teams-heading5" class="teams-hdg5">{{ \'STUDENTS\' | translate }}</h3>'+
       '<ion-list id="items-list9">'+
-        '<ion-item id="items-list-item15" class="list-student" ng-repeat="student in missionStudents">{{student.name}}  {{student.surname}}</ion-item>'+
+        '<ion-item id="items-list-item15" class="list-student item item-avatar" ng-repeat="student in missionStudents">'+
+          '<img src="{{!classroom.studentsView ? student.avatar : student.picture}}">'+
+          '<p>{{student.name}}</p>'+
+          '<p>{{student.surname}}</p>'+
+        '</ion-item>'+
       '</ion-list>'+
       '<div class="button-bar action_buttons">'+
         '<button id="achievements-button91" class="button button-calm button-block" ng-disabled="mission.finished" ng-click="showModalEditMissionMembers()">{{ \'EDIT_STUDENTS\' | translate }}</button>'+
@@ -1092,6 +1090,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.newAchievementModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3>{{ \'NEW_ACHIEVEMENT\' | translate }}</h3>'+
+      '<input class="button button-light button-block button-outline" type="file" id="inputNewAchievementBadge" ng-click="updateInputFile(\'inputNewAchievementBadge\')">'+
       '<form id="newAchievementForm" class="list">'+
         '<ion-list>'+
         '<label class="item item-input list-elements">'+
@@ -1110,15 +1109,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           '<span class="input-label">{{ \'MAX_LEVEL\' | translate }}</span>'+
           '<input type="number" placeholder="{{ \'MAX_LEVEL\' | translate }}" ng-model="modelNewAchievement.maxLevel">'+
         '</label>'+
-        '<label class="item item-input list-elements">'+
-          '<span class="input-label">{{ \'BADGE\' | translate }}</span>'+
-          '<input type="number" placeholder="{{ \'BADGE\' | translate }}" ng-model="modelNewAchievement.badge">'+
-        '</label>'+
       '</ion-list>'+
       '</form>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm  button-block" ng-click="closeModalNewAchievement()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button class="button button-calm  button-block"  ng-click="createAchievement(modelNewAchievement.name, modelNewAchievement.description, modelNewAchievement.requirements, modelNewAchievement.maxLevel, modelNewAchievement.badge)" ng-disabled="!modelNewAchievement.name || !modelNewAchievement.description || !modelNewAchievement.requirements || !modelNewAchievement.maxLevel">{{ \'ADD_ACHIEVEMENT\' | translate }}</button>'+
+        '<button class="button button-calm  button-block"  ng-click="createAchievement(modelNewAchievement.name, modelNewAchievement.description, modelNewAchievement.requirements, modelNewAchievement.maxLevel)" ng-disabled="!modelNewAchievement.name || !modelNewAchievement.description || !modelNewAchievement.requirements || !modelNewAchievement.maxLevel">{{ \'ADD_ACHIEVEMENT\' | translate }}</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -2505,8 +2500,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               }
             }
             if (!change) {
+              student.picture = student.classrooms[$scope.classroom.id].picture;
               $scope.students.push(student);
             } else {
+              student.picture = student.classrooms[$scope.classroom.id].picture;
               $scope.students[index] = student
             }
             $scope.students.sort(sortBySurname);
@@ -2547,7 +2544,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var b = classroomId.substr(classroomId.length -2).toLowerCase();
     var dateTimeHash = Date.now().toString();
     var c = dateTimeHash.substr(dateTimeHash.length -3).toLowerCase();
-
     var email = (name.replace(/\s/g, '') + surname.replace(/\s/g, '') + '.' + a + b + c + '@student.com').toLowerCase().trim();
     var password = "student";
 
@@ -2586,8 +2582,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             newClassStudentRef.set(true);
             $ionicLoading.show();
 
-            if($scope.file != undefined || $scope.file != null)
-            {
+            if ($scope.file != undefined || $scope.file != null) {
               var fileExtension = $scope.file.name.split('.').pop();
               if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
                 var storageRef = firebase.storage().ref('Profile_Pictures/' + sessionStudent.uid + '/' + $scope.classroom.id + '/classroomPicture');
@@ -2625,10 +2620,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                 'picture' : $scope.defaultAvatar,
               });
             }
-            
-
-            
-
             secondaryConnection.auth().signOut();
 
             $scope.closeModalNewStudentDialog();
@@ -2720,13 +2711,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.showModalStudentDialog();
   }
 
-  $scope.setOpening = function(opening) {
-    if (opening == undefined) {
-      opening = false;
-    }
-    var classOpeningRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/open');
-    classOpeningRef.set(opening);
-    $scope.classroom.open = opening;
+  $scope.setStudentsView = function (studentsView) {
+    if(studentsView == undefined) {
+      studentsView = false;
+    }var classStudentsViewRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/studentsView');
+    classStudentsViewRef.set(studentsView);
+    $scope.classroom.studentsView = studentsView;
   }
 
   $scope.setNotifications = function(notification) {
@@ -2736,6 +2726,15 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var classNotificationsRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/notifications');
     classNotificationsRef.set(notification);
     $scope.classroom.notifications = notification;
+  }
+
+  $scope.setOpening = function(opening) {
+    if (opening == undefined) {
+      opening = false;
+    }
+    var classOpeningRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/open');
+    classOpeningRef.set(opening);
+    $scope.classroom.open = opening;
   }
 
   $scope.secondaryMenuSelection = function() {
@@ -3057,7 +3056,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               'id' : item.id,
               'points' : Number(studentPoints) + Number(item.score),
             });
-      			if(Math.sign(item.score) == -1) {
+      			if (Math.sign(item.score) == -1) {
       			  $scope.createNotificationItems($scope.studentsToEvaluate[pos].id, item, 'lose');
       			} else {
       			  $scope.createNotificationItems($scope.studentsToEvaluate[pos].id, item, 'win');
@@ -3130,7 +3129,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                     'id' : item.id,
                     'points' : Number(studentPoints) + Number(item.score),
                   });
-        				  if(Math.sign(item.score) == -1) { 
+        				  if (Math.sign(item.score) == -1) { 
                     $scope.createNotificationItems($scope.students[studentPos].id, item, 'lose');
         				  } else {
                     $scope.createNotificationItems($scope.students[studentPos].id, item, 'win');
@@ -3394,14 +3393,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
 
-  $scope.createAchievement = function(name, description, requirements, maxLevel, badge) {
+  $scope.createAchievement = function(name, description, requirements, maxLevel) {
     if (requirements > $scope.item.maxScore) {
       alert($scope.cantAskMoreScoreAlert);
     } else {
-      if (badge == undefined) {
-        badge = $scope.defaultAchievementAvatar;
-      }
-
       var achievementsNode = $firebaseArray(achievementsRef);
       achievementsNode.$loaded(function() {
         achievementsNode.$add({
@@ -3409,8 +3404,8 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           'description' : description,
           'requirements' : requirements,
           'maxLevel' : maxLevel,
-          'badge' : badge,
         }).then(function(ref) {
+          var downloadURL;
           var id = ref.key;
 
           var idForAchievementRef = firebase.database().ref('achievements/' + id + '/id');
@@ -3418,6 +3413,36 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
           var itemsAchievementsRef = firebase.database().ref('items/' + $scope.item.id + '/achievements/' + id);
           itemsAchievementsRef.set(true);
+
+          //PICTURE PART
+          $ionicLoading.show();
+          if ($scope.file != undefined || $sope.file != null) {
+            var fileExtension = $scope.file.name.split('.').pop();
+            if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
+              var storageRef = firebase.storage().ref('Achievement_Pictures/' + id + '/achievementPicture');
+              var task = storageRef.put($scope.file);
+              task.on('state_changed', function progress(snapshot) {
+
+              }, function error(error) {
+                $ionicLoading.hide();
+              }, function complete() {
+                downloadURL = task.snapshot.downloadURL;
+                var achievementBadgeRef = firebase.database().ref('achievements/' + id + '/badge');
+                achievementBadgeRef.set(downloadURL);
+                $ionicLoading.hide();
+
+                if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+                  $scope.$apply();
+                }
+              });
+            } else {
+              alert($scope.fileInvalidAlert);
+            }
+          } else {
+            var achievementBadgeRef = firebase.database().ref('achievements/' + id + '/badge');
+            achievementBadgeRef.set($scope.achievementDefaultBadge);
+          }
+          $ionicLoading.hide();
 
           $scope.closeModalNewAchievement();
           $scope.getAchievements();
@@ -3532,7 +3557,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                     'id' : achievementToCheck.id,
                     'level' : levelAchievement,
                   });
-                  if(studentLevel != levelAchievement) {
+                  if (studentLevel != levelAchievement) {
                     $scope.createNotificationAchievements(student.id, 'student', achievementToCheck, 'win', levelAchievement, null);
                     $scope.createNotificationAchievements($scope.teacher.$id, 'teacher', achievementToCheck, 'win', levelAchievement, student);
                   }
@@ -3661,18 +3686,14 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
 
-  $scope.createTeam = function(name, objective, picture) {
-    if (picture == undefined) {
-      picture = $scope.defaultTeamAvatar;
-    }
-
+  $scope.createTeam = function(name, objective) {
     var teamsNode = $firebaseArray(teamsRef);
     teamsNode.$loaded(function() {
       teamsNode.$add({
         'name' : name,
         'objective' : objective,
-        'picture' : picture,
       }).then(function(ref) {
+        var downloadURL;
         var id = ref.key;
 
         var idForTeamRef = firebase.database().ref('teams/' + id + '/id');
@@ -3693,6 +3714,36 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             teamStudentsRef.set(true);
           }
         }
+
+        //PICUTRE PART
+        $ionicLoading.show();
+        if ($scope.file != undefined || $scope.file != null) {
+          var fileExtension = $scope.file.name.split('.').pop();
+          if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
+            var storageRef = firebase.storage().ref('Team_Pictures/' + id + '/teamPicture');
+            var task = storageRef.put($scope.file);
+            task.on('state_changed', function progress(snapshot) {
+
+            }, function error(error) {
+              $ionicLoading.hide();
+            }, function complete() {
+              downloadURL = task.snapshot.downloadURL;
+              var teamPictureRef = firebase.database().ref('teams/' + id + '/picture');
+              teamPictureRef.set(downloadURL);
+
+              if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+                $scope.$apply();
+              }
+            });
+          } else {
+            alert($scope.fileInvalidAlert);
+          }
+        } else {
+          var teamPictureRef = firebase.database().ref('teams/' + id + '/picture');
+          teamPictureRef.set($scope.defaultTeamAvatar);
+        }
+        $ionicLoading.hide();
+
         $scope.closeModalNewTeamDialog();
         $scope.getStudentsForTeamSelection();
         $scope.getTeams();
@@ -3793,6 +3844,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             'name' : $scope.students[student].name,
             'surname' : $scope.students[student].surname,
             'avatar' : $scope.students[student].avatar,
+            'picture' : $scope.students[student].picture,
           });
         }
       }
@@ -4173,6 +4225,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   }
 
   $scope.createMission = function(mission) {
+    if (mission.additionalPoints == undefined) {
+      mission.additionalPoints = 0;
+    }
     var missionsNode = $firebaseArray(missionsRef);
     missionsNode.$loaded(function() {
       missionsNode.$add({
@@ -4526,7 +4581,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                         });
                       }
                       for (var rewardPos in $scope.rewards) {
-                        if($scope.rewards[rewardPos].id == rewardId) {
+                        if ($scope.rewards[rewardPos].id == rewardId) {
                           $scope.createNotificationsRewards(student, $scope.rewards[rewardPos], $scope.missions[element]);
                           break;
                         }
@@ -4650,7 +4705,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   }
 
   $scope.createNotificationMissions = function(userId, userType, mission, studentToEvaluate, finished) {
-    if(userType == 'student') {
+    if (userType == 'student') {
       var studentNotificationsRef = firebase.database().ref('students/' + userId + '/notifications/' + $scope.classroom.id);
       var studentNoticationsArray = $firebaseArray(studentNotificationsRef);
       studentNoticationsArray.$loaded(function() {
@@ -4669,7 +4724,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           'message' : $scope.notificationOfStudent + ' ' + studentToEvaluate.name + ' ' + studentToEvaluate.surname + ' ' + $scope.notificationFinishedMissionTeacherSide + ': ' + mission.name,
           'date' : Date.now(),
         });
-        if(finished) {
+        if (finished) {
           teacherNotificationsArray.$add({
           'type' : $scope.notificationTypeMission,
           'message' : $scope.notificationOfMission + ': ' + mission.name + ' ' + $scope.notificationMissionEnded,

@@ -152,7 +152,7 @@
       <button class="button button-calm  button-block" ng-click="showNotificationsModal()" ng-show="notifications.length > 0">{{'YOU_HAVE_NOTIFICATIONS'| translate}}</button>
       <ion-list id="class-list5" class="list-elements">
         <ion-item class="list-student item item-avatar" id="class-list-item7" ng-repeat="student in students" ng-show="student.classrooms[classroom.id].inClass" ng-click="setStudent(student)">
-          <img src="{{student.avatar}}">
+          <img src="{{!classroom.studentsView ? student.avatar : student.picture}}">
           <h2>{{student.name}}</h2>
           <p>{{student.surname}}</p>
         </ion-item>
