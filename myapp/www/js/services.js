@@ -4,6 +4,7 @@ angular.module('app.services', [])
 
 }])
 
+//Used to differentiate beetween user's type(teacher or student) who is going to sign up.
 .service('sharedData', [function(){
 	var data = 'null';
 

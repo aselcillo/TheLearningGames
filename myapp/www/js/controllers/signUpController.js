@@ -5,8 +5,9 @@ angular.module('app.signUpController', ['pascalprecht.translate'])
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
 function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading, $translate, $rootScope) {
 
-  /*
+  /**
     *************************************CLEAN FORM FUNCTIONS GOES HERE*******************************
+    Cleans the form used by the users to introduce their sign up information.
   */
 
   $scope.clearForm = function() {
@@ -24,6 +25,9 @@ function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading, $trans
     $state.go('login');
   }
 
+  /**
+    Needed for the translations to work in the controller's words.
+  */
   $translate(['CHECK_EMAIL_TO_VERIFY', 'EMAIL_INVALID', 'ERROR_ACCESS_UNKNOW', 'EMAIL_ALREADY_USED', 'ERROR_WEAK_PASSWORD', 'SCHOOL_NOT_ESTABLISHED']).then(function(translations) {
     $scope.checkEmailToVerify = translations.CHECK_EMAIL_TO_VERIFY;
     $scope.emailInvalidAlert = translations.EMAIL_INVALID;
@@ -46,6 +50,9 @@ function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading, $trans
     *************************************EVERY FUNCTIONALITY FUNCTION GOES HERE***********************
   */
 
+  /**
+    Checks the sign up type and then signs up the user with their correspond account's type on the firebase database.
+  */
   $scope.registerUser = function(name, surname, email, password, school, avatar) {
 
     if (email.includes('@')) {
@@ -130,6 +137,9 @@ function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading, $trans
     });
   }
 
+  /**
+    Needed for the translations to change their value in execution time.
+  */
   $rootScope.$on('$translateChangeSuccess', function () {
     $scope.checkEmailToVerify = $translate.instant('CHECK_EMAIL_TO_VERIFY');
     $scope.emailInvalidAlert = $translate.instant('EMAIL_INVALID');

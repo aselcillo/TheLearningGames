@@ -4,8 +4,9 @@ angular.module('app.studentController', ['pascalprecht.translate'])
 
 function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $ionicPopover, $firebaseArray, sharedData, $ionicLoading, $translate, $rootScope, $ionicLoading, localStorageService) {
 
-  /*
+  /**
     *************************************DECLARE FUNCTIONS FOR NG-SHOW********************************
+    They work showing the cointainer that depends on the variable with @value: true.
   */
 
   $scope.allFalse = function() {
@@ -68,8 +69,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
   $scope.studentHomeForm();
 
-  /*
+  /**
     *************************************EVERY ACTIONSHEET GOES HERE*******************************
+    Defines what's going to be shown after press the floating button and it's behaviour.
   */
 
                                           /* REWARDS (STUDENT PART) ACTIONSHEET */
@@ -129,8 +131,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     '</ion-list>'+
   '</ion-popover-view>';
 
-  /*
+  /**
     *************************************EVERY POPOVER FUNCTION GOES HERE*******************************
+    Defines the behaviour of each popover.
   */
 
                                         /* LANGUAGES POPOVER */
@@ -147,12 +150,6 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   $scope.$on('$destroy', function() {
     $scope.popoverLanguages.remove();
   });
-  $scope.$on('popoverLanguages.hidden', function() {
-    // Execute action
-  });
-  $scope.$on('popoverLanguages.removed', function() {
-    // Execute action
-  });
 
                                         /* STUDENTHOME POPOVER */
 
@@ -168,12 +165,6 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   $scope.$on('$destroy', function() {
     $scope.popoverStudentHome.remove();
   });
-  $scope.$on('popoverStudentHome.hidden', function() {
-    // Execute action
-  });
-  $scope.$on('popoverStudentHome.removed', function() {
-    // Execute action
-  });
 
                                         /* DEFAULT POPOVER */
 
@@ -188,12 +179,6 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   };
   $scope.$on('$destroy', function() {
     $scope.popoverDefault.remove();
-  });
-  $scope.$on('popoverDefault.hidden', function() {
-    // Execute action
-  });
-  $scope.$on('popoverDefault.removed', function() {
-    // Execute action
   });
 
   /*
@@ -373,8 +358,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     '</ion-content>'+
   '</ion-modal-view>';
 
-  /*
+  /**
     *************************************EVERY MODAL FUNCTION GOES HERE*******************************
+    Defines the behaviour of each modal.
   */
 
                                         /* SELECT REWARDS MODAL */
@@ -495,10 +481,17 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     *************************************DECLARE VARIABLES & GIVE TO $SCOPE ALL THE VALUES WE NEED****
   */
   
+  /**
+    Checks if there is a user signed up in the application.
+    It is used to prevent the users to enter this page without permission.
+  */
   if (firebase.auth().currentUser === null) {
     $state.go('login');
   }
   
+  /**
+    Saves the credentials used to log in in the local storage.
+  */
   firebase.auth().onAuthStateChanged(function(user) {
     if (user && sharedData.getData() === 'student') {
       sessionUser = firebase.auth().currentUser;
@@ -511,7 +504,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
         localStorageService.set('userCredentials', userData);
       });
-
+      //Saves the student into the session and decrypts the student's name and surname.
       var studentsArray = $firebaseArray(studentsRef);
       studentsArray.$loaded(function() {
         $scope.student = studentsArray.$getRecord(sessionUser.uid);
@@ -522,6 +515,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     }
   });
 
+  /**
+    Needed for the translations to work in the controller's words.
+  */
   $translate(['ACTIONS_REWARDS', 'BUY_REWARDS', 'CANCEL', 'CLASS_CLOSED', 'DATA_CHANGED', 'EMAIL_CHANGED', 'NOT_ENOUGH_POINTS', 
     'NOTIFICATION_OF_STUDENT', 'NOTIFICATION_REWARD_OBTAINED', 'NOTIFICATION_REWARD_SPENT', 'PASSWORD_CHANGED', 'REWARD']).then(function(translations) {
     $scope.actionsRewardsActionSheet = translations.ACTIONS_REWARDS;
@@ -559,6 +555,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
                                           /* FUNCTIONS IN PROFILE */
 
+  /**
+    Updates the student's avatar with an image uploaded from the local storage and saves it on the firebase database.
+  */
   $scope.updateStudentAvatar = function() {
     var downloadURL;
     var fileButton = document.getElementById('inputAvatar');
@@ -599,6 +598,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     });
   }
 
+  /**
+    Updates the student's profile information with either some or all the fields and saves changes on the firebase database.
+  */
   $scope.editStudentData = function(name, surname, school) {
     if (name != undefined) {
       $scope.student.name = name;
@@ -628,6 +630,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     alert($scope.dataChangedAlert);
   }
 
+  /**
+    Updates the student's password, sends a confirmation email to the user's email and saves changes on the firebase database.
+  */
   $scope.updateStudentPassword = function(newPassword) {
     sessionUser.updatePassword(newPassword).then(function() {
       $scope.settingsForm();
@@ -635,6 +640,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     });
   }
 
+  /**
+    Updates the student's email, sends a confirmation email to the user's email and saves changes on the firebase database.
+  */
   $scope.updateStudentEmail = function(email) {
     sessionUser.updateEmail(email).then(function() {
       var studentEmailRef = firebase.database().ref('students/' + sessionUser.uid + '/email');
@@ -649,6 +657,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
                                         /* FUNCTIONS IN SETTINGS */
 
+  /**
+    Logs out the session user.
+  */
   $scope.logOut = function() {
     if (firebase.auth().currentUser) {
       var userData = {};
@@ -665,6 +676,12 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
                                           /* FUNCTIONS IN HOME */
 
+  /**
+    Get all the classrooms that the student is part of.
+    Asks firebase for the correspond classrooms' references
+    Defines an event for each classroom's reference which is triggered every time that database reference is modified.
+    The event saves every classroom in the session.
+  */
   $scope.getClassrooms = function() {
     var studentClassroomsRef = firebase.database().ref('students/' + $scope.student.$id + '/classrooms');
     var classroomKeys = $firebaseArray(studentClassroomsRef);
@@ -699,6 +716,11 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     });
   }
 
+  /**
+    @hashcode: Hashcode of the class where the student is going to be part of.
+    Adds the student's reference in the classroom's tree on the firebase database.
+    Adds that classroom's reference in the student's tree on the firebase database and all the information needed in any classroom.
+  */
   $scope.addClass = function(hashcode) {
     var hashcodesArray = $firebaseArray(hashcodesRef);
     hashcodesArray.$loaded(function() {
@@ -730,6 +752,11 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     $scope.closeModalAddClass();
   }
 
+  /**
+    @classroom: The classroom that is going to be saved in the session.
+    Saves the classroom selected in the session and get all from it (items, rewards, missions, rules...)
+    Defines an event in the student's classroom's reference to get the total points in the class.
+  */
   $scope.setClassroom = function(classroom) {
     $scope.classroom = classroom;
     $scope.classroomData = null;
@@ -761,6 +788,12 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
                                         /* FUNCTIONS IN ITEMS */
 
+  /**
+    Get all the items that are part of the classroom.
+    Asks firebase for the correspond items' references
+    Defines an event for each item's reference which is triggered every time that database reference is modified.
+    The event saves the items in the session, either in unlocked or locked depending on the student's history.
+  */
   $scope.getItems = function() {
     var classroomItemsRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/items');
     var itemKeys = $firebaseArray(classroomItemsRef);
@@ -821,12 +854,19 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     });
   }
 
+  /**
+    Add the unlocked and locked items to another array formed by both.
+  */
   $scope.getClassroomItems = function() {
     $scope.itemsClassroom = [];
     $scope.itemsClassroom = $scope.itemsLocked.concat($scope.itemsUnlocked);
     $scope.itemsClassroom.sort(sortByName);
   }
 
+  /**
+    @item: The item that is going to be saved in the session.
+    Saves the item selected in the session and get its achievements.
+  */
   $scope.setItem = function(item) {
     $scope.item = item;
     $scope.unlockedAchievementsExist = false;
@@ -835,6 +875,11 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     $scope.itemsForm();
   }
 
+  /**
+    Gets the student's level in the classroom.
+    Asks firebase for the correspond levels' references.
+    Then check the student's total points with each level's needed points.
+  */
   $scope.getStudentLevel = function() {
     $scope.studentLevel = {};
     var classroomLevelsRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/levels/');
@@ -1339,6 +1384,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     *************************************EVERY SORT FUNCTION GOES HERE***********************
   */
 
+  /**
+    Sorts an array by name.
+  */
   var sortByName = function(a, b) {
     var nameA = a.name.toUpperCase(); // ignore upper and lowercase
     var nameB = b.name.toUpperCase(); // ignore upper and lowercase
@@ -1352,6 +1400,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     return 0;
   }
 
+  /**
+    Sorts an array by surname.
+  */
   var sortBySurname = function(a, b) {
     var surnameA = a.surname.toUpperCase();
     var surnameB = b.surname.toUpperCase();
@@ -1365,6 +1416,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     return 0;
   }
 
+  /**
+    Sorts an array by date.
+  */
   var sortByDate = function(a, b) {
     var dateA = a.date;
     var dateB = b.date;
@@ -1378,6 +1432,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     return 0;
   }
 
+  /**
+    Needed for the translations to change their value in execution time.
+  */
   $rootScope.$on('$translateChangeSuccess', function () {
     $scope.actionsRewardsActionSheet = $translate.instant('ACTIONS_REWARDS');
     $scope.buyRewardsActionSheetOption = $translate.instant('BUY_REWARDS');
