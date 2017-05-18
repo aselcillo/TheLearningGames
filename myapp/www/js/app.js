@@ -1,10 +1,3 @@
-// Ionic Starter App
-
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.services' is found in services.js
-// 'starter.controllers' is found in controllers.js
 angular.module('app', ['ionic', 'app.loginController', 'app.settingsController', 'app.signUpController', 'app.studentController', 'app.teacherController', 'app.translationsController', 'app.routes', 'app.directives', 'app.services', 'ngCookies', 'pascalprecht.translate', 'ui.router', 'firebase', 'firebaseConfig', 'LocalStorageModule'])
 
 .config(function($ionicConfigProvider, $sceDelegateProvider, $translateProvider){
@@ -37,6 +30,7 @@ angular.module('app', ['ionic', 'app.loginController', 'app.settingsController',
     }
   });
 
+  //Used to prevent the back button's action in smartphones.
   $ionicPlatform.registerBackButtonAction(function(event) {
     event.preventDefault();
   }, 800);//registerBackButton
@@ -69,6 +63,7 @@ angular.module('app', ['ionic', 'app.loginController', 'app.settingsController',
   };
 });
 
+//Here they are the translations that use cookies to save the translated values of each language.
 var translationsEN = {
   
   ABOUT: 'About',
@@ -260,6 +255,7 @@ var translationsEN = {
   SETTINGS: 'Settings',
   SCHOOL: 'School',
   SCHOOL_NOT_ESTABLISHED: 'Not established',
+  SHOW_IMAGES: 'Show images',
   SIGN_UP: 'Sign up',
   STUDENT: 'Student',
   STUDENT_DOESNT_HAVE_ENOUGH_POINTS: 'Student doesn\'t have enough points to remove in the item',
@@ -486,6 +482,7 @@ var translationsES= {
   SETTINGS: 'Ajustes',
   SCHOOL: 'Escuela',
   SCHOOL_NOT_ESTABLISHED: 'No establecida',
+  SHOW_IMAGES: 'Mostrar imágenes',
   SIGN_UP: 'Registrarse',
   STUDENT: 'Estudiante',
   STUDENTS: 'Estudiantes',
