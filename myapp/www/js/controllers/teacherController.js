@@ -332,7 +332,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       '<ion-item class="itemPopover" ng-click="closePopoverClassStudents()">{{ \'IMPORT\' | translate }}</ion-item>'+
       '<ion-item class="itemPopover" ng-click="closePopoverClassStudents()">{{ \'EXPORT\' | translate }}</ion-item>'+
       '<ion-item class="itemPopover" ng-click="showConfigureLevelsModal()">{{ \'CONFIGURE_LEVELS\' | translate }}</ion-item>'+
-      '<ion-toggle class="itemPopover" ng-model="checkboxStudentsView" ng-checked="classroom.studentsView" ng-click="setStudentsView(checkboxStudentsView)" toggle-class="toggle-calm">{{ \'AVATAR\' | translate }}<br />/ {{ \'IMAGE\' | translate }}</ion-toggle>'+
+      '<ion-toggle class="itemPopover" ng-model="checkboxStudentsView" ng-checked="classroom.studentsView" ng-click="setStudentsView(checkboxStudentsView)" toggle-class="toggle-calm">{{ \'SHOW_IMAGES\' | translate }}</ion-toggle>'+
       '<ion-toggle class="itemPopover" ng-model="checkboxNotifications" ng-checked="classroom.notifications" ng-click="setNotifications(checkboxNotifications)" toggle-class="toggle-calm">{{ \'NOTIFICATIONS\' | translate }}</ion-toggle>'+
       '<ion-toggle class="itemPopover" ng-model="checkboxOpening" ng-checked="classroom.open" ng-click="setOpening(checkboxOpening)" toggle-class="toggle-calm">{{ \'OPENING\' | translate }}</ion-toggle>'+
       '<ion-item class="itemPopover" ng-click="showHashcodePopup()">{{ \'SEE_CLASS_HASHCODE\' | translate }}</ion-item>'+
@@ -973,7 +973,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               '<input type="text" ng-disabled="mission.finished" placeholder="{{mission.name}}" ng-model="modelEditMission.name">'+
             '</label>'+
             '<label class="item item-input list-elements">'+
-              '<span class="input-label">{{ \'ITEMS\' | translate }}</span>'+
+              '<span class="input-label">{{ \'ADDITIONAL_POINTS_MISSION\' | translate }}</span>'+
               '<input type="text" ng-disabled="mission.finished" placeholder="{{mission.additionalPoints}}" ng-model="modelEditMission.additionalPoints">'+
             '</label>'+
           '</ion-list>'+
@@ -982,7 +982,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         '<button class="button button-calm  button-block" ng-click="closeModalEditMission()">{{ \'CANCEL\' | translate }}</button>'+
         '<button class="button button-calm  button-block" ng-disabled="!modelEditMission.name && !modelEditMission.additionalPoints" ng-click="editMission(modelEditMission.name, modelEditMission.additionalPoints)">EDITAR MISIÓN</button>'+
       '</div>'+
-      '<h3 id="teams-heading5" class="teams-hdg5">{{ \'ADDITIONAL_POINTS_MISSION\' | translate }}</h3>'+
+      '<h3 id="teams-heading5" class="teams-hdg5">{{ \'ITEMS\' | translate }}</h3>'+
       '<ion-list id="items-list9">'+
         '<ion-item id="items-list-item15" class="list-student" ng-repeat="item in missionItems">'+
           '{{item.name}}'+
@@ -2580,9 +2580,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             var downloadURL;
             var newClassStudentRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/students/' + sessionStudent.uid);
             newClassStudentRef.set(true);
-            $ionicLoading.show();
 
+            //PICTURE PART
             if ($scope.file != undefined || $scope.file != null) {
+              $ionicLoading.show();
               var fileExtension = $scope.file.name.split('.').pop();
               if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
                 var storageRef = firebase.storage().ref('Profile_Pictures/' + sessionStudent.uid + '/' + $scope.classroom.id + '/classroomPicture');
@@ -3415,8 +3416,8 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           itemsAchievementsRef.set(true);
 
           //PICTURE PART
-          $ionicLoading.show();
           if ($scope.file != undefined || $sope.file != null) {
+            $ionicLoading.show();
             var fileExtension = $scope.file.name.split('.').pop();
             if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
               var storageRef = firebase.storage().ref('Achievement_Pictures/' + id + '/achievementPicture');
@@ -3716,8 +3717,8 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         }
 
         //PICUTRE PART
-        $ionicLoading.show();
         if ($scope.file != undefined || $scope.file != null) {
+          $ionicLoading.show();
           var fileExtension = $scope.file.name.split('.').pop();
           if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
             var storageRef = firebase.storage().ref('Team_Pictures/' + id + '/teamPicture');
