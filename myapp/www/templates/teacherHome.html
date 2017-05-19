@@ -43,9 +43,13 @@
             </h3>
           </header>
           <div class="avatar_margen">
+            <button class="button button-positive button-float icon ion-arrow-back" ng-click="back()">
+            </button>
             <ion-item class ="teacherAvatar">
               <img src={{teacher.avatar}} class="avatar">
             </ion-item>
+            <button class="button button-positive button-float icon ion-arrow-forward" ng-click="forward()">
+            </button>
           </div>
           <input class="button button-light button-block button-outline" type="file" id="inputAvatar" ng-click="updateTeacherAvatar()">
           <label class="item item-input list-elements" id="signUp-input3">
