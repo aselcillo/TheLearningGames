@@ -196,3 +196,8 @@ padding-left:40px;
 
 /* FIXES */
 .scroll, .teacherHomeView{ height: 100%; }
+
+.swipe-button {
+	min-width: 0;
+	min-height: 0;
+}
