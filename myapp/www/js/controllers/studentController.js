@@ -241,60 +241,66 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   $scope.achievementDialogModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3>{{achievement.name}}</h3>'+
-      '<ion-list>'+
-        '<ion-item class ="teacherAvatar">'+
-          '<img src={{achievement.badge}} class="avatar">'+
-        '</ion-item>'+
-        '<label class="item item-input list-elements" id="signUp-input3">'+
-          '<span class="inputLabelProfile">'+
-            '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;{{ \'DESCRIPTION\' | translate }}'+
-            '<p>{{achievement.description}}</p>'+
-          '</span>'+
-        '</label>'+
-        '<label class="item item-input list-elements" id="signUp-input3">'+
-          '<span class="inputLabelProfile">'+
-            '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;{{ \'REQUIREMENTS\' | translate }}'+
-            '<p>{{achievement.requirements}}</p>'+
-          '</span>'+
-        '</label>'+
-        '<label class="item item-input list-elements" id="signUp-input3" ng-show="unlockedAchievement">'+
-          '<span class="inputLabelProfile">'+
-            '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;{{ \'YOUR_ACTUAL_LEVEL\' | translate }}'+
-            '<p>{{achievement.level}}</p>'+
-          '</span>'+
-        '</label>'+
-        '<label class="item item-input list-elements" id="signUp-input3">'+
-          '<span class="inputLabelProfile">'+
-            '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;{{ \'MAX_LEVEL\' | translate }}'+
-            '<p>{{achievement.maxLevel}}</p>'+
-          '</span>'+
-        '</label>'+
-      '</ion-list>'+
-      '<button ng-click="closeModalAchievementDialog()" class="button button-positive button-block icon ion-arrow-return-left"></button>'+
+      '<div>'+
+        '<div class="avatar_margen">'+
+          '<div class="teacherAvatar">'+
+            '<img src={{achievement.badge}} class="avatar">'+
+          '</div>'+
+        '</div>'+
+        '<ion-list>'+
+          '<label class="item item-input list-elements" id="signUp-input3">'+
+            '<span class="inputLabelProfile">'+
+              '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;{{ \'DESCRIPTION\' | translate }}'+
+              '<p>{{achievement.description}}</p>'+
+            '</span>'+
+          '</label>'+
+          '<label class="item item-input list-elements" id="signUp-input3">'+
+            '<span class="inputLabelProfile">'+
+              '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;{{ \'REQUIREMENTS\' | translate }}'+
+              '<p>{{achievement.requirements}}</p>'+
+            '</span>'+
+          '</label>'+
+          '<label class="item item-input list-elements" id="signUp-input3" ng-show="unlockedAchievement">'+
+            '<span class="inputLabelProfile">'+
+              '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;{{ \'YOUR_ACTUAL_LEVEL\' | translate }}'+
+              '<p>{{achievement.level}}</p>'+
+            '</span>'+
+          '</label>'+
+          '<label class="item item-input list-elements" id="signUp-input3">'+
+            '<span class="inputLabelProfile">'+
+              '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;{{ \'MAX_LEVEL\' | translate }}'+
+              '<p>{{achievement.maxLevel}}</p>'+
+            '</span>'+
+          '</label>'+
+        '</ion-list>'+
+        '<button ng-click="closeModalAchievementDialog()" class="button button-positive button-block icon ion-arrow-return-left"></button>'+
+      '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
 
   $scope.teamDialogModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3>{{team.name}}</h3>'+
-      '<div class="list-student">'+
-        '<div class="teacherAvatar">'+
-          '<img src={{team.picture}} class="avatar">'+
+      '<div>'+
+        '<div class="avatar_margen">'+
+          '<div class="teacherAvatar">'+
+            '<img src={{team.picture}} class="avatar">'+
+          '</div>'+
         '</div>'+
         '<form id="teamDialogForm">'+
-          '<button class="button button-light  button-block button-outline">{{ \'CHANGE_AVATAR\' | translate }}</button>'+
           '<label class="item item-input list-elements">'+
             '<span class="input-label">'+
               '{{ \'TEAM_OBJECTIVE\' | translate }}'+
               '<p>{{team.objective}}</p>'+
             '</span>'+
           '</label>'+
-          '<div class="button-bar action_buttons">'+
-            '<button class="button button-calm  button-block" ng-click="closeModalTeamDialog()">{{ \'CANCEL\' | translate }}</button>'+
-          '</div>'+
         '</form>'+
+        '<div class="button-bar action_buttons">'+
+          '<button ng-click="closeModalTeamDialog()" class="button button-calm button-block icon ion-arrow-return-left"></button>'+
+        '</div>'+
       '</div>'+
-      '<div class="list-team">'+
+      '<div>'+
+        '<h3>{{ \'TEAM_MEMBERS\' | translate}}</h3>'+
         '<ion-list>'+
           '<ion-item class="list-student-team" ng-repeat="teamMember in teamMembers">{{teamMember.name}} {{teamMember.surname}}</ion-item>'+
         '</ion-list>'+
@@ -356,10 +362,12 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
           '<p>{{ \'NEEDED_POINTS\' | translate }}: {{item.neededPoints}}</p>'+
         '</ion-item>'+
       '</ion-list>'+
+      '<div class="button-bar action_buttons"></div>'+
       '<h3 id="teams-heading5" class="teams-hdg5">{{ \'REWARDS\' | translate }}</h3>'+
       '<ion-list id="items-list9">'+
         '<ion-item id="items-list-item15" class="list-student" ng-repeat="reward in missionRewards">{{reward.name}}</ion-item>'+
       '</ion-list>'+
+      '<div class="button-bar action_buttons"></div>'+
       '<h3 id="teams-heading5" class="teams-hdg5">{{ \'STUDENTS\' | translate }}</h3>'+
       '<ion-list id="items-list9">'+
         '<ion-item id="items-list-item15" class="list-student" ng-repeat="student in missionStudents">{{student.name}}  {{student.surname}}</ion-item>'+
