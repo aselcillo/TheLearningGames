@@ -851,10 +851,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           '<ion-item class="list-student-dialog" ng-repeat="item in studentItems">'+
             '<i class="icon ion-clipboard"></i>&nbsp;&nbsp;{{item.name}}'+
             '<span class="item-note">{{item.points}} / {{item.maxScore}}&nbsp;&nbsp;&nbsp;<i class="icon ion-chevron-left float_right"/></span>'+
-            '<ion-option-button class="button-assertive" ng-click="removePoints(item)">'+
+            '<ion-option-button class="button-assertive swipe-button" ng-click="removePoints(item)">'+
               '<i class="icon ion-minus-round"></i>'+
             '</ion-option-button>'+
-            '<ion-option-button class="button-calm" ng-click="addPoints(item)">'+
+            '<ion-option-button class="button-calm swipe-button" ng-click="addPoints(item)">'+
               '<i class="icon ion-plus-round"></i>'+
             '</ion-option-button>'+
         '</ion-list>'+
@@ -881,12 +881,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3>{{team.name}}</h3>'+
       '<div>'+
-      '<div class="avatar_margen">'+
-        '<div class="teacherAvatar">'+
-          '<img src={{team.picture}} class="avatar">'+
+        '<div class="avatar_margen">'+
+          '<div class="teacherAvatar">'+
+            '<img src={{team.picture}} class="avatar">'+
+          '</div>'+
         '</div>'+
-      '</div>'+
-      '<input class="button button-light button-block button-outline" type="file" id="inputTeamPicture" ng-click="updateTeamPicture()">'+
+        '<input class="button button-light button-block button-outline" type="file" id="inputTeamPicture" ng-click="updateTeamPicture()">'+
         '<form id="teamDialogForm">'+
           '<label class="item item-input list-elements">'+
             '<span class="input-label">{{ \'NAME\' | translate }}</span>'+
@@ -903,6 +903,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         '</form>'+
       '</div>'+
       '<div>'+
+        '<h3>{{ \'TEAM_MEMBERS\' | translate}}</h3>'+
         '<ion-list>'+
           '<ion-item class="list-student item item-avatar" ng-repeat="teamMember in teamMembers">'+
             '<img src="{{!classroom.studentsView ? teamMember.avatar : teamMember.picture}}">'+
@@ -926,7 +927,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         '</div>'+
         '<input class="button button-light button-block button-outline" type="file" id="inputNewTeamPicture" ng-click="updateInputFile(\'inputNewTeamPicture\')">'+
         '<form id="newTeamForm">'+
-          '<button  class="button button-light  button-block button-outline">{{ \'UPLOAD_AVATAR\' | translate }}</button>'+
           '<label class="item item-input list-elements">'+
             '<span class="input-label">{{ \'NAME\' | translate }}</span>'+
             '<input type="text" placeholder="{{ \'NAME\' | translate }}" ng-model="modelNewTeamDialog.name">'+
@@ -966,18 +966,18 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.editMissionModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3>{{mission.name}}</h3>'+
-        '<form class="list">'+
-          '<ion-list>'+
-            '<label class="item item-input list-elements">'+
-              '<span class="input-label">{{ \'NAME\' | translate }} </span>'+
-              '<input type="text" ng-disabled="mission.finished" placeholder="{{mission.name}}" ng-model="modelEditMission.name">'+
-            '</label>'+
-            '<label class="item item-input list-elements">'+
-              '<span class="input-label">{{ \'ADDITIONAL_POINTS_MISSION\' | translate }}</span>'+
-              '<input type="text" ng-disabled="mission.finished" placeholder="{{mission.additionalPoints}}" ng-model="modelEditMission.additionalPoints">'+
-            '</label>'+
-          '</ion-list>'+
-        '</form>'+
+      '<form class="list">'+
+        '<ion-list>'+
+          '<label class="item item-input list-elements">'+
+            '<span class="input-label">{{ \'NAME\' | translate }} </span>'+
+            '<input type="text" ng-disabled="mission.finished" placeholder="{{mission.name}}" ng-model="modelEditMission.name">'+
+          '</label>'+
+          '<label class="item item-input list-elements">'+
+            '<span class="input-label">{{ \'ADDITIONAL_POINTS_MISSION\' | translate }}</span>'+
+            '<input type="text" ng-disabled="mission.finished" placeholder="{{mission.additionalPoints}}" ng-model="modelEditMission.additionalPoints">'+
+          '</label>'+
+        '</ion-list>'+
+      '</form>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm  button-block" ng-click="closeModalEditMission()">{{ \'CANCEL\' | translate }}</button>'+
         '<button class="button button-calm  button-block" ng-disabled="!modelEditMission.name && !modelEditMission.additionalPoints" ng-click="editMission(modelEditMission.name, modelEditMission.additionalPoints)">EDITAR MISIÓN</button>'+
@@ -1090,30 +1090,37 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.newAchievementModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3>{{ \'NEW_ACHIEVEMENT\' | translate }}</h3>'+
-      '<input class="button button-light button-block button-outline" type="file" id="inputNewAchievementBadge" ng-click="updateInputFile(\'inputNewAchievementBadge\')">'+
-      '<form id="newAchievementForm" class="list">'+
-        '<ion-list>'+
-        '<label class="item item-input list-elements">'+
-          '<span class="input-label">{{ \'NAME\' | translate }}</span>'+
-          '<input type="text" placeholder="{{ \'NAME\' | translate }}" ng-model="modelNewAchievement.name">'+
-        '</label>'+
-        '<label class="item item-input list-elements">'+
-          '<span class="input-label">{{ \'DESCRIPTION\' | translate }}</span>'+
-          '<input type="text" placeholder="{{ \'DESCRIPTION\' | translate }}" ng-model="modelNewAchievement.description">'+
-        '</label>'+
-        '<label class="item item-input list-elements">'+
-          '<span class="input-label">{{ \'REQUIREMENTS\' | translate }}</span>'+
-          '<input type="number" placeholder="{{ \'REQUIREMENTS\' | translate }}" ng-model="modelNewAchievement.requirements">'+
-        '</label>'+
-        '<label class="item item-input list-elements">'+
-          '<span class="input-label">{{ \'MAX_LEVEL\' | translate }}</span>'+
-          '<input type="number" placeholder="{{ \'MAX_LEVEL\' | translate }}" ng-model="modelNewAchievement.maxLevel">'+
-        '</label>'+
-      '</ion-list>'+
-      '</form>'+
-      '<div class="button-bar action_buttons">'+
-        '<button class="button button-calm  button-block" ng-click="closeModalNewAchievement()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button class="button button-calm  button-block"  ng-click="createAchievement(modelNewAchievement.name, modelNewAchievement.description, modelNewAchievement.requirements, modelNewAchievement.maxLevel)" ng-disabled="!modelNewAchievement.name || !modelNewAchievement.description || !modelNewAchievement.requirements || !modelNewAchievement.maxLevel">{{ \'ADD_ACHIEVEMENT\' | translate }}</button>'+
+      '<div>'+
+        '<div class="avatar_margen">'+
+          '<div class="teacherAvatar">'+
+            '<img src={{defaultAchievementAvatar}} class="avatar">'+
+          '</div>'+
+        '</div>'+
+        '<input class="button button-light button-block button-outline" type="file" id="inputNewAchievementBadge" ng-click="updateInputFile(\'inputNewAchievementBadge\')">'+
+        '<form id="newAchievementForm" class="list">'+
+          '<ion-list>'+
+          '<label class="item item-input list-elements">'+
+            '<span class="input-label">{{ \'NAME\' | translate }}</span>'+
+            '<input type="text" placeholder="{{ \'NAME\' | translate }}" ng-model="modelNewAchievement.name">'+
+          '</label>'+
+          '<label class="item item-input list-elements">'+
+            '<span class="input-label">{{ \'DESCRIPTION\' | translate }}</span>'+
+            '<input type="text" placeholder="{{ \'DESCRIPTION\' | translate }}" ng-model="modelNewAchievement.description">'+
+          '</label>'+
+          '<label class="item item-input list-elements">'+
+            '<span class="input-label">{{ \'REQUIREMENTS\' | translate }}</span>'+
+            '<input type="number" placeholder="{{ \'REQUIREMENTS\' | translate }}" ng-model="modelNewAchievement.requirements">'+
+          '</label>'+
+          '<label class="item item-input list-elements">'+
+            '<span class="input-label">{{ \'MAX_LEVEL\' | translate }}</span>'+
+            '<input type="number" placeholder="{{ \'MAX_LEVEL\' | translate }}" ng-model="modelNewAchievement.maxLevel">'+
+          '</label>'+
+        '</ion-list>'+
+        '</form>'+
+        '<div class="button-bar action_buttons">'+
+          '<button class="button button-calm  button-block" ng-click="closeModalNewAchievement()">{{ \'CANCEL\' | translate }}</button>'+
+          '<button class="button button-calm  button-block"  ng-click="createAchievement(modelNewAchievement.name, modelNewAchievement.description, modelNewAchievement.requirements, modelNewAchievement.maxLevel)" ng-disabled="!modelNewAchievement.name || !modelNewAchievement.description || !modelNewAchievement.requirements || !modelNewAchievement.maxLevel">{{ \'ADD_ACHIEVEMENT\' | translate }}</button>'+
+        '</div>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -3416,7 +3423,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           itemsAchievementsRef.set(true);
 
           //PICTURE PART
-          if ($scope.file != undefined || $sope.file != null) {
+          if ($scope.file != undefined || $scope.file != null) {
             $ionicLoading.show();
             var fileExtension = $scope.file.name.split('.').pop();
             if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
