@@ -14,6 +14,16 @@ angular.module('app.settingsController', ['pascalprecht.translate'])
     });
 
     /**
+      Needed for the translations to change their value in execution time.
+    */
+    $rootScope.$on('$translateChangeSuccess', function () {
+      $scope.about = $translate.instant('ABOUT');
+      $scope.helpText = $translate.instant('HELP');
+      $scope.okayText = $translate.instant('OKAY');
+      $scope.termsAndConditions = $translate.instant('TERMS_CONDITIONS');
+    });
+
+    /**
       Shows a popup that contains help's information.
     */
     $scope.showHelpPopup = function() {
@@ -71,15 +81,4 @@ angular.module('app.settingsController', ['pascalprecht.translate'])
         }
       });
     }
-
-    /**
-      Needed for the translations to change their value in execution time.
-    */
-    $rootScope.$on('$translateChangeSuccess', function () {
-      $scope.about = $translate.instant('ABOUT');
-      $scope.helpText = $translate.instant('HELP');
-      $scope.okayText = $translate.instant('OKAY');
-      $scope.termsAndConditions = $translate.instant('TERMS_CONDITIONS');
-    });
-
 }])

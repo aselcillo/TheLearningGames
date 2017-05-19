@@ -1,3 +1,28 @@
+/**
+  THIS IS THE CONTROLLER'S STRUCTURE
+    *DECLARATIONS FOR NG-SHOW
+    *ACTION SHEETS
+    *POPOVERS
+    *POPOVERS' FUNCTIONS
+      -LANGUAGES POPOVER
+      -STUDENT HOME POPOVER
+      -DEFAULT POPOVER
+    *MODALS
+    *MODALS' FUNCTIONS
+    *DECLARATIONS OF NEEDED VARIABLES AND FUNCTIONS
+    *FUNCTIONS IN THE SCREENS
+      -FUNCTIONS IN PROFILE
+      -FUNCTIONS IN SETTINGS
+      -FUNCTIONS IN HOME
+      -FUNCTIONS IN ITEMS
+      -FUNCTIONS IN ACHIEVEMENTS
+      -FUNCTIONS IN TEAMS
+      -FUNCTIONS IN REWARDS
+      -FUNCTIONS IN MISSIONS
+      -FUNCTIONS NOTIFICATIONS
+    *SORT FUNCTIONS
+*/
+
 angular.module('app.studentController', ['pascalprecht.translate'])
 
 .controller('studentHomeCtrl', ['$scope', '$stateParams', '$http', '$state', '$ionicModal', '$ionicActionSheet', '$ionicPopover', '$firebaseArray', 'sharedData', '$ionicLoading', '$translate', '$rootScope', '$ionicLoading', 'localStorageService',
@@ -216,60 +241,66 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   $scope.achievementDialogModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3>{{achievement.name}}</h3>'+
-      '<ion-list>'+
-        '<ion-item class ="teacherAvatar">'+
-          '<img src={{achievement.badge}} class="avatar">'+
-        '</ion-item>'+
-        '<label class="item item-input list-elements" id="signUp-input3">'+
-          '<span class="inputLabelProfile">'+
-            '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;{{ \'DESCRIPTION\' | translate }}'+
-            '<p>{{achievement.description}}</p>'+
-          '</span>'+
-        '</label>'+
-        '<label class="item item-input list-elements" id="signUp-input3">'+
-          '<span class="inputLabelProfile">'+
-            '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;{{ \'REQUIREMENTS\' | translate }}'+
-            '<p>{{achievement.requirements}}</p>'+
-          '</span>'+
-        '</label>'+
-        '<label class="item item-input list-elements" id="signUp-input3" ng-show="unlockedAchievement">'+
-          '<span class="inputLabelProfile">'+
-            '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;{{ \'YOUR_ACTUAL_LEVEL\' | translate }}'+
-            '<p>{{achievement.level}}</p>'+
-          '</span>'+
-        '</label>'+
-        '<label class="item item-input list-elements" id="signUp-input3">'+
-          '<span class="inputLabelProfile">'+
-            '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;{{ \'MAX_LEVEL\' | translate }}'+
-            '<p>{{achievement.maxLevel}}</p>'+
-          '</span>'+
-        '</label>'+
-      '</ion-list>'+
-      '<button ng-click="closeModalAchievementDialog()" class="button button-positive button-block icon ion-arrow-return-left"></button>'+
+      '<div>'+
+        '<div class="avatar_margen">'+
+          '<div class="teacherAvatar">'+
+            '<img src={{achievement.badge}} class="avatar">'+
+          '</div>'+
+        '</div>'+
+        '<ion-list>'+
+          '<label class="item item-input list-elements" id="signUp-input3">'+
+            '<span class="inputLabelProfile">'+
+              '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;{{ \'DESCRIPTION\' | translate }}'+
+              '<p>{{achievement.description}}</p>'+
+            '</span>'+
+          '</label>'+
+          '<label class="item item-input list-elements" id="signUp-input3">'+
+            '<span class="inputLabelProfile">'+
+              '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;{{ \'REQUIREMENTS\' | translate }}'+
+              '<p>{{achievement.requirements}}</p>'+
+            '</span>'+
+          '</label>'+
+          '<label class="item item-input list-elements" id="signUp-input3" ng-show="unlockedAchievement">'+
+            '<span class="inputLabelProfile">'+
+              '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;{{ \'YOUR_ACTUAL_LEVEL\' | translate }}'+
+              '<p>{{achievement.level}}</p>'+
+            '</span>'+
+          '</label>'+
+          '<label class="item item-input list-elements" id="signUp-input3">'+
+            '<span class="inputLabelProfile">'+
+              '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;{{ \'MAX_LEVEL\' | translate }}'+
+              '<p>{{achievement.maxLevel}}</p>'+
+            '</span>'+
+          '</label>'+
+        '</ion-list>'+
+        '<button ng-click="closeModalAchievementDialog()" class="button button-positive button-block icon ion-arrow-return-left"></button>'+
+      '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
 
   $scope.teamDialogModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3>{{team.name}}</h3>'+
-      '<div class="list-student">'+
-        '<div class="teacherAvatar">'+
-          '<img src={{team.picture}} class="avatar">'+
+      '<div>'+
+        '<div class="avatar_margen">'+
+          '<div class="teacherAvatar">'+
+            '<img src={{team.picture}} class="avatar">'+
+          '</div>'+
         '</div>'+
         '<form id="teamDialogForm">'+
-          '<button class="button button-light  button-block button-outline">{{ \'CHANGE_AVATAR\' | translate }}</button>'+
           '<label class="item item-input list-elements">'+
             '<span class="input-label">'+
               '{{ \'TEAM_OBJECTIVE\' | translate }}'+
               '<p>{{team.objective}}</p>'+
             '</span>'+
           '</label>'+
-          '<div class="button-bar action_buttons">'+
-            '<button class="button button-calm  button-block" ng-click="closeModalTeamDialog()">{{ \'CANCEL\' | translate }}</button>'+
-          '</div>'+
         '</form>'+
+        '<div class="button-bar action_buttons">'+
+          '<button ng-click="closeModalTeamDialog()" class="button button-calm button-block icon ion-arrow-return-left"></button>'+
+        '</div>'+
       '</div>'+
-      '<div class="list-team">'+
+      '<div>'+
+        '<h3>{{ \'TEAM_MEMBERS\' | translate}}</h3>'+
         '<ion-list>'+
           '<ion-item class="list-student-team" ng-repeat="teamMember in teamMembers">{{teamMember.name}} {{teamMember.surname}}</ion-item>'+
         '</ion-list>'+
@@ -331,10 +362,12 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
           '<p>{{ \'NEEDED_POINTS\' | translate }}: {{item.neededPoints}}</p>'+
         '</ion-item>'+
       '</ion-list>'+
+      '<div class="button-bar action_buttons"></div>'+
       '<h3 id="teams-heading5" class="teams-hdg5">{{ \'REWARDS\' | translate }}</h3>'+
       '<ion-list id="items-list9">'+
         '<ion-item id="items-list-item15" class="list-student" ng-repeat="reward in missionRewards">{{reward.name}}</ion-item>'+
       '</ion-list>'+
+      '<div class="button-bar action_buttons"></div>'+
       '<h3 id="teams-heading5" class="teams-hdg5">{{ \'STUDENTS\' | translate }}</h3>'+
       '<ion-list id="items-list9">'+
         '<ion-item id="items-list-item15" class="list-student" ng-repeat="student in missionStudents">{{student.name}}  {{student.surname}}</ion-item>'+
@@ -534,6 +567,24 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     $scope.rewardNotificationType = translations.REWARD;
   });
 
+  /**
+    Needed for the translations to change their value in execution time.
+  */
+  $rootScope.$on('$translateChangeSuccess', function () {
+    $scope.actionsRewardsActionSheet = $translate.instant('ACTIONS_REWARDS');
+    $scope.buyRewardsActionSheetOption = $translate.instant('BUY_REWARDS');
+    $scope.cancelText = $translate.instant('CANCEL');
+    $scope.classroomClosedAlert = $translate.instant('CLASS_CLOSED');
+    $scope.dataChangedAlert = $translate.instant('DATA_CHANGED');
+    $scope.emailChangedAlert = $translate.instant('EMAIL_CHANGED');
+    $scope.notEnoughPointsAlert = $translate.instant('NOT_ENOUGH_POINTS');
+    $scope.notificationOfStudent = $translate.instant('NOTIFICATION_OF_STUDENT');
+    $scope.notificationRewardObtained = $translate.instant('NOTIFICATION_REWARD_OBTAINED');
+    $scope.notificationRewardSpent = $translate.instant('NOTIFICATION_REWARD_SPENT');
+    $scope.passwordChangedAlert = $translate.instant('PASSWORD_CHANGED');
+    $scope.rewardNotificationType = $translate.instant('REWARD');
+  });
+
   $scope.defaultAvatar = 'img/userDefaultAvatar.png';
   
   var itemModal;
@@ -677,7 +728,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
                                           /* FUNCTIONS IN HOME */
 
   /**
-    Get all the classrooms that the student is part of.
+    Get all the classrooms that the student is part of and saves them in the session.
     Asks firebase for the correspond classrooms' references
     Defines an event for each classroom's reference which is triggered every time that database reference is modified.
     The event saves every classroom in the session.
@@ -789,7 +840,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
                                         /* FUNCTIONS IN ITEMS */
 
   /**
-    Get all the items that are part of the classroom.
+    Get all the items that are part of the classroom and saves them in the session.
     Asks firebase for the correspond items' references
     Defines an event for each item's reference which is triggered every time that database reference is modified.
     The event saves the items in the session, either in unlocked or locked depending on the student's history.
@@ -898,6 +949,13 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
                                         /* FUNCTIONS IN ACHIEVEMENTS */
 
+  /**
+    Get all the achievements that are part of the item in the session.
+    Asks firebase for the correspond achievements' references
+    Defines an event for each achievement's reference which is triggered every time that database reference is modified.
+    The event saves the achievements in the session, either in unlocked or locked depending on the student's history 
+    and also check for the student's level in the achievement.
+  */
   $scope.getAchievements = function() {
     var itemAchievementsRef = firebase.database().ref('items/' + $scope.item.id + '/achievements');
     var achievementKeys = $firebaseArray(itemAchievementsRef);
@@ -976,7 +1034,11 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     });
   }
 
-   $scope.setAchievement = function(achievement) {
+  /**
+    @achievement: The achievement that is going to be saved in the session.
+    Saves the achievement selected in the session.
+  */
+  $scope.setAchievement = function(achievement) {
     $scope.achievement = achievement;
     $scope.unlockedAchievement = (achievement.level != undefined);
     $scope.showModalAchievementDialog();
@@ -987,6 +1049,12 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
                                         /* FUNCTIONS IN TEAMS */
 
+  /**
+    Get all the teams from the classroom that the student is part of and saves them in the session.
+    Asks firebase for the correspond teams' references
+    Defines an event for each team's reference which is triggered every time that database reference is modified.
+    The event saves the teams in the session.
+  */
   $scope.getTeams = function() {
     var studentTeamsRef = firebase.database().ref('students/' + sessionUser.uid + '/teams');
     var teamKeys = $firebaseArray(studentTeamsRef);
@@ -1023,6 +1091,12 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     });
   }
 
+  /**
+    @team: The team that is going to be saved in the session.
+    Saves the team selected in the session.
+    Defines an event for each team member's reference which is triggered every time that database reference is modified.
+    The event saves the members in the session team.
+  */
   $scope.setTeam = function(team) {
     $scope.team = team;
     var teamMembersRef = firebase.database().ref('teams/' + team.id + '/students');
@@ -1060,6 +1134,12 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
                                           /* FUNCTIONS IN REWARDS */
 
+  /**
+    Get all the rewards that are part of the classroomand saves them in the session.
+    Asks firebase for the correspond rewards' references
+    Defines an event for each reward's reference which is triggered every time that database reference is modified.
+    The event saves the rewards either in unlocked or locked depending on the student's history in the session.
+  */
   $scope.getRewards = function() {
     var classroomRewardsRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/rewards');
     var rewardKeys = $firebaseArray(classroomRewardsRef);
@@ -1115,6 +1195,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     });
   }
 
+  /**
+    Add the unlocked and locked rewards in an array for selection purposes.
+  */
   $scope.getRewardsForSelection = function() {
     $scope.rewards = $scope.rewardsLocked.concat($scope.rewardsUnlocked);
 
@@ -1126,6 +1209,11 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     }
   }
 
+  /**
+    @reward: The reward that is going to be saved in the session.
+    Saves the reward selected in the session.
+    Checks if the student already has the rewards.
+  */
   $scope.setReward = function(reward) {
     $scope.reward = reward;
     if ($scope.student.rewards != undefined) {
@@ -1140,6 +1228,11 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     $scope.showModalRewardDialog();
   }
 
+  /**
+    Buys the selected rewards.
+    Removes the correspond total price to the student's available points.
+    Adds the bought rewards' references to the stundet's tree on the firebase database.
+  */
   $scope.buyReward = function(reward) {
     if ($scope.availablePoints >= reward.price) {
       var rewardForStudentRef = firebase.database().ref('students/' + $scope.student.id + '/rewards/' + reward.id);
@@ -1173,6 +1266,10 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     }
   }
 
+  /**
+    @reward: The rewards that is going to be spent.
+    Spends the the reward and checks the student's quantity of that reward to remove either its reference or 1 amount.
+  */
   $scope.consumeReward = function(reward) {
     $scope.closeModalRewardDialog();
 
@@ -1190,6 +1287,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     $scope.getRewards();
   }
 
+  /**
+    Gets all the selected rewards in the modal and then calls the buyReward method to buy them.
+  */
   $scope.selectRewards = function() {
     $scope.closeSelectRewardsModal();
       for (var element in $scope.rewardsForSelection) {
@@ -1200,6 +1300,10 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     $scope.rewardsForSelection = $scope.rewards;
   }
 
+  /**
+    @reward: The reward selected.
+    Checks if the selected reward it was already selected or not.
+  */
   $scope.changeSelectedReward = function(reward) {
     if (reward.selected === false) {
       reward.selected = true;
@@ -1210,6 +1314,12 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
                                             /* FUNCTIONS IN MISSIONS */
 
+  /**
+    Get all the missions from the classroom that the student is part of and saves them in the session.
+    Asks firebase for the correspond missions' references
+    Defines an event for each mission's reference which is triggered every time that database reference is modified.
+    The event saves the missions in the session if the student is part of them.
+  */
   $scope.getMissions = function() {
     var classroomMissionsRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/missions');
     var missionKeys = $firebaseArray(classroomMissionsRef);
@@ -1246,6 +1356,12 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     });
   }
 
+  /**
+    Get all the students that are part of the classroom and saves them in the session.
+    Asks firebase for the correspond students' references
+    Defines an event for each student's reference which is triggered every time that database reference is modified.
+    The event saves the students in the session.
+  */
   $scope.getClassroomStudents = function() {
     var classroomStudentsRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/students');
     var studentsKeys = $firebaseArray(classroomStudentsRef);
@@ -1280,6 +1396,11 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     });
   }
 
+  /**
+    @mission: The mission that is going to be saved in the session.
+    Saves the mission selected in the session.
+    Also checks and retrieves all the mission's items, students and rewards.
+  */
   $scope.setMission = function(mission) {
     $scope.mission = mission;
     $scope.getClassroomItems();
@@ -1326,13 +1447,21 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
                                         /* FUNCTIONS NOTIFICATIONS */
 
+  /**
+    Get all the notifications from the student in the classroom.
+    Asks firebase for the correspond notifications' references
+    Defines an event for each notification's reference which is triggered every time that database reference is modified.
+    The event saves the notifications in the session.
+    Also show the notifications modal to the student if he has any.
+  */
   $scope.getNotifications = function() {
     var studentNotificationsRef = firebase.database().ref('students/' + $scope.student.id + '/notifications/' + $scope.classroom.id);
     var studentNotificationsArray = $firebaseArray(studentNotificationsRef);
     studentNotificationsArray.$loaded(function() {
       $scope.notifications = [];
         for (var element in studentNotificationsArray) {
-          var studentNotificationRef = firebase.database().ref('students/' + $scope.student.id + '/notifications/' + $scope.classroom.id + '/' + studentNotificationsArray[element].$id);
+          var notificationKey = studentNotificationsArray[element].$id;
+          var studentNotificationRef = firebase.database().ref('students/' + $scope.student.id + '/notifications/' + $scope.classroom.id + '/' + notificationKey);
           studentNotificationRef.on('value', function(snapshot) {
             if (snapshot.val() != null) {
               var change = false;
@@ -1353,6 +1482,12 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     });
   }
 
+  /**
+    @reward: The rewards that the student buyed or consumed.
+    @operationType: Buy or consume. Tells the method what message send
+    @student: The student that buyed or consumed the reward.
+    Creates a notification for the teacher to informa that the student either buyed or consumed the reward.
+  */
   $scope.createNotificationRewards = function(reward, operationType, student) {
     var teacherNotificationsRef = firebase.database().ref('teachers/' + $scope.classroom.teacher + '/notifications/' + $scope.classroom.id);
     var teacherNotificationsArray = $firebaseArray(teacherNotificationsRef);
@@ -1373,6 +1508,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     });
   }
 
+  /**
+    Removes all the notificatiosn from the student's tree.
+  */
   $scope.deleteNotifications = function() {
     var notificationToDeleteRef = firebase.database().ref('students/' + $scope.student.id + '/notifications/' + $scope.classroom.id);
     notificationToDeleteRef.remove();
@@ -1431,23 +1569,4 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     //dates must be equal
     return 0;
   }
-
-  /**
-    Needed for the translations to change their value in execution time.
-  */
-  $rootScope.$on('$translateChangeSuccess', function () {
-    $scope.actionsRewardsActionSheet = $translate.instant('ACTIONS_REWARDS');
-    $scope.buyRewardsActionSheetOption = $translate.instant('BUY_REWARDS');
-    $scope.cancelText = $translate.instant('CANCEL');
-    $scope.classroomClosedAlert = $translate.instant('CLASS_CLOSED');
-    $scope.dataChangedAlert = $translate.instant('DATA_CHANGED');
-    $scope.emailChangedAlert = $translate.instant('EMAIL_CHANGED');
-    $scope.notEnoughPointsAlert = $translate.instant('NOT_ENOUGH_POINTS');
-    $scope.notificationOfStudent = $translate.instant('NOTIFICATION_OF_STUDENT');
-    $scope.notificationRewardObtained = $translate.instant('NOTIFICATION_REWARD_OBTAINED');
-    $scope.notificationRewardSpent = $translate.instant('NOTIFICATION_REWARD_SPENT');
-    $scope.passwordChangedAlert = $translate.instant('PASSWORD_CHANGED');
-    $scope.rewardNotificationType = $translate.instant('REWARD');
-  });
-  
 }])
