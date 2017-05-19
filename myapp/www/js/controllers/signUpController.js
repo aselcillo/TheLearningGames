@@ -37,6 +37,18 @@ function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading, $trans
     $scope.weakPasswordAlert = translations.ERROR_WEAK_PASSWORD;
   });
 
+  /**
+    Needed for the translations to change their value in execution time.
+  */
+  $rootScope.$on('$translateChangeSuccess', function () {
+    $scope.checkEmailToVerify = $translate.instant('CHECK_EMAIL_TO_VERIFY');
+    $scope.emailInvalidAlert = $translate.instant('EMAIL_INVALID');
+    $scope.errorEmailUsedAlert = $translate.instant('EMAIL_ALREADY_USED');
+    $scope.errorUnknowAlert = $translate.instant('ERROR_ACCESS_UNKNOW');
+    $scope.schholNotEstablished = $translate.instant('SCHOOL_NOT_ESTABLISHED');
+    $scope.weakPasswordAlert = $translate.instant('ERROR_WEAK_PASSWORD');
+  });
+
   $scope.modelSignUp = {};
 
   $scope.defaultAvatar = 'img/userDefaultAvatar.png';
@@ -136,17 +148,4 @@ function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading, $trans
 		  }
     });
   }
-
-  /**
-    Needed for the translations to change their value in execution time.
-  */
-  $rootScope.$on('$translateChangeSuccess', function () {
-    $scope.checkEmailToVerify = $translate.instant('CHECK_EMAIL_TO_VERIFY');
-    $scope.emailInvalidAlert = $translate.instant('EMAIL_INVALID');
-    $scope.errorEmailUsedAlert = $translate.instant('EMAIL_ALREADY_USED');
-    $scope.errorUnknowAlert = $translate.instant('ERROR_ACCESS_UNKNOW');
-    $scope.schholNotEstablished = $translate.instant('SCHOOL_NOT_ESTABLISHED');
-    $scope.weakPasswordAlert = $translate.instant('ERROR_WEAK_PASSWORD');
-  });
-
 }])

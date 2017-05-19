@@ -54,6 +54,24 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
   });
 
   /**
+    Needed for the translations to change their value in execution time.
+  */
+  $rootScope.$on('$translateChangeSuccess', function () {
+    $scope.acceptText = $translate.instant('ACCEPT');
+    $scope.accountStudentNotExistAlert = $translate.instant('ACCOUNT_STUDENT_NOT_EXIST');
+    $scope.accountTeacherNotExistAlert = $translate.instant('ACCOUNT_TEACHER_NOT_EXIST');
+    $scope.cancelText = $translate.instant('CANCEL');
+    $scope.checkEmailToVerify = $translate.instant('CHECK_EMAIL_TO_VERIFY');
+    $scope.emailInvalidAlert = $translate.instant('EMAIL_INVALID');
+    $scope.emailOfAccountText = $translate.instant('EMAIL_OF_ACCOUNT');
+    $scope.errorUnknowAlert = $translate.instant('ERROR_ACCESS_UNKNOW');
+    $scope.insertEmailValidAlert = $translate.instant('INSERT_EMAIL_CORRECT');
+    $scope.userNotFoundAlert = $translate.instant('USER_NOT_FOUND');
+    $scope.verifyEmailAlert = $translate.instant('VERIFY_EMAIL');
+    $scope.wronCredentialsAlert = $translate.instant('WRONG_CREDENTIALS');
+  });
+
+  /**
     Checks if there was any user's credentials in the local storage and (if true) determinates the user's type 
     (teacher or student) to send them to their home screen.
   */
@@ -241,23 +259,4 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
       ] 
     });     
   };
-
-  /**
-    Needed for the translations to change their value in execution time.
-  */
-  $rootScope.$on('$translateChangeSuccess', function () {
-    $scope.acceptText = $translate.instant('ACCEPT');
-    $scope.accountStudentNotExistAlert = $translate.instant('ACCOUNT_STUDENT_NOT_EXIST');
-    $scope.accountTeacherNotExistAlert = $translate.instant('ACCOUNT_TEACHER_NOT_EXIST');
-    $scope.cancelText = $translate.instant('CANCEL');
-    $scope.checkEmailToVerify = $translate.instant('CHECK_EMAIL_TO_VERIFY');
-    $scope.emailInvalidAlert = $translate.instant('EMAIL_INVALID');
-    $scope.emailOfAccountText = $translate.instant('EMAIL_OF_ACCOUNT');
-    $scope.errorUnknowAlert = $translate.instant('ERROR_ACCESS_UNKNOW');
-    $scope.insertEmailValidAlert = $translate.instant('INSERT_EMAIL_CORRECT');
-    $scope.userNotFoundAlert = $translate.instant('USER_NOT_FOUND');
-    $scope.verifyEmailAlert = $translate.instant('VERIFY_EMAIL');
-    $scope.wronCredentialsAlert = $translate.instant('WRONG_CREDENTIALS');
-  });
-
 }])
