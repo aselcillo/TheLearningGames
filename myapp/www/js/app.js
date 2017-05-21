@@ -1,10 +1,3 @@
-// Ionic Starter App
-
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.services' is found in services.js
-// 'starter.controllers' is found in controllers.js
 angular.module('app', ['ionic', 'app.loginController', 'app.settingsController', 'app.signUpController', 'app.studentController', 'app.teacherController', 'app.translationsController', 'app.routes', 'app.directives', 'app.services', 'ngCookies', 'pascalprecht.translate', 'ui.router', 'firebase', 'firebaseConfig', 'LocalStorageModule'])
 
 .config(function($ionicConfigProvider, $sceDelegateProvider, $translateProvider){
@@ -37,6 +30,7 @@ angular.module('app', ['ionic', 'app.loginController', 'app.settingsController',
     }
   });
 
+  //Used to prevent the back button's action in smartphones.
   $ionicPlatform.registerBackButtonAction(function(event) {
     event.preventDefault();
   }, 800);//registerBackButton
@@ -69,6 +63,7 @@ angular.module('app', ['ionic', 'app.loginController', 'app.settingsController',
   };
 });
 
+//Here they are the translations that use cookies to save the translated values of each language.
 var translationsEN = {
   
   ABOUT: 'About',
@@ -120,6 +115,7 @@ var translationsEN = {
   CLEAN_NOTIFICATIONS: 'Clear notifications',
   CONFIGURE_LEVELS: 'Configure levels',
   CONFIRM_PASSWORD: 'Confirm password',
+  COPY_ELEMENTS_FROM_ANOTHER_CLASS: 'Copy elements from another class',
   COPY_STUDENT_TO_ANOTHER_CLASS: 'Copy student to another class',
   CREATE: 'Create',
   CREATE_RANDOM_TEAMS: 'Create random teams',
@@ -142,6 +138,7 @@ var translationsEN = {
   EDIT_MEMBERS: 'Edit members',
   EDIT_REWARD: 'Edit reward',
   EDIT_REWARDS: 'Edit rewards',
+  EDIT_SCORE: 'Edit score',
   EDIT_STUDENTS: 'Edit students',
   EDIT_TEAM: 'Edit team',
   EMAIL: 'Email',
@@ -184,7 +181,7 @@ var translationsEN = {
   LEVEL_LEVEL: 'Level',
   LEVEL_REQUIRED_POINTS: 'Required points',
   LEVELS_CONFIGURATION: 'Levels configuration',
-  LOCKED_ACHIVEMENTS: 'Locked achievements',
+  LOCKED_ACHIEVEMENTS: 'Locked achievements',
   LOCKED_ITEMS: 'Locked items',
   LOCKED_REWARDS: 'Locked rewards',
   LOG_OUT: 'Log out', 
@@ -258,6 +255,7 @@ var translationsEN = {
   SETTINGS: 'Settings',
   SCHOOL: 'School',
   SCHOOL_NOT_ESTABLISHED: 'Not established',
+  SHOW_IMAGES: 'Show images',
   SIGN_UP: 'Sign up',
   STUDENT: 'Student',
   STUDENT_DOESNT_HAVE_ENOUGH_POINTS: 'Student doesn\'t have enough points to remove in the item',
@@ -268,6 +266,7 @@ var translationsEN = {
   TAKE_PICTURE: 'Take picture',
   TEACHER: 'Teacher',
   TEACHER_MESSAGE: 'Teacher\'s message',
+  TEAM_MEMBERS: 'Members',
   TEAMS: 'Teams',
   TEAM_OBJECTIVE: 'Objective',
   TERMS_CONDITIONS: 'Terms and conditions',
@@ -285,7 +284,7 @@ var translationsEN = {
   WRONG_CREDENTIALS: 'Email or password is wrong',
   YOU_HAVE_NOTIFICATIONS: 'You have notifications',
   YOU_WIN_REWARD: 'You have win the reward',
-  YOUR_ACTUAL_LEVEL: 'Your actual level',
+  YOUR_ACTUAL_LEVEL: 'Current level',
   YOUR_PASSWORD: 'Your Password',
   ZERO_SCORE_ESTABLISHED: 'the score has been established to 0',
   ZERO_SCORE_WILL_ESTABLISH: 'the score will be established to 0',
@@ -342,6 +341,7 @@ var translationsES= {
   CLEAR_NOTIFICATIONS: 'Limpiar notificaciones',
   CONFIGURE_LEVELS: 'Configurar niveles',
   CONFIRM_PASSWORD: 'Confirmar contraseña',
+  COPY_ELEMENTS_FROM_ANOTHER_CLASS: 'Copiar elementos de otra clase',
   COPY_STUDENT_TO_ANOTHER_CLASS: 'Copiar estudiante a otra clase',
   CREATE: 'Crear',
   CREATE_RANDOM_TEAMS: 'Create random teams',
@@ -364,6 +364,7 @@ var translationsES= {
   EDIT_MEMBERS: 'Editar miembros',
   EDIT_REWARD: 'Editar recompensa',
   EDIT_REWARDS: 'Editar recompensas',
+  EDIT_SCORE: 'Editar puntuación',
   EDIT_STUDENTS: 'Editar estudiantes',
   EDIT_TEAM: 'Editar equipo',
   EMAIL: 'Correo',
@@ -376,7 +377,7 @@ var translationsES= {
   ERROR_ACCESS_UNKNOW: 'Error desconocido',
   ERROR_WEAK_PASSWORD: 'La contraseña debe ser de al menos 6 caracteres',
   EVALUATE_STUDENTS: 'Evaluar estudiante(s)',
-  EVALUATE_TEAMS: 'Evaluar estudiante(s)',
+  EVALUATE_TEAMS: 'Evaluar equipo(s)',
   EXPORT: 'Exportar',
   FILE_INVALID: 'El archivo no es una imagen válida',
   FORGOT_PASSWORD: '¿Se te olvidó tu contraseña?',
@@ -407,7 +408,7 @@ var translationsES= {
   LEVEL_LEVEL: 'Nivel',
   LEVEL_REQUIRED_POINTS: 'Puntos requeridos',
   LEVELS_CONFIGURATION: 'Configuración de niveles',
-  LOCKED_ACHIVEMENTS: 'Logros bloqueados',
+  LOCKED_ACHIEVEMENTS: 'Logros bloqueados',
   LOCKED_ITEMS: 'Items bloqueados',
   LOCKED_REWARDS: 'Recompensas bloqueadas',
   LOG_OUT: 'Cerrar sesión',
@@ -481,16 +482,18 @@ var translationsES= {
   SETTINGS: 'Ajustes',
   SCHOOL: 'Escuela',
   SCHOOL_NOT_ESTABLISHED: 'No establecida',
+  SHOW_IMAGES: 'Mostrar imágenes',
   SIGN_UP: 'Registrarse',
   STUDENT: 'Estudiante',
   STUDENTS: 'Estudiantes',
   STUDENT_DOESNT_HAVE_ENOUGH_POINTS: 'El alumno no dispone de suficientes puntos en el item',
-  STUDENTS_VIEW: 'Viste de alumnos',
+  STUDENTS_VIEW: 'Vista de alumnos',
   SURNAME: 'Apellido',
   TAKE_ATTENDANCE: 'Tomar asistencia',
   TAKE_PICTURE: 'Seleccionar foto',
   TEACHER: 'Profesor',
   TEACHER_MESSAGE: 'Mensaje de profesor',
+  TEAM_MEMBERS: 'Miembros',
   TEAMS: 'Equipos',
   TEAM_OBJECTIVE: 'Objetivo',
   TERMS_CONDITIONS: 'Términos y condiciones',

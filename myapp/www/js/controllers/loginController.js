@@ -5,8 +5,9 @@ angular.module('app.loginController', ['pascalprecht.translate'])
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
 function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ionicPopup, $ionicLoading, $translate, $rootScope, localStorageService) {
 
-  /*
+  /**
     *************************************DECLARE FUNCTIONS FOR NG-SHOW********************************
+    They work showing the cointainer that depends on the variable with @value: true.
   */
 
   $scope.loginType=false;
@@ -34,6 +35,9 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
     *************************************DECLARE VARIABLES & GIVE TO $SCOPE ALL THE VALUES WE NEED****
   */
 
+  /**
+    Needed for the translations to work in the controller's words.
+  */
   $translate(['ACCEPT', 'ACCOUNT_STUDENT_NOT_EXIST', 'ACCOUNT_TEACHER_NOT_EXIST', 'CANCEL', 'CHECK_EMAIL_TO_VERIFY', 'EMAIL_INVALID', 'EMAIL_OF_ACCOUNT', 'ERROR_ACCESS_UNKNOW', 'INSERT_EMAIL_CORRECT', 'USER_NOT_FOUND', 'VERIFY_EMAIL', 'WRONG_CREDENTIALS']).then(function(translations) {
     $scope.acceptText = translations.ACCEPT;
     $scope.accountStudentNotExistAlert = translations.ACCOUNT_STUDENT_NOT_EXIST;
@@ -49,6 +53,28 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
     $scope.wronCredentialsAlert = translations.WRONG_CREDENTIALS;
   });
 
+  /**
+    Needed for the translations to change their value in execution time.
+  */
+  $rootScope.$on('$translateChangeSuccess', function () {
+    $scope.acceptText = $translate.instant('ACCEPT');
+    $scope.accountStudentNotExistAlert = $translate.instant('ACCOUNT_STUDENT_NOT_EXIST');
+    $scope.accountTeacherNotExistAlert = $translate.instant('ACCOUNT_TEACHER_NOT_EXIST');
+    $scope.cancelText = $translate.instant('CANCEL');
+    $scope.checkEmailToVerify = $translate.instant('CHECK_EMAIL_TO_VERIFY');
+    $scope.emailInvalidAlert = $translate.instant('EMAIL_INVALID');
+    $scope.emailOfAccountText = $translate.instant('EMAIL_OF_ACCOUNT');
+    $scope.errorUnknowAlert = $translate.instant('ERROR_ACCESS_UNKNOW');
+    $scope.insertEmailValidAlert = $translate.instant('INSERT_EMAIL_CORRECT');
+    $scope.userNotFoundAlert = $translate.instant('USER_NOT_FOUND');
+    $scope.verifyEmailAlert = $translate.instant('VERIFY_EMAIL');
+    $scope.wronCredentialsAlert = $translate.instant('WRONG_CREDENTIALS');
+  });
+
+  /**
+    Checks if there was any user's credentials in the local storage and (if true) determinates the user's type 
+    (teacher or student) to send them to their home screen.
+  */
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
       userData = localStorageService.get('userCredentials');
@@ -60,7 +86,6 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
       $ionicLoading.hide();
     }
   });
-
   var userData = localStorageService.get('userCredentials');
   if (userData != null && Object.keys(userData).length > 0) {
     $ionicLoading.show();
@@ -80,6 +105,9 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
     *************************************EVERY FUNCTIONALITY FUNCTION GOES HERE***********************
   */
 
+  /**
+    Logs a user with teacher role if the credentials (email and password) are correct else shows an alert with the error.
+  */
   $scope.logInTeacher = function(email, password) {
 
     if (email != undefined && email.includes('@')) {
@@ -136,6 +164,9 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
     });
   }
 
+  /**
+    Logs a user with student role if the credentials (email and password) are correct else shows an alert with the error.
+  */
   $scope.logInStudent = function(email, password) {
 
     if (email != undefined && email.includes('@')) {
@@ -195,6 +226,9 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
     });
   }
 
+  /**
+    Shows a popup asking for a valid email to reset that user's password with an email.
+  */
   $scope.showResetPasswordPopup = function() {
     $scope.emailUser = {};
     var ressetPasswordPopup = $ionicPopup.alert({
@@ -225,20 +259,4 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
       ] 
     });     
   };
-
-  $rootScope.$on('$translateChangeSuccess', function () {
-    $scope.acceptText = $translate.instant('ACCEPT');
-    $scope.accountStudentNotExistAlert = $translate.instant('ACCOUNT_STUDENT_NOT_EXIST');
-    $scope.accountTeacherNotExistAlert = $translate.instant('ACCOUNT_TEACHER_NOT_EXIST');
-    $scope.cancelText = $translate.instant('CANCEL');
-    $scope.checkEmailToVerify = $translate.instant('CHECK_EMAIL_TO_VERIFY');
-    $scope.emailInvalidAlert = $translate.instant('EMAIL_INVALID');
-    $scope.emailOfAccountText = $translate.instant('EMAIL_OF_ACCOUNT');
-    $scope.errorUnknowAlert = $translate.instant('ERROR_ACCESS_UNKNOW');
-    $scope.insertEmailValidAlert = $translate.instant('INSERT_EMAIL_CORRECT');
-    $scope.userNotFoundAlert = $translate.instant('USER_NOT_FOUND');
-    $scope.verifyEmailAlert = $translate.instant('VERIFY_EMAIL');
-    $scope.wronCredentialsAlert = $translate.instant('WRONG_CREDENTIALS');
-  });
-
 }])

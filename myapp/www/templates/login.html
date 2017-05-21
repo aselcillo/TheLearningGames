@@ -6,31 +6,29 @@
     </div>
 
     <div id="login-button-bar1" class="button-bar">
-      <button class="button button-calm  button-block bold-font" 
-      ng-click="teacherForm()">{{ 'TEACHER' | translate }}</button>
-      <button class="button button-calm  button-block bold-font" 
-      ng-click="studentForm()">{{ 'STUDENT' | translate }}</button>
+      <button class="button button-light button-outline" ng-click="teacherForm()">{{ 'TEACHER' | translate }}</button>
+      <button class="button button-light button-outline" ng-click="studentForm()">{{ 'STUDENT' | translate }}</button>
     </div>
 
     <form id="teacherLoginForm" class="list" ng-show="loginType">
       <ion-list id="login-list1">
         <label class="item item-input list-elements" id="login-input1">
-        <span class="input-label">{{ 'EMAIL' | translate }}</span>
-        <input type="email" placeholder="{{ 'EMAIL_EXAMPLE' | translate }}" ng-model="modelLoginTeacher.email">
+          <span class="input-label">{{ 'EMAIL' | translate }}</span>
+          <input type="email" placeholder="{{ 'EMAIL_EXAMPLE' | translate }}" ng-model="modelLoginTeacher.email">
         </label>
         <label class="item item-input list-elements" id="login-input2" id="pass">
-        <span class="input-label">{{ 'PASSWORD' | translate }}</span>
-        <input id="passInputTeacher" type="password" placeholder="{{ 'YOUR_PASSWORD' | translate }}" ng-model="modelLoginTeacher.password">
-        <a href="javascript:void();" 
-        onmouseout="document.getElementById('passInputTeacher').type='password'" 
-        onmouseover="document.getElementById('passInputTeacher').type='text'"><span class="ion-eye verPass"></span></a>
+          <span class="input-label">{{ 'PASSWORD' | translate }}</span>
+          <input id="passInputTeacher" type="password" placeholder="{{ 'YOUR_PASSWORD' | translate }}" ng-model="modelLoginTeacher.password">
+          <a href="javascript:void();" onmouseout="document.getElementById('passInputTeacher').type='password'" 
+            onmouseover="document.getElementById('passInputTeacher').type='text'"><span class="ion-eye verPass"></span>
+          </a>
         </label>
         <div class="spacer" class="spacerLogin"></div>
         <div id="login-button-bar1" class="button-bar">       
           <button id="login-button6" id="login-button6" class="button button-calm  button-block bold-font" ng-click="logInTeacher(modelLoginTeacher.email, modelLoginTeacher.password)">{{ 'LOG_TEACHER' | translate }}</button>
         </div>
       </ion-list>
-      <div id="login-button-bar3" class="button-bar">
+      <div>
         <button id="login-button10" class="button button-light  button-block button-clear icon ion-ios-arrow-forward" ng-click="showResetPasswordPopup()"> {{ 'FORGOT_PASSWORD' | translate }}</button>
         <button ui-sref="signUp" id="login-button2" class="button button-light  button-block button-clear icon ion-ios-arrow-forward" ng-click="allFalseForm()">  {{ 'DONT_HAVE_ACCOUNT' | translate }}</button>
       </div>
@@ -39,23 +37,23 @@
     <form id="studentLoginForm" class="list" ng-show="loginType2">
       <ion-list id="login-list1">
         <label class="item item-input list-elements" id="login-input1">
-        <span class="input-label">{{ 'EMAIL' | translate }}</span>
-        <input type="email" placeholder="{{ 'EMAIL_EXAMPLE' | translate }}" ng-model="modelLoginStudent.email">
+          <span class="input-label">{{ 'EMAIL' | translate }}</span>
+          <input type="email" placeholder="{{ 'EMAIL_EXAMPLE' | translate }}" ng-model="modelLoginStudent.email">
         </label>
         <label class="item item-input list-elements" id="login-input2" id="pass">
-        <span class="input-label">{{ 'PASSWORD' | translate }}</span>
-        <input id="passInputStudent" type="password" placeholder="{{ 'YOUR_PASSWORD' | translate }}" ng-model="modelLoginStudent.password">
-        <a href="javascript:void();" 
-        onmouseout="document.getElementById('passInputStudent').type='password'" 
-        onmouseover="document.getElementById('passInputStudent').type='text'"><span class="ion-eye verPass"></span></a>
+          <span class="input-label">{{ 'PASSWORD' | translate }}</span>
+          <input id="passInputStudent" type="password" placeholder="{{ 'YOUR_PASSWORD' | translate }}" ng-model="modelLoginStudent.password">
+          <a href="javascript:void();" onmouseout="document.getElementById('passInputStudent').type='password'" 
+            onmouseover="document.getElementById('passInputStudent').type='text'"><span class="ion-eye verPass"></span>
+          </a>
         </label>
         <div class="spacer" class="spacerLogin"></div>
         <div id="login-button-bar1" class="button-bar">       
           <button id="login-button6" id="login-button6" class="button button-calm  button-block bold-font" ng-click="logInStudent(modelLoginStudent.email, modelLoginStudent.password)">{{ 'LOG_STUDENT' | translate }}</button>
         </div>
       </ion-list>
-      <div id="login-button-bar3" class="button-bar">
-        <button id="login-button10" class="button button-light  button-block button-clear icon ion-ios-arrow-forward" ng-click="showResetPasswordPopup()"> {{ 'FORGOT_PASSWORD' | translate }}</button>
+      <div>
+        <button id="login-button10" class="button button-light button-block button-clear icon ion-ios-arrow-forward" ng-click="showResetPasswordPopup()"> {{ 'FORGOT_PASSWORD' | translate }}</button>
         <button ui-sref="signUp" id="login-button2" class="button button-light button-block button-clear icon ion-ios-arrow-forward" ng-click="allFalseForm()">  {{ 'DONT_HAVE_ACCOUNT' | translate }}</button>
       </div>
     </form>

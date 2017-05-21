@@ -4,8 +4,9 @@ angular.module('app.teacherController', ['pascalprecht.translate'])
 
 function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ionicActionSheet, $firebaseObject, $firebaseArray, $ionicPopup, sharedData, $ionicLoading, localStorageService, $translate, $rootScope) {
 
-  /*
+  /**
     *************************************DECLARE FUNCTIONS FOR NG-SHOW********************************
+    They work showing the cointainer that depends on the variable with @value: true.
   */
 
   $scope.allFalse = function() {
@@ -94,8 +95,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.loginTypeSelectStudent=true;
   }
 
-  /*
+  /**
     *************************************EVERY ACTIONSHEET GOES HERE*******************************
+    Defines what's going to be shown after press the floating button and it's behaviour.
   */
 
                                         /* TEACHERHOME ACTIONSHEET */
@@ -143,7 +145,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   $scope.showActionsheetClassStudents = function() {
     $ionicActionSheet.show({
-      titleText: $scope.actionClassroomStudentsPopover,
+      titleText: $scope.actionClassroomStudentsActionSheet,
       buttons: [
         { text: $scope.takeAttendanceActionSheetOption },
         { text: $scope.evaluateStudentsActionSheetOption },
@@ -187,7 +189,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   $scope.showActionsheetClassTeams = function() {
     $ionicActionSheet.show({
-      titleText: $scope.actionClassroomStudentsActionSheet,
+      titleText: $scope.actionClassroomTeamsActionSheet,
       buttons: [
         { text: $scope.evaluateTeamsActionSheetoption },
         { text: $scope.sendMessageActionSheetOption },
@@ -299,7 +301,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   };
 
   /*
-    *************************************SAVE EVERY POPOVER INTO $scope*******************************
+    *************************************SAVE EVERY POPOVER INTO $SCOPE*******************************
   */
 
   $scope.templateLanguagesPopover = '<ion-popover-view>'+
@@ -332,14 +334,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       '<ion-item class="itemPopover" ng-click="closePopoverClassStudents()">{{ \'IMPORT\' | translate }}</ion-item>'+
       '<ion-item class="itemPopover" ng-click="closePopoverClassStudents()">{{ \'EXPORT\' | translate }}</ion-item>'+
       '<ion-item class="itemPopover" ng-click="showConfigureLevelsModal()">{{ \'CONFIGURE_LEVELS\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover item item-input item-select">'+
-        '<div class="input-label">{{ \'STUDENTS_VIEW\' | translate }}'+
-        '</div>'+
-        '<select>'+
-          '<option selected>{{ \'AVATAR\' | translate }}</option>'+
-          '<option>{{ \'IMAGE\' | translate }}</option>'+
-        '</select>'+
-      '</ion-item>'+
+      '<ion-toggle class="itemPopover" ng-model="checkboxStudentsView" ng-checked="classroom.studentsView" ng-click="setStudentsView(checkboxStudentsView)" toggle-class="toggle-calm">{{ \'SHOW_IMAGES\' | translate }}</ion-toggle>'+
       '<ion-toggle class="itemPopover" ng-model="checkboxNotifications" ng-checked="classroom.notifications" ng-click="setNotifications(checkboxNotifications)" toggle-class="toggle-calm">{{ \'NOTIFICATIONS\' | translate }}</ion-toggle>'+
       '<ion-toggle class="itemPopover" ng-model="checkboxOpening" ng-checked="classroom.open" ng-click="setOpening(checkboxOpening)" toggle-class="toggle-calm">{{ \'OPENING\' | translate }}</ion-toggle>'+
       '<ion-item class="itemPopover" ng-click="showHashcodePopup()">{{ \'SEE_CLASS_HASHCODE\' | translate }}</ion-item>'+
@@ -386,8 +381,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     '</ion-list>'+
   '</ion-popover-view>';
 
-  /*
+  /**
     *************************************EVERY POPOVER FUNCTION GOES HERE*******************************
+    Defines the behaviour of each popover.
   */
 
                                         /* LANGUAGES POPOVER */
@@ -517,7 +513,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   });
 
   /*
-    *************************************SAVE EVERY MODAL INTO $scope*******************************
+    *************************************SAVE EVERY MODAL INTO $SCOPE*******************************
   */
 
   $scope.attendanceModal = '<ion-modal-view>'+
@@ -582,7 +578,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       '</ion-list>'+
       '<div class="button-bar action_buttons">'+
       '<button class="button button-calm  button-block" ng-click="closeSelectItemsModal()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button id="attendance-button123" ng-click="selectItems()" id="attendance-btn123" class="button button-calm  button-block"{{ \'SELECT\' | translate }}</button>'+
+        '<button id="attendance-button123" ng-click="selectItems()" id="attendance-btn123" class="button button-calm  button-block">{{ \'SELECT\' | translate }}</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -665,7 +661,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       "<div>"+
         '<form class="list">'+
           '<label class="item item-input item-select">'+
-            '<span class="input-label">COPIAR ELEMENTOS DE OTRA CLASE</span>'+
+            '<span class="input-label">{{ \'COPY_ELEMENTS_FROM_ANOTHER_CLASS\' | translate }}</span>'+
             '<select id="selectClass">'+
               '<option>{{ \'NONE\' | translate }}</option>'+
               '<option ng-repeat="class in classrooms">{{class.name}}</option>'+
@@ -685,7 +681,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       '<h3 id="attendance-heading3" class="attendance-hdg3">{{classroomName}}</h3>'+
       '<h3 id="attendance-heading3" class="attendance-hdg3">{{ \'LEVELS_CONFIGURATION\' | translate }}</h3>'+
       '<ion-list id="attendance-list7" class="list-elements">'+
-        '<ion-item id="attendance-checkbox2" name="checkItem" ng-repeat="level in levels" ng-click="setLevel(level)">{{level.level}}. {{level.title}}'+
+        '<ion-item id="attendance-checkbox2" name="checkItem" ng-repeat="level in levels" ng-click="setLevel(level)">{{level.level}}. {{level.title}}&nbsp;&nbsp;&nbsp;<i class="icon ion-chevron-left float_right"/>'+
           '<ion-option-button class="button-assertive" ng-click="deleteLevel(level)">{{ \'DELETE\' | translate }}</ion-option-button>'+
         '</ion-item>'+
       '</ion-list>'+
@@ -783,7 +779,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           '<img src={{defaultAvatar}} class="avatar">'+
         '</div>'+
       '</div>'+
-      '<button  class="button button-light  button-block button-outline">{{ \'TAKE_PICTURE\' | translate }}</button>'+
+      '<input class="button button-light button-block button-outline" type="file" id="inputNewStudentPicture" ng-click="updateInputFile(\'inputNewStudentPicture\')">'+
       '<div>'+
         '<ion-list>'+
           '<form id="newStudentForm" class="list">'+
@@ -819,11 +815,24 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       '<div>'+
       '<div class="avatar_margen">'+
         '<div class="teacherAvatar">'+
-          '<img src={{student.avatar}} class="avatar">'+
+          '<img src="{{!classroom.studentsView ? student.avatar : student.picture}}" class="avatar">'+
         '</div>'+
       '</div>'+
+      '<input class="button button-light button-block button-outline"  ng-show="classroom.studentsView" type="file" id="inputStudentPicture" ng-click="updateStudentPicture()">'+
         '<form id="studentProfileFormData" class="list">'+
           '<ion-list id="signUp-list2">'+
+            '<label class="item item-input list-elements" id="signUp-input3">'+
+              '<span class="inputLabelProfile">'+
+                '<i class="icon ion-clipboard"></i>&nbsp;&nbsp;{{ \'LEVEL_IN_CLASS\' | translate }}'+
+                '<p>{{student.level.level}}&nbsp;({{student.level.title}})</p>'+
+              '</span>'+
+            '</label>'+
+            '<label class="item item-input list-elements" id="signUp-input3">'+
+              '<span class="inputLabelProfile">'+
+                '<i class="icon ion-clipboard"></i>&nbsp;&nbsp;{{ \'TOTAL_POINTS_CLASS\' | translate }}'+
+                '<p>{{student.classrooms[classroom.id].totalPoints}}</p>'+
+              '</span>'+
+            '</label>'+
             '<label class="item item-input list-elements" id="signUp-input3">'+
               '<span class="inputLabelProfile">'+
                 '<i class="icon ion-clipboard"></i>&nbsp;&nbsp;{{ \'SCHOOL\' | translate }}'+
@@ -840,15 +849,15 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         '</form>'+
       '</div>'+
       '<div ng-show="studentHasItems">'+
-        '<h3>{{ \'ITEMS\' | translate }}:</h3>'+
+        '<h3>{{ \'ITEMS\' | translate }}</h3>'+
         '<ion-list>'+
           '<ion-item class="list-student-dialog" ng-repeat="item in studentItems">'+
             '<i class="icon ion-clipboard"></i>&nbsp;&nbsp;{{item.name}}'+
-            '<span class="item-note">{{item.points}} / {{item.maxScore}}</span>'+
-            '<ion-option-button class="button-assertive" ng-click="removePoints(item)">'+
+            '<span class="item-note">{{item.points}} / {{item.maxScore}}&nbsp;&nbsp;&nbsp;<i class="icon ion-chevron-left float_right"/></span>'+
+            '<ion-option-button class="button-assertive swipe-button" ng-click="removePoints(item)">'+
               '<i class="icon ion-minus-round"></i>'+
             '</ion-option-button>'+
-            '<ion-option-button class="button-calm" ng-click="addPoints(item)">'+
+            '<ion-option-button class="button-calm swipe-button" ng-click="addPoints(item)">'+
               '<i class="icon ion-plus-round"></i>'+
             '</ion-option-button>'+
         '</ion-list>'+
@@ -875,13 +884,13 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3>{{team.name}}</h3>'+
       '<div>'+
-      '<div class="avatar_margen">'+
-        '<div class="teacherAvatar">'+
-          '<img src={{team.picture}} class="avatar">'+
+        '<div class="avatar_margen">'+
+          '<div class="teacherAvatar">'+
+            '<img src={{team.picture}} class="avatar">'+
+          '</div>'+
         '</div>'+
-      '</div>'+
+        '<input class="button button-light button-block button-outline" type="file" id="inputTeamPicture" ng-click="updateTeamPicture()">'+
         '<form id="teamDialogForm">'+
-          '<button class="button button-light  button-block button-outline">{{ \'CHANGE_AVATAR\' | translate }}</button>'+
           '<label class="item item-input list-elements">'+
             '<span class="input-label">{{ \'NAME\' | translate }}</span>'+
             '<input type="text" placeholder="{{team.name}}" ng-model="modelTeamDialog.name">'+
@@ -890,34 +899,37 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             '<span class="input-label">{{ \'TEAM_OBJECTIVE\' | translate }}</span>'+
             '<input type="text" placeholder="{{team.objective}}" ng-model="modelTeamDialog.objective">'+
           '</label>'+
-          '<label class="item item-input list-elements">'+
-            '<span class="input-label">{{ \'IMAGE\' | translate }}</span>'+
-            '<input type="text" placeholder="{{team.picture}}" ng-model="modelTeamDialog.picture">'+
-          '</label>'+
           '<div class="button-bar action_buttons">'+
             '<button class="button button-calm  button-block" ng-click="closeModalTeamDialog()">{{ \'CANCEL\' | translate }}</button>'+
-            '<button class="button button-calm  button-block" ng-disabled="!modelTeamDialog.name && !modelTeamDialog.objective && !modelTeamDialog.picture" ng-click="editTeam(modelTeamDialog.name, modelTeamDialog.objective, modelTeamDialog.picture)">{{ \'EDIT_TEAM\' | translate }}</button>'+
+            '<button class="button button-calm  button-block" ng-disabled="!modelTeamDialog.name && !modelTeamDialog.objective" ng-click="editTeam(modelTeamDialog.name, modelTeamDialog.objective)">{{ \'EDIT_TEAM\' | translate }}</button>'+
           '</div>'+
         '</form>'+
       '</div>'+
       '<div>'+
+        '<h3>{{ \'TEAM_MEMBERS\' | translate}}</h3>'+
         '<ion-list>'+
-          '<ion-item class="list-student" ng-repeat="teamMember in teamMembers">{{teamMember.name}} {{teamMember.surname}}</ion-item>'+
+          '<ion-item class="list-student item item-avatar" ng-repeat="teamMember in teamMembers">'+
+            '<img src="{{!classroom.studentsView ? teamMember.avatar : teamMember.picture}}">'+
+            '<p>{{teamMember.name}}</p>'+ 
+            '<p>{{teamMember.surname}}</p>'+
+          '</ion-item>'+
         '</ion-list>'+
-        '<button ng-click="showModalEditMembers()" class="button button-calm  button-block">{{ \'EDIT_MEMBERS\' | translate }}</button>'+
       '</div>'+
+      '<button ng-click="showModalEditMembers()" class="button button-calm button-block">{{ \'EDIT_MEMBERS\' | translate }}</button>'+
     '</ion-content>'+
   '</ion-modal-view>';
 
   $scope.newTeamDialogModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3>New Team</h3>'+
-      '<div class="list-student">'+
-        '<div class="teacherAvatar">'+
-          '<img src={{defaultTeamAvatar}} class="avatar">'+
+      '<div>'+
+        '<div class="avatar_margen">'+
+          '<div class="teacherAvatar">'+
+            '<img src={{defaultTeamAvatar}} class="avatar">'+
+          '</div>'+
         '</div>'+
-        '<button  class="button button-light  button-block button-outline">{{ \'UPLOAD_AVATAR\' | translate }}</button>'+
-        '<form id="newTeamForm" class="list">'+
+        '<input class="button button-light button-block button-outline" type="file" id="inputNewTeamPicture" ng-click="updateInputFile(\'inputNewTeamPicture\')">'+
+        '<form id="newTeamForm">'+
           '<label class="item item-input list-elements">'+
             '<span class="input-label">{{ \'NAME\' | translate }}</span>'+
             '<input type="text" placeholder="{{ \'NAME\' | translate }}" ng-model="modelNewTeamDialog.name">'+
@@ -926,19 +938,16 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             '<span class="input-label">{{ \'TEAM_OBJECTIVE\' | translate }}</span>'+
             '<input type="text" placeholder="{{ \'TEAM_OBJECTIVE\' | translate }}" ng-model="modelNewTeamDialog.objective">'+
           '</label>'+
-          '<label class="item item-input list-elements">'+
-            '<span class="input-label">{{ \'IMAGE\' | translate }}</span>'+
-            '<input type="text" placeholder="{{ \'IMAGE\' | translate }}" ng-model="modelNewTeamDialog.picture">'+
-          '</label>'+
           '<div class="button-bar action_buttons">'+
             '<button class="button button-calm  button-block" ng-click="closeModalNewTeamDialog()">{{ \'CANCEL\' | translate }}</button>'+
-            '<button class="button button-calm  button-block" ng-disabled="!modelNewTeamDialog.name || !modelNewTeamDialog.objective" ng-click="createTeam(modelNewTeamDialog.name, modelNewTeamDialog.objective, modelNewTeamDialog.picture)">{{ \'CREATE\' | translate }}</button>'+
+            '<button class="button button-calm  button-block" ng-disabled="!modelNewTeamDialog.name || !modelNewTeamDialog.objective" ng-click="createTeam(modelNewTeamDialog.name, modelNewTeamDialog.objective)">{{ \'CREATE\' | translate }}</button>'+
           '</div>'+
         '</form>'+
       '</div>'+
-      '<div class="list-team">'+
+      '<div>'+
+        '<h3>{{ \'TEAM_MEMBERS\' | translate}}</h3>'+
         '<ion-list>'+
-          '<ion-checkbox class="list-student-team" ng-repeat="studentForTeamSelection in studentsForTeamSelection" ng-checked="studentForTeamSelection.selected" ng-click="changeSelectedStudentForTeam(studentForTeamSelection)">{{studentForTeamSelection.name}} {{studentForTeamSelection.surname}}</ion-checkbox>'+
+          '<ion-checkbox class="list-student" ng-repeat="studentForTeamSelection in studentsForTeamSelection" ng-checked="studentForTeamSelection.selected" ng-click="changeSelectedStudentForTeam(studentForTeamSelection)">{{studentForTeamSelection.name}} {{studentForTeamSelection.surname}}</ion-checkbox>'+
         '</ion-list>'+
       '</div>'+
     '</ion-content>'+
@@ -950,9 +959,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       '<ion-list>'+
         '<ion-checkbox class="list-student-team" ng-repeat="studentForTeamSelection in studentsForTeamSelection" ng-checked="studentForTeamSelection.inTeam" ng-click="inTeam(studentForTeamSelection)">{{studentForTeamSelection.name}} {{studentForTeamSelection.surname}}</ion-checkbox>'+
       '</ion-list>'+
-      '<div class="list-student">'+
-        '<button ng-click="closeModalEditMembers()" class="button button-calm  button-block">{{ \'CANCEL\' | translate }}</button>'+
-        '<button ng-click="editTeamMembers()" class="button button-calm  button-block">{{ \'EDIT_MEMBERS\' | translate }}</button>'+
+      '<div>'+
+        '<button ng-click="closeModalEditMembers()" class="button button-calm button-block">{{ \'CANCEL\' | translate }}</button>'+
+        '<button ng-click="editTeamMembers()" class="button button-calm button-block">{{ \'EDIT_MEMBERS\' | translate }}</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -960,23 +969,23 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.editMissionModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3>{{mission.name}}</h3>'+
-        '<form class="list">'+
-          '<ion-list>'+
-            '<label class="item item-input list-elements">'+
-              '<span class="input-label">{{ \'NAME\' | translate }} </span>'+
-              '<input type="text" ng-disabled="mission.finished" placeholder="{{mission.name}}" ng-model="modelEditMission.name">'+
-            '</label>'+
-            '<label class="item item-input list-elements">'+
-              '<span class="input-label">{{ \'ITEMS\' | translate }}</span>'+
-              '<input type="text" ng-disabled="mission.finished" placeholder="{{mission.additionalPoints}}" ng-model="modelEditMission.additionalPoints">'+
-            '</label>'+
-          '</ion-list>'+
-        '</form>'+
+      '<form class="list">'+
+        '<ion-list>'+
+          '<label class="item item-input list-elements">'+
+            '<span class="input-label">{{ \'NAME\' | translate }} </span>'+
+            '<input type="text" ng-disabled="mission.finished" placeholder="{{mission.name}}" ng-model="modelEditMission.name">'+
+          '</label>'+
+          '<label class="item item-input list-elements">'+
+            '<span class="input-label">{{ \'ADDITIONAL_POINTS_MISSION\' | translate }}</span>'+
+            '<input type="text" ng-disabled="mission.finished" placeholder="{{mission.additionalPoints}}" ng-model="modelEditMission.additionalPoints">'+
+          '</label>'+
+        '</ion-list>'+
+      '</form>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm  button-block" ng-click="closeModalEditMission()">{{ \'CANCEL\' | translate }}</button>'+
         '<button class="button button-calm  button-block" ng-disabled="!modelEditMission.name && !modelEditMission.additionalPoints" ng-click="editMission(modelEditMission.name, modelEditMission.additionalPoints)">EDITAR MISIÓN</button>'+
       '</div>'+
-      '<h3 id="teams-heading5" class="teams-hdg5">{{ \'ADDITIONAL_POINTS_MISSION\' | translate }}</h3>'+
+      '<h3 id="teams-heading5" class="teams-hdg5">{{ \'ITEMS\' | translate }}</h3>'+
       '<ion-list id="items-list9">'+
         '<ion-item id="items-list-item15" class="list-student" ng-repeat="item in missionItems">'+
           '{{item.name}}'+
@@ -995,7 +1004,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       '</div>'+
       '<h3 id="teams-heading5" class="teams-hdg5">{{ \'STUDENTS\' | translate }}</h3>'+
       '<ion-list id="items-list9">'+
-        '<ion-item id="items-list-item15" class="list-student" ng-repeat="student in missionStudents">{{student.name}}  {{student.surname}}</ion-item>'+
+        '<ion-item id="items-list-item15" class="list-student item item-avatar" ng-repeat="student in missionStudents">'+
+          '<img src="{{!classroom.studentsView ? student.avatar : student.picture}}">'+
+          '<p>{{student.name}}</p>'+
+          '<p>{{student.surname}}</p>'+
+        '</ion-item>'+
       '</ion-list>'+
       '<div class="button-bar action_buttons">'+
         '<button id="achievements-button91" class="button button-calm button-block" ng-disabled="mission.finished" ng-click="showModalEditMissionMembers()">{{ \'EDIT_STUDENTS\' | translate }}</button>'+
@@ -1080,33 +1093,37 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.newAchievementModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3>{{ \'NEW_ACHIEVEMENT\' | translate }}</h3>'+
-      '<form id="newAchievementForm" class="list">'+
-        '<ion-list>'+
-        '<label class="item item-input list-elements">'+
-          '<span class="input-label">{{ \'NAME\' | translate }}</span>'+
-          '<input type="text" placeholder="{{ \'NAME\' | translate }}" ng-model="modelNewAchievement.name">'+
-        '</label>'+
-        '<label class="item item-input list-elements">'+
-          '<span class="input-label">{{ \'DESCRIPTION\' | translate }}</span>'+
-          '<input type="text" placeholder="{{ \'DESCRIPTION\' | translate }}" ng-model="modelNewAchievement.description">'+
-        '</label>'+
-        '<label class="item item-input list-elements">'+
-          '<span class="input-label">{{ \'REQUIREMENTS\' | translate }}</span>'+
-          '<input type="number" placeholder="{{ \'REQUIREMENTS\' | translate }}" ng-model="modelNewAchievement.requirements">'+
-        '</label>'+
-        '<label class="item item-input list-elements">'+
-          '<span class="input-label">{{ \'MAX_LEVEL\' | translate }}</span>'+
-          '<input type="number" placeholder="{{ \'MAX_LEVEL\' | translate }}" ng-model="modelNewAchievement.maxLevel">'+
-        '</label>'+
-        '<label class="item item-input list-elements">'+
-          '<span class="input-label">{{ \'BADGE\' | translate }}</span>'+
-          '<input type="number" placeholder="{{ \'BADGE\' | translate }}" ng-model="modelNewAchievement.badge">'+
-        '</label>'+
-      '</ion-list>'+
-      '</form>'+
-      '<div class="button-bar action_buttons">'+
-        '<button class="button button-calm  button-block" ng-click="closeModalNewAchievement()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button class="button button-calm  button-block"  ng-click="createAchievement(modelNewAchievement.name, modelNewAchievement.description, modelNewAchievement.requirements, modelNewAchievement.maxLevel, modelNewAchievement.badge)" ng-disabled="!modelNewAchievement.name || !modelNewAchievement.description || !modelNewAchievement.requirements || !modelNewAchievement.maxLevel">{{ \'ADD_ACHIEVEMENT\' | translate }}</button>'+
+      '<div>'+
+        '<div class="avatar_margen">'+
+          '<div class="teacherAvatar">'+
+            '<img src={{defaultAchievementAvatar}} class="avatar">'+
+          '</div>'+
+        '</div>'+
+        '<input class="button button-light button-block button-outline" type="file" id="inputNewAchievementBadge" ng-click="updateInputFile(\'inputNewAchievementBadge\')">'+
+        '<form id="newAchievementForm" class="list">'+
+          '<ion-list>'+
+          '<label class="item item-input list-elements">'+
+            '<span class="input-label">{{ \'NAME\' | translate }}</span>'+
+            '<input type="text" placeholder="{{ \'NAME\' | translate }}" ng-model="modelNewAchievement.name">'+
+          '</label>'+
+          '<label class="item item-input list-elements">'+
+            '<span class="input-label">{{ \'DESCRIPTION\' | translate }}</span>'+
+            '<input type="text" placeholder="{{ \'DESCRIPTION\' | translate }}" ng-model="modelNewAchievement.description">'+
+          '</label>'+
+          '<label class="item item-input list-elements">'+
+            '<span class="input-label">{{ \'REQUIREMENTS\' | translate }}</span>'+
+            '<input type="number" placeholder="{{ \'REQUIREMENTS\' | translate }}" ng-model="modelNewAchievement.requirements">'+
+          '</label>'+
+          '<label class="item item-input list-elements">'+
+            '<span class="input-label">{{ \'MAX_LEVEL\' | translate }}</span>'+
+            '<input type="number" placeholder="{{ \'MAX_LEVEL\' | translate }}" ng-model="modelNewAchievement.maxLevel">'+
+          '</label>'+
+        '</ion-list>'+
+        '</form>'+
+        '<div class="button-bar action_buttons">'+
+          '<button class="button button-calm  button-block" ng-click="closeModalNewAchievement()">{{ \'CANCEL\' | translate }}</button>'+
+          '<button class="button button-calm  button-block"  ng-click="createAchievement(modelNewAchievement.name, modelNewAchievement.description, modelNewAchievement.requirements, modelNewAchievement.maxLevel)" ng-disabled="!modelNewAchievement.name || !modelNewAchievement.description || !modelNewAchievement.requirements || !modelNewAchievement.maxLevel">{{ \'ADD_ACHIEVEMENT\' | translate }}</button>'+
+        '</div>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -1186,8 +1203,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     '</ion-content>'+
   '</ion-modal-view>';
 
-  /*
+  /**
     *************************************EVERY MODAL FUNCTION GOES HERE*******************************
+    Defines the behaviour of each modal.
   */
 
                                         /* CONFIGURE LEVELS MODAL */
@@ -1432,6 +1450,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.newStudentModal.show();  
   }
   $scope.closeModalNewStudentDialog = function() {
+    document.getElementById('inputNewStudentPicture').value = '';
     $scope.newStudentModal.hide();
   }
 
@@ -1488,6 +1507,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.newTeamDialogModal.show();  
   }
   $scope.closeModalNewTeamDialog = function() {
+    document.getElementById('inputNewTeamPicture').value = '';
     $scope.newTeamDialogModal.hide();
   }
 
@@ -1595,6 +1615,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.newAchievementModal.show();  
   }
   $scope.closeModalNewAchievement = function() {
+    document.getElementById('inputNewAchievementBadge').value = '';
     $scope.newAchievementModal.hide();
   }
 
@@ -1638,8 +1659,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.notificationsModal.hide();
   }
 
-  /*
+  /**
     *************************************CLEAN FORM FUNCTIONS GOES HERE*******************************
+    Used to clean some forms and also to put the index in the used select elements in the first index.
   */
 
   $scope.clearFormSecundaryModal = function() {
@@ -1648,13 +1670,20 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   }
 
   /*
-    *************************************DECLARE VARIABLES & GIVE TO $scope ALL THE VALUES WE NEED****
+    *************************************DECLARE VARIABLES & GIVE TO $SCOPE ALL THE VALUES WE NEED****
   */
 
+  /**
+    Checks if there is a user signed up in the application.
+    It is used to prevent the users to enter this page without permission.
+  */
   if (firebase.auth().currentUser === null) {
     $state.go('login');
   }
 
+  /**
+    Saves the credentials used to log in in the local storage.
+  */
   firebase.auth().onAuthStateChanged(function(user) {
     if (user && sharedData.getData() === 'teacher') {
       sessionUser = firebase.auth().currentUser;
@@ -1667,7 +1696,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
         localStorageService.set('userCredentials', userData);
       });
-
+      //Saves the teacher into the session and decrypts the teacher's name and surname.
       var teachersArray = $firebaseArray(teachersRef);
       teachersArray.$loaded(function() {
         $scope.teacher = teachersArray.$getRecord(sessionUser.uid);
@@ -1678,10 +1707,13 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   });
 
+  /**
+    Needed for the translations to work in the controller's words.
+  */
   $translate(['ACTIONS_ACHIEVEMENTS', 'ACTIONS_CLASSROOM_STUDENTS', 'ACTIONS_CLASSROOM_TEAMS', 
     'ACTIONS_ITEMS', 'ACTION_MISSIONS', 'ACTIONS_REWARDS', 'ACTIONS_TEACHER_HOME', 'ACHIEVEMENT', 'ARCHIVE_CLASSES', 
     'BACKUP', 'BECAUSE_COMPLETE_MISSION', 'CANCEL', 'CANT_ASK_MORE_SCORE_THAN_MAX', 'CANT_CREATE_MORE_TEAMS_THAN_STUDENT', 'CHANGE_SCORE', 'CLASS_CODE', 'DATA_CHANGED',
-    'DELETE_ACHIEVEMENTS', 'DELETE_CLASSROOMS', 'DELETE_ITEMS', 'DELETE_REWARDS', 'DELETE_STUDENTS', 'DELETE_TEAMS', 'EMAIL_ALREADY_USED', 
+    'DELETE_ACHIEVEMENTS', 'DELETE_CLASSROOMS', 'DELETE_ITEMS', 'DELETE_MISSIONS', 'DELETE_REWARDS', 'DELETE_STUDENTS', 'DELETE_TEAMS', 'EDIT_SCORE', 'EMAIL_ALREADY_USED', 
     'EMAIL_CHANGED', 'EMAIL_INVALID', 'EVALUATE_STUDENTS', 'EVALUATE_TEAMS', 'EXPORT', 'FILE_INVALID', 'IMPORT', 'INTRODUCE_MISSION_NAME', 
     'INTRODUCE_ADDITIONAL_POINTS', 'ERROR_ACCESS_UNKNOW', 'ERROR_WEAK_PASSWORD', 'HAS_FINISHED', 'HAS_FINISHED_MISSION', 'HAS_LOST_ACHIEVEMENT', 'HAS_LOST_MIN_POINTS_IN_ITEM', 'HAS_LOST_MIN_POINTS_IN_ITEM', 
     'HAS_RECIBED_MAX_POINTS_IN_ITEM', 'HAS_UNLOCKED_LEVEL_ACHIEVEMENT', 'HAVE_FINISHED_MISSION', 'HAVE_LOST_ACHIEVEMENT',  'HAVE_UNLOCKED_LEVEL_ACHIEVEMENT', 'IN_THE_ACHIEVEMENT', 
@@ -1713,6 +1745,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.deleteRewardsActionSheetOption = translations.DELETE_REWARDS;
     $scope.deleteStudentsActionSheetOption = translations.DELETE_STUDENTS;
     $scope.deleteTeamsActionSheetOption = translations.DELETE_TEAMS;
+    $scope.editScoreText = translations.EDIT_SCORE;
     $scope.errorEmailUsedAlert = translations.EMAIL_ALREADY_USED;
     $scope.emailChangedAlert = translations.EMAIL_CHANGED;
     $scope.emailInvalidAlert = translations.EMAIL_INVALID;
@@ -1760,8 +1793,85 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.zeroPointsWillEstablishAlert = translations.ZERO_SCORE_WILL_ESTABLISH;
   });
 
+  /**
+    Needed for the translations to change their value in execution time.
+  */
+  $rootScope.$on('$translateChangeSuccess', function () {
+    $scope.actionAchievementsActionSheet = $translate.instant('ACTIONS_ACHIEVEMENTS');
+    $scope.actionClassroomStudentsActionSheet = $translate.instant('ACTIONS_CLASSROOM_STUDENTS');
+    $scope.actionClassroomTeamsActionSheet = $translate.instant('ACTIONS_CLASSROOM_TEAMS');
+    $scope.actionItemsActionSheet = $translate.instant('ACTIONS_ITEMS');
+    $scope.actionMissionsActionSheet = $translate.instant('ACTION_MISSIONS');
+    $scope.actionRewardsActionSheet = $translate.instant('ACTION_REWARDS');
+    $scope.actionTeacherHomeActionSheet = $translate.instant('ACTIONS_TEACHER_HOME');
+    $scope.achievementText = $translate.instant('ACHIEVEMENT');
+    $scope.archiveClassroomsActionSheetOption = $translate.instant('ARCHIVE_CLASSES');
+    $scope.backupActionSheetOption = $translate.instant('BACKUP');
+    $scope.becouseCompleteMission = $translate.instant('BECAUSE_COMPLETE_MISSION');
+    $scope.cancelText = $translate.instant('CANCEL');
+    $scope.cantAskMoreScoreAlert = $translate.instant('CANT_ASK_MORE_SCORE_THAN_MAX');
+    $scope.cantCreateMoreTeamsThanStudentsAlert = $translate.instant('CANT_CREATE_MORE_TEAMS_THAN_STUDENT');
+    $scope.changeScore = $translate.instant('CHANGE_SCORE');
+    $scope.classCodePopup = $translate.instant('CLASS_CODE');
+    $scope.dataChangedAlert = $translate.instant('DATA_CHANGED');
+    $scope.deleteAchievementsActionSheetOption = $translate.instant('DELETE_ACHIEVEMENTS');
+    $scope.deleteClassroomsActionSheetOption = $translate.instant('DELETE_CLASSROOMS');
+    $scope.deleteItemsActionSheetOption = $translate.instant('DELETE_ITEMS');
+    $scope.deleteMissionsActionSheetOption = $translate.instant('DELETE_MISSIONS');
+    $scope.deleteRewardsActionSheetOption = $translate.instant('DELETE_REWARDS');
+    $scope.deleteStudentsActionSheetOption = $translate.instant('DELETE_STUDENTS');
+    $scope.deleteTeamsActionSheetOption = $translate.instant('DELETE_TEAMS');
+    $scope.editScoreText = $translate.instant('EDIT_SCORE');
+    $scope.errorEmailUsedAlert = $translate.instant('EMAIL_ALREADY_USED');
+    $scope.emailChangedAlert = $translate.instant('EMAIL_CHANGED');
+    $scope.emailInvalidAlert = $translate.instant('EMAIL_INVALID');
+    $scope.errorUnknowAlert = $translate.instant('ERROR_ACCESS_UNKNOW');
+    $scope.evaluateStudentsActionSheetOption = $translate.instant('EVALUATE_STUDENTS');
+    $scope.evaluateTeamsActionSheetoption = $translate.instant('EVALUATE_TEAMS');
+    $scope.exportPopoverOption = $translate.instant('EXPORT');
+    $scope.fileInvalidAlert = $translate.instant('FILE_INVALID');
+    $scope.hasLostMinPointItemAlert = $translate.instant('HAS_LOST_MIN_POINTS_IN_ITEM');
+    $scope.hasRecibedMaxPointsItemAlert = $translate.instant('HAS_RECIBED_MAX_POINTS_IN_ITEM');
+    $scope.importPopoverOption = $translate.instant('IMPORT');
+    $scope.inTheAchievementText = $translate.instant('IN_THE_ACHIEVEMENT');
+    $scope.introduceMissionName = $translate.instant('INTRODUCE_MISSION_NAME');
+    $scope.introduceAdditionalPoints = $translate.instant('INTRODUCE_ADDITIONAL_POINTS');
+    $scope.maxPointsHasBeenEstablishedAlert = $translate.instant('MAX_SCORE_ESTABLISEHD');
+    $scope.maxPointsWillEstablishAlert = $translate.instant('MAX_SCORE_WILL_ESTABLISH');
+    $scope.nextText = $translate.instant('NEXT');
+    $scope.notificationFinishedMissionStudentSide = $translate.instant('HAVE_FINISHED_MISSION');
+    $scope.notificationsFinishedMissionTeacherSide = $translate.instant('HAS_FINISHED_MISSION');
+    $scope.notificationMissionEnded = $translate.instant('HAS_FINISHED');
+    $scope.notificationOfMission = $translate.instant('NOTIFICATION_OF_MISSION');
+    $scope.notificationOfStudent = $translate.instant('NOTIFICATION_OF_STUDENT');
+    $scope.notificationLose = $translate.instant('NOTIFICATION_HAS_LOST');
+    $scope.notificationTypeItem = $translate.instant('ITEM');
+    $scope.notificationTypeMission = $translate.instant('MISSION');
+    $scope.notificationTypeReward = $translate.instant('REWARD');
+    $scope.notificationUnlockedLevelAchievementStudentSide = $translate.instant('HAVE_UNLOCKED_LEVEL_ACHIEVEMENT');
+    $scope.notificationUnlockedLevelAchievementTeacherSide = $translate.instant('HAS_UNLOCKED_LEVEL_ACHIEVEMENT');
+    $scope.notificationLostAchievementStudentSide = $translate.instant('HAVE_LOST_ACHIEVEMENT');
+    $scope.notificationLostAchievementTeacherSide = $translate.instant('HAS_LOST_ACHIEVEMENT');
+    $scope.notificationWin = $translate.instant('NOTIFICATION_HAS_WIN');
+    $scope.passwordChangedAlert = $translate.instant('PASSWORD_CHANGED');
+    $scope.pointOnTheitemSet = $translate.instant('POINTS_ON_THE_ITEM');
+    $scope.randomStudentActionSheetOption = $translate.instant('RANDOM_STUDENT');
+    $scope.randomTeamActionSheetOption = $translate.instant('RANDOM_TEAM');
+    $scope.sendMessageActionSheetOption = $translate.instant('SEND_MESSAGE');
+    $scope.studentDoesNotHaveEnougPointsAlert = $translate.instant('STUDENT_DOESNT_HAVE_ENOUGH_POINTS');
+    $scope.takeAttendanceActionSheetOption = $translate.instant('TAKE_ATTENDANCE');
+    $scope.teacherMessageNotificationType = $translate.instant('TEACHER_MESSAGE');
+    $scope.useDefaultPoints = $translate.instant('USE_DEFAULT_POINT');
+    $scope.unarchiveClassroomsActionSheetOption = $translate.instant('UNARCHIVE_CLASSES');
+    $scope.weakPasswordAlert = $translate.instant('ERROR_WEAK_PASSWORD');
+    $scope.youHaveWinTheReward = $translate.instant('YOU_WIN_REWARD');
+    $scope.zeroPointEstablishedAlert = $translate.instant('ZERO_SCORE_ESTABLISHED');
+    $scope.zeroPointsWillEstablishAlert = $translate.instant('ZERO_SCORE_WILL_ESTABLISH');
+  });
+
   $scope.defaultAvatar = 'img/userDefaultAvatar.png';
   $scope.defaultTeamAvatar = 'img/teamDefaultAvatar.png';
+  $scope.defaultAchievementAvatar = 'img/achievementDefaultBadge.png';
 
   var modalFirst;
   var modalMissions = 0;
@@ -1789,8 +1899,30 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
 
 
+                                        /* UPDATE INPUT FILE */
+
+  /**
+    @elementId: Id of the input type file used to get the picture
+    Used to get the file selected depending on the input type file used
+  */
+  $scope.updateInputFile = function(elementId) {
+    var fileButton = document.getElementById(elementId);
+    
+    fileButton.addEventListener('change',function(e) {
+      if (e.target.files.length > 0) {
+        $scope.file = e.target.files[0];
+      }
+    });
+  }
+
+
+
+
                                         /* HASHCODE POPUP */
 
+  /**
+    Used to show the hashcode's popup
+  */
   $scope.showHashcodePopup = function() {
     var alertPopup = $ionicPopup.alert({
       title: $scope.classCodePopup,
@@ -1807,6 +1939,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
                                         /* FUNCTIONS IN SETTINGS */
 
+  /**
+    Logs out the session user.
+  */
   $scope.logOut = function() {
     if (firebase.auth().currentUser) {
       var userData = {};
@@ -1823,6 +1958,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
                                         /* FUNCTIONS IN TEACHER HOME */
 
+  /**
+    Get all the classrooms that the teacher manage and saves them in the session.
+    Asks firebase for the correspond classrooms' references
+    Defines an event for each classroom's reference which is triggered every time that database reference is modified.
+    The event saves every classroom in the session.
+  */
   $scope.getClassrooms = function() {
     var teacherClassroomsRef = firebase.database().ref('teachers/' + $scope.teacher.$id + '/classrooms');
     var classroomKeys = $firebaseArray(teacherClassroomsRef);
@@ -1839,6 +1980,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                 if ($scope.classrooms[j].id == snapshot.val().id) {
                   change = true;
                   index = j;
+                  break;
                 }              
             }
             if (!change) {
@@ -1860,6 +2002,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     });
   }
 
+  /**
+    Copy all the classrooms in another array for selection purposes.
+  */
   $scope.getClassroomsForSelection = function() {
     $scope.classroomsForSelection = angular.copy($scope.classrooms);
     for (var element in $scope.classroomsForSelection) {
@@ -1867,6 +2012,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
 
+  /**
+    @name: The name for the classroom that is going to be create.
+    Creates a classroom and add its reference to the teacher's tree on the firebase database.
+    Also creates the hashcode for the classroom and add it to the classroom's tree on the firebase database.
+  */
   $scope.createClassroom = function(name) {
     var classroomsNode = $firebaseArray(classroomsRef);
     classroomsNode.$loaded(function() {
@@ -1940,12 +2090,20 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     });
   }
 
+  /**
+    Creates a demo classroom
+  */
   $scope.createDemoClassroom = function() {
     $scope.closePopoverTeacherHome();
     demoClassroom = true;
     $scope.createClassroom('Demo Classroom');
   }
 
+  /**
+    @classroom: The classroom that is going to be remove.
+    Removes a level and  its references in the students' and teacher's tree on firebase database.
+    Also removes the items, rewards, achievements and missions references from the mission in the students' tree on firebase database.
+  */
   $scope.deleteClassroom = function(classroom) {
     for (var studentId in classroom.students) {
       var studentClassToDeleteRef = firebase.database().ref('students/' + studentId + '/classrooms/' + classroom.id);
@@ -2000,6 +2158,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.getClassrooms();
   }
 
+  /**
+    @classroom: The classroom that is going to be saved in the session.
+    Saves the classroom selected in the session and get all from it (items, rewards, missions, rules...)
+  */
   $scope.setClassroom = function(classroom) {
     $scope.classroom = classroom;
     $scope.getStudents();
@@ -2012,23 +2174,38 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.classForm();
   }
 
+  /**
+    @classroom: The classroom that is about to be archived.
+    Makes the classroom to be archived.
+  */
   $scope.archiveClassroom = function(classroom) {
     var classroomToArchiveRef = firebase.database().ref('classrooms/' + classroom.id + '/archived');
-    classroomToArchiveRef.set(true).then(function() {
-    });
+    classroomToArchiveRef.set(true)
   }
 
+  /**
+    @classroom: The classroom that is about to be unarchived.
+    Makes the classroom to be unarchived.
+  */
   $scope.unArchiveClassroom = function(classroom) {
     var classroomToArchiveRef = firebase.database().ref('classrooms/' + classroom.id + '/archived');
-    classroomToArchiveRef.set(false).then(function() {
-    });
+    classroomToArchiveRef.set(false)
   }
 
+  /**
+    @value: True o false. To show the classrooms
+    Shows or hide the archived classrooms depending the value.
+  */
   $scope.showArchivedClassrooms = function(value) {
     $scope.archivedClassroomsToShow = value;
     $scope.closePopoverTeacherHome();
   }
 
+  /**
+    @originalClassroom: The original classroom that is used to copy data.
+    @newClassroomId: The id of the new classroom that is going to be a copy.
+    It gets all the levels, items, students, achievements, missions... from the original classroom to the new classroom.
+  */
   $scope.copyPreferencesFromClassroom = function(originalClassroom, newClassroomId) {
     $scope.classroom = {};
     $scope.classroom.id = originalClassroom.id;
@@ -2174,6 +2351,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.getClassrooms();
   }
 
+  /**
+    Gets all the selected classrooms in the modal and then calls the correspond method depending on the var created when choose an option in the action sheet.
+  */
   $scope.selectClassrooms = function() {
     $scope.closeSelectClassroomsModal();
     if ($scope.actionSheetTeacherHomeType === 'delete') {
@@ -2198,6 +2378,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
 
+  /**
+    @classroom: The classroom selected.
+    Checks if the selected classroom it was already selected or not.
+  */
   $scope.changeSelectedClassroom = function(classroom) {
     if (classroom.selected === false) {
       classroom.selected = true;
@@ -2211,12 +2395,14 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
                                         /* FUNCTIONS IN TEACHER PROFILE */
 
+  /**
+    Updates the teacher's avatar with an image uploaded from the local storage and saves it on the firebase database.
+  */
   $scope.updateTeacherAvatar = function() {
     var downloadURL;
     var fileButton = document.getElementById('inputAvatar');
     
     fileButton.addEventListener('change',function(e) {
-      $scope.uploadingPicture = true;
       if (e.target.files.length > 0) {
         $ionicLoading.show();
         var file = e.target.files[0];
@@ -2252,6 +2438,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     });
   }
 
+  /**
+    Updates the teacher's profile information with either some or all the fields and saves changes on the firebase database.
+  */
   $scope.editTeacherData = function(name, surname, school) {
     if (name != undefined) {
       $scope.teacher.name = name;
@@ -2281,6 +2470,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     alert($scope.dataChangedAlert);
   }
 
+  /**
+    Updates the teacher's password, sends a confirmation email to the user's email and saves changes on the firebase database.
+  */
   $scope.updateTeacherPassword = function(newPassword) {
     sessionUser.updatePassword(newPassword).then(function() {
       $scope.settingsForm();
@@ -2288,6 +2480,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     });
   }
 
+  /**
+    Updates the teacher's email, sends a confirmation email to the user's email and saves changes on the firebase database.
+  */
   $scope.updateTeacherEmail = function(email) {
     sessionUser.updateEmail(email).then(function() {
       var teacherEmailRef = firebase.database().ref('teachers/' + sessionUser.uid + '/email');
@@ -2302,6 +2497,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
                                         /* FUNCTIONS IN CLASS */
 
+  /**
+    Get all the levels from the classroom and saves them in the session.
+    Asks firebase for the correspond levels' references
+    Defines an event for each level's reference which is triggered every time that database reference is modified.
+    The event saves every level in the session.
+  */                                      
   $scope.getLevels = function() {
     var classroomLevelsRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/levels');
     var classroomLevelsArray = $firebaseArray(classroomLevelsRef);
@@ -2319,6 +2520,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                 if ($scope.levels[i].id == level.id) {
                   change = true;
                   index = i;
+                  break;
                 }
               }
 
@@ -2337,6 +2539,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     });
   }
 
+  /**
+    @title: The title for the level that is going to be create.
+    @level: The  numeric level for the level that is going to be created.
+    @neededPoints: The points needed to reach the level that is going to be created.
+    Creates a level and add its reference to the classroom's tree on the firebase database.
+  */
   $scope.createLevel = function(title, level, requiredPoints) {
     var newLevel = {
       'title' : title,
@@ -2364,6 +2572,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     });
   }
 
+  /**
+    @level: The level that is going to be remove.
+    Removes a level and  its references in the classroom's tree on firebase database.
+  */
   $scope.deleteLevel = function(level) {
     var levelToDeleteRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/levels/' + level.id);
     levelToDeleteRef.remove();
@@ -2375,11 +2587,21 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
 
+  /**
+    @level: The level that is going to be saved in the session.
+    Saves the level selected in the session.
+  */
   $scope.setLevel = function(level) {
     $scope.level = level;
     $scope.showEditLevelModal();
   }
 
+  /**
+    @title: The new title to set in the level about to be edited.
+    @level: The numeric level to set in the level about to be edited.
+    @requiredPoints: The required points to set in the level about to be edited.
+    Edits the level in the session with the new title, level and required points.
+  */
   $scope.editLevel = function(title, level, requiredPoints) {
     if (title != undefined && level != undefined && requiredPoints != undefined) {
       var editLevel = {
@@ -2416,6 +2638,42 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     alert($scope.dataChangedAlert);
   }
 
+  $scope.updateStudentPicture = function() {
+    var downloadURL;
+    var fileButton = document.getElementById('inputStudentPicture');
+    
+    fileButton.addEventListener('change',function(e) {
+      if (e.target.files.length > 0) {
+        $ionicLoading.show();
+        var file = e.target.files[0];
+        var fileExtension = file.name.split('.').pop();
+        if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
+          var storageRef = firebase.storage().ref('Profile_Pictures/' + $scope.student.id + '/' + $scope.classroom.id + '/classroomPicture');
+          var task = storageRef.put(file);
+          task.on('state_changed', function progress(snapshot) {
+
+          }, function error(error) {
+            $ionicLoading.hide();
+          }, function complete() {
+            downloadURL = task.snapshot.downloadURL;
+              
+            $scope.student.picture = downloadURL;
+            var studentPictureToUpdateRef = firebase.database().ref('students/' + $scope.student.id + '/picture');
+            studentPictureToUpdateRef.set(downloadURL);
+            
+            $ionicLoading.hide();
+
+            if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+              $scope.$apply();
+            }
+          });
+        } else {
+          alert($scope.fileInvalidAlert);
+        }
+      }
+    });
+  }
+
   $scope.getStudents = function() {
     var classroomStudentsRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/students');
     var studentKeys = $firebaseArray(classroomStudentsRef);
@@ -2435,11 +2693,14 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               if ($scope.students[j].id == student.id) {
                 change = true;
                 index = j;
+                break;
               }
             }
             if (!change) {
+              student.picture = student.classrooms[$scope.classroom.id].picture;
               $scope.students.push(student);
             } else {
+              student.picture = student.classrooms[$scope.classroom.id].picture;
               $scope.students[index] = student
             }
             $scope.students.sort(sortBySurname);
@@ -2480,7 +2741,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var b = classroomId.substr(classroomId.length -2).toLowerCase();
     var dateTimeHash = Date.now().toString();
     var c = dateTimeHash.substr(dateTimeHash.length -3).toLowerCase();
-
     var email = (name.replace(/\s/g, '') + surname.replace(/\s/g, '') + '.' + a + b + c + '@student.com').toLowerCase().trim();
     var password = "student";
 
@@ -2514,17 +2774,51 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             'avatar' : sessionStudent.photoURL,
             'emailVerified' : true,
           }).then(function() {
+            var downloadURL;
             var newClassStudentRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/students/' + sessionStudent.uid);
             newClassStudentRef.set(true);
 
-            var newStudentClassRef = firebase.database().ref('students/' + sessionStudent.uid + '/classrooms/' + $scope.classroom.id);
-            newStudentClassRef.set({
-              'id' : $scope.classroom.id,
-              'totalPoints' : 0,
-              'usedPoints' : 0,
-              'inClass' : true,
-            });
+            //PICTURE PART
+            if ($scope.file != undefined || $scope.file != null) {
+              $ionicLoading.show();
+              var fileExtension = $scope.file.name.split('.').pop();
+              if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
+                var storageRef = firebase.storage().ref('Profile_Pictures/' + sessionStudent.uid + '/' + $scope.classroom.id + '/classroomPicture');
+                var task = storageRef.put($scope.file);
+                task.on('state_changed', function progress(snapshot) {
 
+                }, function error(error) {
+                  $ionicLoading.hide();
+                }, function complete() {
+                  downloadURL = task.snapshot.downloadURL;
+                  var newStudentClassRef = firebase.database().ref('students/' + sessionStudent.uid + '/classrooms/' + $scope.classroom.id);
+                  newStudentClassRef.set({
+                    'id' : $scope.classroom.id,
+                    'totalPoints' : 0,
+                    'usedPoints' : 0,
+                    'inClass' : true,
+                    'picture' : downloadURL,
+                  });
+                  $ionicLoading.hide();
+
+                  if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+                    $scope.$apply();
+                  }
+                });
+              } else {
+                alert($scope.fileInvalidAlert);
+              }
+              $scope.file = undefined;
+            } else {
+              var newStudentClassRef = firebase.database().ref('students/' + sessionStudent.uid + '/classrooms/' + $scope.classroom.id);
+              newStudentClassRef.set({
+                'id' : $scope.classroom.id,
+                'totalPoints' : 0,
+                'usedPoints' : 0,
+                'inClass' : true,
+                'picture' : $scope.defaultAvatar,
+              });
+            }
             secondaryConnection.auth().signOut();
 
             $scope.closeModalNewStudentDialog();
@@ -2580,6 +2874,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.setStudent = function(student) {
     $scope.student = student;
     $scope.studentHasItems = false;
+    for (var levelId in $scope.classroom.levels) {
+      if (student.classrooms[$scope.classroom.id].totalPoints >= $scope.classroom.levels[levelId].requiredPoints) {
+        $scope.student.level = $scope.classroom.levels[levelId];
+      }
+    }
     $scope.studentItems = [];
     for (var itemId in student.items) {
       for (i = 0 ; i < $scope.items.length ; i++) {
@@ -2611,13 +2910,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.showModalStudentDialog();
   }
 
-  $scope.setOpening = function(opening) {
-    if (opening == undefined) {
-      opening = false;
-    }
-    var classOpeningRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/open');
-    classOpeningRef.set(opening);
-    $scope.classroom.open = opening;
+  $scope.setStudentsView = function (studentsView) {
+    if(studentsView == undefined) {
+      studentsView = false;
+    }var classStudentsViewRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/studentsView');
+    classStudentsViewRef.set(studentsView);
+    $scope.classroom.studentsView = studentsView;
   }
 
   $scope.setNotifications = function(notification) {
@@ -2627,6 +2925,15 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var classNotificationsRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/notifications');
     classNotificationsRef.set(notification);
     $scope.classroom.notifications = notification;
+  }
+
+  $scope.setOpening = function(opening) {
+    if (opening == undefined) {
+      opening = false;
+    }
+    var classOpeningRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/open');
+    classOpeningRef.set(opening);
+    $scope.classroom.open = opening;
   }
 
   $scope.secondaryMenuSelection = function() {
@@ -2777,6 +3084,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               if (item.id == $scope.items[j].id) {
                 change = true;
                 index = j;
+                break;
               }
             }
             if (!change) {
@@ -2947,7 +3255,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               'id' : item.id,
               'points' : Number(studentPoints) + Number(item.score),
             });
-      			if(Math.sign(item.score) == -1) {
+      			if (Math.sign(item.score) == -1) {
       			  $scope.createNotificationItems($scope.studentsToEvaluate[pos].id, item, 'lose');
       			} else {
       			  $scope.createNotificationItems($scope.studentsToEvaluate[pos].id, item, 'win');
@@ -3020,7 +3328,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                     'id' : item.id,
                     'points' : Number(studentPoints) + Number(item.score),
                   });
-        				  if(Math.sign(item.score) == -1) { 
+        				  if (Math.sign(item.score) == -1) { 
                     $scope.createNotificationItems($scope.students[studentPos].id, item, 'lose');
         				  } else {
                     $scope.createNotificationItems($scope.students[studentPos].id, item, 'win');
@@ -3101,6 +3409,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         if ($scope.actionSheetItemsType === 'evaluateStudents' || $scope.actionSheetItemsType === 'evaluateTeams' || $scope.actionSheetItemsType == 'newMissionCreation') { 
         $scope.points = item.score;
         $scope.popupChooseScore = $ionicPopup.show({
+          title: $scope.editScoreText,
           template: '<input id="inputScore" type="number" ng-model="points">',
           scope: $scope,
           buttons: [
@@ -3204,6 +3513,42 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
                                         /* FUNCTIONS IN ACHIEVEMENTS */
 
+  $scope.updateAchievementPicture = function() {
+    var downloadURL;
+    var fileButton = document.getElementById('inputAchievementPicture');
+    
+    fileButton.addEventListener('change',function(e) {
+      if (e.target.files.length > 0) {
+        $ionicLoading.show();
+        var file = e.target.files[0];
+        var fileExtension = file.name.split('.').pop();
+        if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
+          var storageRef = firebase.storage().ref('Achievement_Pictures/' + $scope.achievement.id + '/achievementPicture');
+          var task = storageRef.put(file);
+          task.on('state_changed', function progress(snapshot) {
+
+          }, function error(error) {
+            $ionicLoading.hide();
+          }, function complete() {
+            downloadURL = task.snapshot.downloadURL;
+              
+            $scope.achievement.badge = downloadURL;
+            var achievementPictureToUpdateRef = firebase.database().ref('achievements/' + $scope.achievement.id + '/badge/');
+            achievementPictureToUpdateRef.set(downloadURL);
+            
+            $ionicLoading.hide();
+
+            if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+              $scope.$apply();
+            }
+          });
+        } else {
+          alert($scope.fileInvalidAlert);
+        }
+      }
+    });
+  }
+
   $scope.getAchievements = function() {
     var itemAchievementsRef = firebase.database().ref('items/' + $scope.item.id + '/achievements');
     var achievementKeys = $firebaseArray(itemAchievementsRef);
@@ -3221,6 +3566,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               if (achievement.id == $scope.achievements[j].id) {
                 change = true;
                 index = j;
+                break;
               }
             }
             if (!change) {
@@ -3246,14 +3592,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
 
-  $scope.createAchievement = function(name, description, requirements, maxLevel, badge) {
+  $scope.createAchievement = function(name, description, requirements, maxLevel) {
     if (requirements > $scope.item.maxScore) {
       alert($scope.cantAskMoreScoreAlert);
     } else {
-      if (badge == undefined) {
-        badge = $scope.defaultAvatar
-      }
-
       var achievementsNode = $firebaseArray(achievementsRef);
       achievementsNode.$loaded(function() {
         achievementsNode.$add({
@@ -3261,8 +3603,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           'description' : description,
           'requirements' : requirements,
           'maxLevel' : maxLevel,
-          'badge' : badge,
+          'badge' : '',
         }).then(function(ref) {
+          var downloadURL;
           var id = ref.key;
 
           var idForAchievementRef = firebase.database().ref('achievements/' + id + '/id');
@@ -3270,6 +3613,37 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
           var itemsAchievementsRef = firebase.database().ref('items/' + $scope.item.id + '/achievements/' + id);
           itemsAchievementsRef.set(true);
+
+          //PICTURE PART
+          if ($scope.file != undefined || $scope.file != null) {
+            $ionicLoading.show();
+            var fileExtension = $scope.file.name.split('.').pop().toLowerCase();
+            if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
+              var storageRef = firebase.storage().ref('Achievement_Pictures/' + id + '/achievementPicture');
+              var task = storageRef.put($scope.file);
+              task.on('state_changed', function progress(snapshot) {
+
+              }, function error(error) {
+                $ionicLoading.hide();
+              }, function complete() {
+                downloadURL = task.snapshot.downloadURL;
+                var achievementBadgeRef = firebase.database().ref('achievements/' + id + '/badge');
+                achievementBadgeRef.set(downloadURL);
+                $ionicLoading.hide();
+
+                if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+                  $scope.$apply();
+                }
+              });
+            } else {
+              alert($scope.fileInvalidAlert);
+            }
+            $scope.file = undefined;
+          } else {
+            var achievementBadgeRef = firebase.database().ref('achievements/' + id + '/badge');
+            achievementBadgeRef.set($scope.defaultAchievementAvatar);
+          }
+          $ionicLoading.hide();
 
           $scope.closeModalNewAchievement();
           $scope.getAchievements();
@@ -3300,8 +3674,8 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.achievementsForm();
   }
 
-  $scope.editAchievement = function(name, description, requirements, maxLevel, badge) {
-    if (name != undefined && description != undefined && requirements != undefined && maxLevel != undefined && badge != undefined) {
+  $scope.editAchievement = function(name, description, requirements, maxLevel) {
+    if (name != undefined && description != undefined && requirements != undefined && maxLevel != undefined) {
       var achievementRef = firebase.database().ref('achievements/' + $scope.achievement.id);
       var achievementEdit = {
         'id' : $scope.achievement.id,
@@ -3309,7 +3683,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         'description' : description,
         'requirements' : requirements,
         'maxLevel' : maxLevel,
-        'badge' : badge,
+        'badge' : $scope.achievement.badge,
       };
       achievementRef.set(achievementEdit);
     } else {
@@ -3331,11 +3705,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       if (maxLevel != undefined) {
         var achievementMaxLevelRef = firebase.database().ref('achievements/' + $scope.achievement.id + '/maxLevel');
         achievementMaxLevelRef.set(maxLevel);
-      }
-
-      if (badge != undefined) {
-        var achievementBadgeRef = firebase.database().ref('achievements/' + $scope.achievement.id + '/badge');
-        achievementBadgeRef.set(badge);
       }
     }
     $scope.itemsForm();
@@ -3389,13 +3758,13 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                     'id' : achievementToCheck.id,
                     'level' : levelAchievement,
                   });
-                  if(studentLevel != levelAchievement) {
+                  if (studentLevel != levelAchievement) {
                     $scope.createNotificationAchievements(student.id, 'student', achievementToCheck, 'win', levelAchievement, null);
                     $scope.createNotificationAchievements($scope.teacher.$id, 'teacher', achievementToCheck, 'win', levelAchievement, student);
                   }
-                  //THINGS TO DO NULL REFERENCE AND UNDEFINED HERE
+                  /*THINGS TO DO NULL REFERENCE AND UNDEFINED HERE
                   student.items[item.id].achievements[achievementToCheck.id].id = achievementToCheck.id;
-                  student.items[item.id].achievements[achievementToCheck.id].level = levelAchievement;
+                  student.items[item.id].achievements[achievementToCheck.id].level = levelAchievement;*/
                 } else {
                   if (student.items != undefined && student.items[item.id].achievements != undefined && student.items[item.id].achievements[achievementToCheck.id] != undefined) {
                     $scope.createNotificationAchievements(student.id, 'student', achievementToCheck, 'lose', levelAchievement, null);
@@ -3403,7 +3772,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                   }
                   var studentItemAchievementRef = firebase.database().ref('students/' + student.id + '/items/' + item.id + '/achievements/' + achievementToCheck.id);
                   studentItemAchievementRef.remove();
-                  delete $scope.student.items[item.id].achievements[achievementToCheck.id];
+                  /*delete $scope.student.items[item.id].achievements[achievementToCheck.id];*/
                 }
               }
             });
@@ -3417,6 +3786,42 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
 
                                        /* FUNCTIONS IN TEAMS */
+
+  $scope.updateTeamPicture = function() {
+    var downloadURL;
+    var fileButton = document.getElementById('inputTeamPicture');
+    
+    fileButton.addEventListener('change',function(e) {
+      if (e.target.files.length > 0) {
+        $ionicLoading.show();
+        var file = e.target.files[0];
+        var fileExtension = file.name.split('.').pop();
+        if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
+          var storageRef = firebase.storage().ref('Team_Pictures/' + $scope.team.id + '/teamPicture');
+          var task = storageRef.put(file);
+          task.on('state_changed', function progress(snapshot) {
+
+          }, function error(error) {
+            $ionicLoading.hide();
+          }, function complete() {
+            downloadURL = task.snapshot.downloadURL;
+              
+            $scope.team.picture = downloadURL;
+            var teamPictureToUpdateRef = firebase.database().ref('teams/' + $scope.team.id + '/picture');
+            teamPictureToUpdateRef.set(downloadURL);
+            
+            $ionicLoading.hide();
+
+            if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+              $scope.$apply();
+            }
+          });
+        } else {
+          alert($scope.fileInvalidAlert);
+        }
+      }
+    });
+  }
 
   $scope.getTeams = function() {
     var classroomTeamsRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/teams');
@@ -3435,6 +3840,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               if ($scope.teams[j].id == team.id) {
                 change = true;
                 index = j;
+                break;
               }
             }
             if (!change) {
@@ -3481,18 +3887,14 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
 
-  $scope.createTeam = function(name, objective, picture) {
-    if (picture == undefined) {
-      picture = $scope.defaultTeamAvatar;
-    }
-
+  $scope.createTeam = function(name, objective) {
     var teamsNode = $firebaseArray(teamsRef);
     teamsNode.$loaded(function() {
       teamsNode.$add({
         'name' : name,
         'objective' : objective,
-        'picture' : picture,
       }).then(function(ref) {
+        var downloadURL;
         var id = ref.key;
 
         var idForTeamRef = firebase.database().ref('teams/' + id + '/id');
@@ -3513,6 +3915,37 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             teamStudentsRef.set(true);
           }
         }
+
+        //PICUTRE PART
+        if ($scope.file != undefined || $scope.file != null) {
+          $ionicLoading.show();
+          var fileExtension = $scope.file.name.split('.').pop();
+          if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
+            var storageRef = firebase.storage().ref('Team_Pictures/' + id + '/teamPicture');
+            var task = storageRef.put($scope.file);
+            task.on('state_changed', function progress(snapshot) {
+
+            }, function error(error) {
+              $ionicLoading.hide();
+            }, function complete() {
+              downloadURL = task.snapshot.downloadURL;
+              var teamPictureRef = firebase.database().ref('teams/' + id + '/picture');
+              teamPictureRef.set(downloadURL);
+
+              if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+                $scope.$apply();
+              }
+            });
+          } else {
+            alert($scope.fileInvalidAlert);
+          }
+          $scope.file = undefined;
+        } else {
+          var teamPictureRef = firebase.database().ref('teams/' + id + '/picture');
+          teamPictureRef.set($scope.defaultTeamAvatar);
+        }
+        $ionicLoading.hide();
+
         $scope.closeModalNewTeamDialog();
         $scope.getStudentsForTeamSelection();
         $scope.getTeams();
@@ -3613,6 +4046,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             'name' : $scope.students[student].name,
             'surname' : $scope.students[student].surname,
             'avatar' : $scope.students[student].avatar,
+            'picture' : $scope.students[student].picture,
           });
         }
       }
@@ -3620,35 +4054,16 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.showModalTeamDialog();
   }
 
-  $scope.editTeam = function(name, objective, picture) {
-    if (name != undefined && objective != undefined && picture != undefined) {
-      var team = {
-        'id' : $scope.team.id,
-        'name' : name,
-        'objective' : objective,
-        'picture' : picture,
-        'students' : $scope.team.students,
-      }
-      var teamRef = firebase.database().ref('teams/' + $scope.team.id);
-      teamRef.set(team);
-    } else {
-      if (name != undefined) {
-        $scope.team.name = name;
-        var teamNameRef = firebase.database().ref('teams/' + $scope.team.id + '/name');
-        teamNameRef.set(name);
-      }
-
-      if (objective != undefined) {
-        $scope.team.objective = objective;
-        var teamObjectiveRef = firebase.database().ref('teams/' + $scope.team.id + '/objective');
-        teamObjectiveRef.set(objective);
-      }
-
-      if (picture != undefined) {
-        $scope.team.picture = picture;
-        var teamPictureRef = firebase.database().ref('teams/' + $scope.team.id + '/picture');
-        teamPictureRef.set(picture);
-      }
+  $scope.editTeam = function(name, objective) {
+    if (name != undefined) {
+      $scope.team.name = name;
+      var teamNameRef = firebase.database().ref('teams/' + $scope.team.id + '/name');
+      teamNameRef.set(name);
+    }
+    if (objective != undefined) {
+      $scope.team.objective = objective;
+      var teamObjectiveRef = firebase.database().ref('teams/' + $scope.team.id + '/objective');
+      teamObjectiveRef.set(objective);
     }
     $scope.closeModalTeamDialog();
     alert($scope.dataChangedAlert);
@@ -3765,6 +4180,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               if (reward.id == $scope.rewards[j].id) {
                 change = true;
                 index = j;
+                break;
               }
             }
             if (!change) {
@@ -3923,6 +4339,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               if (mission.id == $scope.missions[j].id) {
                 change = true;
                 index = j;
+                break;
               }
             }
             if (!change) {
@@ -4010,6 +4427,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   }
 
   $scope.createMission = function(mission) {
+    if (mission.additionalPoints == undefined) {
+      mission.additionalPoints = 0;
+    }
     var missionsNode = $firebaseArray(missionsRef);
     missionsNode.$loaded(function() {
       missionsNode.$add({
@@ -4363,7 +4783,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                         });
                       }
                       for (var rewardPos in $scope.rewards) {
-                        if($scope.rewards[rewardPos].id == rewardId) {
+                        if ($scope.rewards[rewardPos].id == rewardId) {
                           $scope.createNotificationsRewards(student, $scope.rewards[rewardPos], $scope.missions[element]);
                           break;
                         }
@@ -4487,7 +4907,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   }
 
   $scope.createNotificationMissions = function(userId, userType, mission, studentToEvaluate, finished) {
-    if(userType == 'student') {
+    if (userType == 'student') {
       var studentNotificationsRef = firebase.database().ref('students/' + userId + '/notifications/' + $scope.classroom.id);
       var studentNoticationsArray = $firebaseArray(studentNotificationsRef);
       studentNoticationsArray.$loaded(function() {
@@ -4506,7 +4926,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           'message' : $scope.notificationOfStudent + ' ' + studentToEvaluate.name + ' ' + studentToEvaluate.surname + ' ' + $scope.notificationFinishedMissionTeacherSide + ': ' + mission.name,
           'date' : Date.now(),
         });
-        if(finished) {
+        if (finished) {
           teacherNotificationsArray.$add({
           'type' : $scope.notificationTypeMission,
           'message' : $scope.notificationOfMission + ': ' + mission.name + ' ' + $scope.notificationMissionEnded,
@@ -4591,77 +5011,4 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     //dates must be equal
     return 0;
   }
-
-  $rootScope.$on('$translateChangeSuccess', function () {
-    $scope.actionAchievementsActionSheet = $translate.instant('ACTIONS_ACHIEVEMENTS');
-    $scope.actionClassroomStudentsActionSheet = $translate.instant('ACTIONS_CLASSROOM_STUDENTS');
-    $scope.actionClassroomTeamsActionSheet = $translate.instant('ACTIONS_CLASSROOM_TEAMS');
-    $scope.actionItemsActionSheet = $translate.instant('ACTIONS_ITEMS');
-    $scope.actionMissionsActionSheet = $translate.instant('ACTION_MISSIONS');
-    $scope.actionRewardsActionSheet = $translate.instant('ACTION_REWARDS');
-    $scope.actionTeacherHomeActionSheet = $translate.instant('ACTIONS_TEACHER_HOME');
-    $scope.achievementText = $translate.instant('ACHIEVEMENT');
-    $scope.archiveClassroomsActionSheetOption = $translate.instant('ARCHIVE_CLASSES');
-    $scope.backupActionSheetOption = $translate.instant('BACKUP');
-    $scope.becouseCompleteMission = $translate.instant('BECAUSE_COMPLETE_MISSION');
-    $scope.cancelText = $translate.instant('CANCEL');
-    $scope.cantAskMoreScoreAlert = $translate.instant('CANT_ASK_MORE_SCORE_THAN_MAX');
-    $scope.cantCreateMoreTeamsThanStudentsAlert = $translate.instant('CANT_CREATE_MORE_TEAMS_THAN_STUDENT');
-    $scope.changeScore = $translate.instant('CHANGE_SCORE');
-    $scope.classCodePopup = $translate.instant('CLASS_CODE');
-    $scope.dataChangedAlert = $translate.instant('DATA_CHANGED');
-    $scope.deleteAchievementsActionSheetOption = $translate.instant('DELETE_ACHIEVEMENTS');
-    $scope.deleteClassroomsActionSheetOption = $translate.instant('DELETE_CLASSROOMS');
-    $scope.deleteItemsActionSheetOption = $translate.instant('DELETE_ITEMS');
-    $scope.deleteMissionsActionSheetOption = $translate.instant('DELETE_MISSIONS');
-    $scope.deleteRewardsActionSheetOption = $translate.instant('DELETE_REWARDS');
-    $scope.deleteStudentsActionSheetOption = $translate.instant('DELETE_STUDENTS');
-    $scope.deleteTeamsActionSheetOption = $translate.instant('DELETE_TEAMS');
-    $scope.errorEmailUsedAlert = $translate.instant('EMAIL_ALREADY_USED');
-    $scope.emailChangedAlert = $translate.instant('EMAIL_CHANGED');
-    $scope.emailInvalidAlert = $translate.instant('EMAIL_INVALID');
-    $scope.errorUnknowAlert = $translate.instant('ERROR_ACCESS_UNKNOW');
-    $scope.evaluateStudentsActionSheetOption = $translate.instant('EVALUATE_STUDENTS');
-    $scope.evaluateTeamsActionSheetoption = $translate.instant('EVALUATE_TEAMS');
-    $scope.exportPopoverOption = $translate.instant('EXPORT');
-    $scope.fileInvalidAlert = $translate.instant('FILE_INVALID');
-    $scope.hasLostMinPointItemAlert = $translate.instant('HAS_LOST_MIN_POINTS_IN_ITEM');
-    $scope.hasRecibedMaxPointsItemAlert = $translate.instant('HAS_RECIBED_MAX_POINTS_IN_ITEM');
-    $scope.importPopoverOption = $translate.instant('IMPORT');
-    $scope.inTheAchievementText = $translate.instant('IN_THE_ACHIEVEMENT');
-    $scope.introduceMissionName = $translate.instant('INTRODUCE_MISSION_NAME');
-    $scope.introduceAdditionalPoints = $translate.instant('INTRODUCE_ADDITIONAL_POINTS');
-    $scope.maxPointsHasBeenEstablishedAlert = $translate.instant('MAX_SCORE_ESTABLISEHD');
-    $scope.maxPointsWillEstablishAlert = $translate.instant('MAX_SCORE_WILL_ESTABLISH');
-    $scope.nextText = $translate.instant('NEXT');
-    $scope.notificationFinishedMissionStudentSide = $translate.instant('HAVE_FINISHED_MISSION');
-    $scope.notificationsFinishedMissionTeacherSide = $translate.instant('HAS_FINISHED_MISSION');
-    $scope.notificationMissionEnded = $translate.instant('HAS_FINISHED');
-    $scope.notificationOfMission = $translate.instant('NOTIFICATION_OF_MISSION');
-    $scope.notificationOfStudent = $translate.instant('NOTIFICATION_OF_STUDENT');
-    $scope.notificationLose = $translate.instant('NOTIFICATION_HAS_LOST');
-    $scope.notificationTypeItem = $translate.instant('ITEM');
-    $scope.notificationTypeMission = $translate.instant('MISSION');
-    $scope.notificationTypeReward = $translate.instant('REWARD');
-    $scope.notificationUnlockedLevelAchievementStudentSide = $translate.instant('HAVE_UNLOCKED_LEVEL_ACHIEVEMENT');
-    $scope.notificationUnlockedLevelAchievementTeacherSide = $translate.instant('HAS_UNLOCKED_LEVEL_ACHIEVEMENT');
-    $scope.notificationLostAchievementStudentSide = $translate.instant('HAVE_LOST_ACHIEVEMENT');
-    $scope.notificationLostAchievementTeacherSide = $translate.instant('HAS_LOST_ACHIEVEMENT');
-    $scope.notificationWin = $translate.instant('NOTIFICATION_HAS_WIN');
-    $scope.passwordChangedAlert = $translate.instant('PASSWORD_CHANGED');
-    $scope.pointOnTheitemSet = $translate.instant('POINTS_ON_THE_ITEM');
-    $scope.randomStudentActionSheetOption = $translate.instant('RANDOM_STUDENT');
-    $scope.randomTeamActionSheetOption = $translate.instant('RANDOM_TEAM');
-    $scope.sendMessageActionSheetOption = $translate.instant('SEND_MESSAGE');
-    $scope.studentDoesNotHaveEnougPointsAlert = $translate.instant('STUDENT_DOESNT_HAVE_ENOUGH_POINTS');
-    $scope.takeAttendanceActionSheetOption = $translate.instant('TAKE_ATTENDANCE');
-    $scope.teacherMessageNotificationType = $translate.instant('TEACHER_MESSAGE');
-    $scope.useDefaultPoints = $translate.instant('USE_DEFAULT_POINT');
-    $scope.unarchiveClassroomsActionSheetOption = $translate.instant('UNARCHIVE_CLASSES');
-    $scope.weakPasswordAlert = $translate.instant('ERROR_WEAK_PASSWORD');
-    $scope.youHaveWinTheReward = $translate.instant('YOU_WIN_REWARD');
-    $scope.zeroPointEstablishedAlert = $translate.instant('ZERO_SCORE_ESTABLISHED');
-    $scope.zeroPointsWillEstablishAlert = $translate.instant('ZERO_SCORE_WILL_ESTABLISH');
-  });
-
 }])

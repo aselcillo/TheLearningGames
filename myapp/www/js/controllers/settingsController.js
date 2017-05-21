@@ -3,13 +3,29 @@ angular.module('app.settingsController', ['pascalprecht.translate'])
 .controller('settingsCtrl', ['$scope', '$ionicPopup', '$translate', '$rootScope',
   function($scope, $ionicPopup, $translate, $rootScope) {
 
-    $translate(['HELP', 'OKAY', 'TERMS_CONDITIONS']).then(function(translations) {
+    /**
+      Needed for the translations to work in the controller's words.
+    */
+    $translate(['ABOUT', 'HELP', 'OKAY', 'TERMS_CONDITIONS']).then(function(translations) {
       $scope.about = translations.ABOUT;
       $scope.helpText = translations.HELP;
       $scope.okayText = translations.OKAY;
       $scope.termsAndConditions = translations.TERMS_CONDITIONS;
     });
 
+    /**
+      Needed for the translations to change their value in execution time.
+    */
+    $rootScope.$on('$translateChangeSuccess', function () {
+      $scope.about = $translate.instant('ABOUT');
+      $scope.helpText = $translate.instant('HELP');
+      $scope.okayText = $translate.instant('OKAY');
+      $scope.termsAndConditions = $translate.instant('TERMS_CONDITIONS');
+    });
+
+    /**
+      Shows a popup that contains help's information.
+    */
     $scope.showHelpPopup = function() {
       $ionicPopup.alert({
         title: $scope.helpText,
@@ -26,6 +42,9 @@ angular.module('app.settingsController', ['pascalprecht.translate'])
       });
     }
 
+    /**
+      Shows a popup that contains terms and conditions' information.
+    */
     $scope.showTermsPopup = function() {
       $ionicPopup.alert({
         title: $scope.termsAndConditions,
@@ -42,6 +61,9 @@ angular.module('app.settingsController', ['pascalprecht.translate'])
       });
     }
 
+    /**
+      Shows a popup that contains about's information.
+    */
     $scope.showAboutPopup = function() {
       $ionicPopup.alert({
         title: $scope.about,
@@ -59,12 +81,4 @@ angular.module('app.settingsController', ['pascalprecht.translate'])
         }
       });
     }
-
-    $rootScope.$on('$translateChangeSuccess', function () {
-      $scope.about = $translate.instant('ABOUT');
-      $scope.helpText = $translate.instant('HELP');
-      $scope.okayText = $translate.instant('OKAY');
-      $scope.termsAndConditions = $translate.instant('TERMS_CONDITIONS');
-    });
-
 }])

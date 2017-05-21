@@ -3795,7 +3795,8 @@ a.subdued {
     pointer-events: none; }
   .action-sheet-open .action-sheet-backdrop {
     pointer-events: auto; }
-
+    
+/* THIS IS A COMMENTED JUST FOR HAVE THE SAME ACTIONSHEET DESIGN IN ANDROID AND IOS
 .platform-android .action-sheet-backdrop.active {
   background-color: rgba(0, 0, 0, 0.2); }
 
@@ -3825,7 +3826,7 @@ a.subdued {
 
 .platform-android .action-sheet-has-icons .button {
   padding-left: 56px; }
-
+*/
 .backdrop {
   position: fixed;
   top: 0;
@@ -9827,7 +9828,7 @@ a.button {
 
 .list-student-dialog {
   display: inline-block;
-  width: 100%;
+  width: 98%;
   list-style-type: none;
   background: transparent;
   border-width: 0px; }
