@@ -2297,38 +2297,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     });
   }
 
-  $scope.galery = ["https://s-media-cache-ak0.pinimg.com/736x/17/6a/bc/176abcfadf88b1bcf3804050e03335a3.jpg",
-                  "https://s-media-cache-ak0.pinimg.com/originals/14/13/89/141389bdab8e2007268978c14f2d9056.jpg",
-                  "http://definicion.de/wp-content/uploads/2016/02/avatar.jpg",
-                  "http://mariabahe.com/wp-content/uploads/2016/07/avatar-malo.png"];
-
-
-  $scope.forward = function(){
-    var pos = $scope.galery.indexOf($scope.teacher.avatar);
-    if(pos == -1){
-      $scope.teacher.avatar = $scope.galery[0];
-    }
-    else if(pos != -1 && pos < $scope.galery.length-1){
-      $scope.teacher.avatar = $scope.galery[pos+1];
-    }
-    else {
-      $scope.teacher.avatar = $scope.galery[0];
-    }
-  }
-
-  $scope.back = function(){
-    var pos = $scope.galery.indexOf($scope.teacher.avatar);
-    if(pos == -1){
-      $scope.teacher.avatar = $scope.galery[$scope.galery.length-1];
-    }
-    else if(pos != -1 && pos > 0){
-      $scope.teacher.avatar = $scope.galery[pos-1];
-    }
-    else {
-      $scope.teacher.avatar = $scope.galery[$scope.galery.length-1];
-    }
-  }
-
 
 
 
