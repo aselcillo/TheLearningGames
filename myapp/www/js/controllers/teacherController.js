@@ -2399,7 +2399,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                                         /* FUNCTIONS IN TEACHER PROFILE */
 
   /**
-    Updates the teacher's avatar with an image uploaded from the local storage and saves it on the firebase database.
+    Updates the teacher's avatar with an image uploaded from the local storage and saves it on the firebase storage.
   */
   $scope.updateTeacherAvatar = function() {
     var downloadURL;
@@ -2409,7 +2409,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       if (e.target.files.length > 0) {
         $ionicLoading.show();
         var file = e.target.files[0];
-        var fileExtension = file.name.split('.').pop();
+        var fileExtension = $scope.file.name.split('.').pop().toLowerCase();
         if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
           var storageRef = firebase.storage().ref('Profile_Pictures/' + sessionUser.uid + '/profilePicture');
           var task = storageRef.put(file);
@@ -2543,7 +2543,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   }
 
   /**
-    @title: The title for the level that is going to be create.
+    @title: The title for the level that is going to be created.
     @level: The  numeric level for the level that is going to be created.
     @neededPoints: The points needed to reach the level that is going to be created.
     Creates a level and add its reference to the classroom's tree on the firebase database.
@@ -2577,7 +2577,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   /**
     @level: The level that is going to be remove.
-    Removes a level and  its references in the classroom's tree on firebase database.
+    Removes a level and its references in the classroom's tree on firebase database.
   */
   $scope.deleteLevel = function(level) {
     var levelToDeleteRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/levels/' + level.id);
@@ -2641,6 +2641,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     alert($scope.dataChangedAlert);
   }
 
+  /**
+    Updates the students's classroom's picture with an image uploaded from the local storage and saves it on the firebase storage.
+  */
   $scope.updateStudentPicture = function() {
     var downloadURL;
     var fileButton = document.getElementById('inputStudentPicture');
@@ -2649,7 +2652,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       if (e.target.files.length > 0) {
         $ionicLoading.show();
         var file = e.target.files[0];
-        var fileExtension = file.name.split('.').pop();
+        var fileExtension = $scope.file.name.split('.').pop().toLowerCase();
         if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
           var storageRef = firebase.storage().ref('Profile_Pictures/' + $scope.student.id + '/' + $scope.classroom.id + '/classroomPicture');
           var task = storageRef.put(file);
@@ -2677,6 +2680,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     });
   }
 
+  /**
+    Get all the students from the classroom and saves them in the session.
+    Asks firebase for the correspond students' references.
+    Defines an event for each student's reference which is triggered every time that database reference is modified.
+    The event saves every student in the session after decrypt their names and surnames.
+  */ 
   $scope.getStudents = function() {
     var classroomStudentsRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/students');
     var studentKeys = $firebaseArray(classroomStudentsRef);
@@ -2718,6 +2727,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     });
   }
 
+  /**
+    Copy all the students in another array for selection purposes.
+    If the selection purpose is to evaluate students. It is going to copy the students that are in the classroom.
+  */
   $scope.getStudentsForSelection = function() {
     $scope.studentsForSelection = [];
     if ($scope.actionsheetClassStudentsType == 'evaluate') {
@@ -2737,6 +2750,13 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
 
+  /**
+    @name: The name for the student that is going to be created.
+    @surname: The surname for the student that is going to be created.
+    Creates a student and add its reference to the classroom's tree on the firebase database.
+    Also add the classroom's reference to the new student's tree on the firebase database.
+    The new student gets the email auto verified.
+  */
   $scope.createNewStudent = function(name, surname) {
     var teacherId = $scope.teacher.$id;
     var a = teacherId.substr(teacherId.length -2).toLowerCase();
@@ -2784,7 +2804,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             //PICTURE PART
             if ($scope.file != undefined || $scope.file != null) {
               $ionicLoading.show();
-              var fileExtension = $scope.file.name.split('.').pop();
+              var fileExtension = $scope.file.name.split('.').pop().toLowerCase();
               if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
                 var storageRef = firebase.storage().ref('Profile_Pictures/' + sessionStudent.uid + '/' + $scope.classroom.id + '/classroomPicture');
                 var task = storageRef.put($scope.file);
@@ -2833,7 +2853,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       if (error) {
         switch (error.code) {
       case "auth/weak-password":
-        alert($scope.weakPasswordAlert = translations.ERROR_WEAK_PASSWORD);
+        alert($scope.weakPasswordAlert);
         break;
       case "auth/email-already-in-use":
         alert($scope.errorEmailUsedAlert);
@@ -2848,6 +2868,13 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     });
   }
 
+  /**
+    @student: The student that is going to be remove.
+    Removes  the student's references in the classroom's tree on firebase database.
+    Also removes the classroom's reference from the student's tree on firebase database.
+    Removes the student's reference from all the teams that it could be part of.
+    Removes all the classroom's missions' references from the student's tree on firebase database.
+  */
   $scope.deleteStudent = function(student) {
     var studentClassRef = firebase.database().ref('students/' + student.id + '/classrooms/' + $scope.classroom.id);
     studentClassRef.remove();
@@ -2874,6 +2901,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
 
+  /**
+    @student: The student that is going to be saved in the session.
+    Saves the student selected in the session.
+    Also gets all the students items and his classroom's level.
+  */
   $scope.setStudent = function(student) {
     $scope.student = student;
     $scope.studentHasItems = false;
@@ -2913,14 +2945,23 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.showModalStudentDialog();
   }
 
+  /**
+    @studentsView: True or false.
+    Determinates if the photo that is shown from the studnet's is going to be either their avatar or their classroom's pictures.
+  */
   $scope.setStudentsView = function (studentsView) {
     if(studentsView == undefined) {
       studentsView = false;
-    }var classStudentsViewRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/studentsView');
+    }
+    var classStudentsViewRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/studentsView');
     classStudentsViewRef.set(studentsView);
     $scope.classroom.studentsView = studentsView;
   }
 
+  /**
+    @notification: True or false.
+    Sets the notifications for the classroom.
+  */
   $scope.setNotifications = function(notification) {
     if (notification == undefined) {
       notification = false;
@@ -2930,6 +2971,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.classroom.notifications = notification;
   }
 
+  /**
+    @opening: True or false.
+    Sets the opening for the classroom. If true the students can join to the classroom by its hashcode.
+  */
   $scope.setOpening = function(opening) {
     if (opening == undefined) {
       opening = false;
@@ -2939,6 +2984,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.classroom.open = opening;
   }
 
+  /**
+    Adds the student to a team.
+    Copies the student to another class.
+  */
   $scope.secondaryMenuSelection = function() {
     var teamIndex = document.getElementById("selectTeam").selectedIndex;
     var classroomIndex = document.getElementById("selectCopy").selectedIndex;
@@ -2961,6 +3010,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.closeModalSecondary();
   }
 
+  /**
+    @team: The team where the student is going to be added.
+    @student: The student that is going to be added in a team.
+    Adds the student's reference to the team's tree on the firebase database.
+    Also add the team's refence to the student's tree on the firebase database.
+  */
   $scope.addStudentToTeam = function(team, student) {
     var studentTeamsRef = firebase.database().ref('students/' + student.id + '/teams/' + team.id);
     studentTeamsRef.set(true);
@@ -2969,6 +3024,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     teamStudentsRef.set(true);
   }
 
+  /**
+    @classroom: The classsroom whre the student is going to be copied.
+    @student: The student that is going to be added in a classroom.
+    Adds the student's reference to the classroom's tree on the firebase database.
+    Also add the classroom's reference to the student's tree on the firebase database.
+  */
   $scope.copyStudentToClass = function(classroom, student) {
     var classStudentRef = firebase.database().ref('classrooms/' + classroom.id + '/students/' + student.id);
     classStudentRef.set(true);
@@ -2978,9 +3039,13 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       'id' : classroom.id,
       'totalPoints' : 0,
       'inClass' : true,
+      'picture' : $scope.defaultAvatar,
     });
   }
 
+  /**
+    Gets all the selected students in the modal and then calls the correspond method depending on the var created when choose an option in the action sheet.
+  */
   $scope.selectStudents = function() {
     $scope.closeSelectStudentsModal();
     $scope.closeAttendanceModal();
@@ -3011,6 +3076,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
 
+  /**
+    @message: The message that is going to be send.
+    Gets all the selected students in the modal and then calls the correspond method to send a message for each student.
+  */
   $scope.selectStudentsForMessage = function(message) {
     $scope.closeSelectStudentsModal();
     for (var element in $scope.studentsForSelection) {
@@ -3020,6 +3089,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
 
+  /**
+    @studentId: The id of the student that is goin to recieve the message.
+    @message: The message that is going to be send to the student
+    Sends a message to the correspond student with the same studnetId.
+    Adds the notification info in student's tree on firebase database.
+  */
   $scope.sendMessageStudents = function(studentId, message) {
     var studentNotificationsRef = firebase.database().ref('students/' + studentId + '/notifications/' + $scope.classroom.id);
     var studentNoticationsArray = $firebaseArray(studentNotificationsRef);
@@ -3032,6 +3107,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     });
   }
   
+  /**
+    @student: The student selected.
+    Checks if the selected student it was already selected or not.
+  */
   $scope.changeSelectedStudent = function(student) {
     if (student.selected === false) {
       student.selected = true;
@@ -3040,6 +3119,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
 
+  /**
+    @student: The student that si going to be checked in class.
+    Checks the attendance of one student in the classroom.
+  */
   $scope.inClass = function(student) {
     if (student.classrooms[$scope.classroom.id].inClass === true) {
       student.classrooms[$scope.classroom.id].inClass = false;
@@ -3048,11 +3131,18 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
 
+  /**
+    @student: The student that is going to change its attendance.
+    Edits the students attendance in the classroom.
+  */
   $scope.editStudentsAttendance = function(student) {
     var studentAttendanceRef = firebase.database().ref('students/' + student.id + '/classrooms/' + $scope.classroom.id + '/inClass');
     studentAttendanceRef.set(student.classrooms[$scope.classroom.id].inClass);
   }
 
+  /**
+    Picks a random student from all in the classroom.
+  */
   $scope.getRandomStudent = function() {
     var randomStudent = Math.trunc(Math.random()*$scope.students.length);
     
@@ -3070,6 +3160,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
                                         /* FUNCTIONS IN ITEMS */
 
+  /**
+    Get all the items from the classroom and saves them in the session.
+    Asks firebase for the correspond items' references.
+    Defines an event for each item's reference which is triggered every time that database reference is modified.
+    The event saves every item in the session.
+  */
   $scope.getItems = function() {
     var classroomItemsRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/items');
     var itemKeys = $firebaseArray(classroomItemsRef);
@@ -3106,6 +3202,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     });
   }
 
+  /**
+    Copy all the items in another array for selection purposes.
+  */
   $scope.getItemsForSelection = function() {
     $scope.itemsForSelection = angular.copy($scope.items);
     for (var element in $scope.itemsForSelection) {
@@ -3113,6 +3212,15 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
 
+  /**
+    @name: The name for the item that is going to be create.
+    @description: A description for the item that is going to be created.
+    @requirements: The requirements to unlock the item.
+    @score: Default score for the item.
+    @maxScore: Max score for the item.
+    @useForLevel: True or false. If the points achieved in the item either adds to the classroom's level or not.
+    Creates an item and add its reference to the classroom's tree on the firebase database.
+  */
   $scope.createItem = function (name, description, requirements, score, maxScore, useForLevel) {
     if (useForLevel == undefined) {
       useForLevel = false;
@@ -3144,6 +3252,14 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     });
   }
 
+  /**
+    @item: The item that is going to be remove.
+    Removes  the item's references on firebase database.
+    Then removes  the item's references in the classroom's tree on firebase database.
+    Also removes the item's reference from the students that unlocked it tree on firebase database.
+    Removes the item's reference from the classroom's missions tree on the firebase database.
+    Finally removes all the achievements that depend on the item.
+  */
   $scope.deleteItem = function(item) {
     var itemRef = firebase.database().ref('items/' + item.id);
     itemRef.remove();
@@ -3169,12 +3285,26 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.getItems();
   }
 
+  /**
+    @item: The item that is going to be saved in the session.
+    Saves the item selected in the session.
+    Also gets all the item's achievements.
+  */
   $scope.setItem = function(item) {
     $scope.item = item;
     $scope.getAchievements();
     $scope.itemsForm();
   }
 
+  /**
+    @name: The new name for the item that is going to be edited.
+    @description: A new description for the item that is going to be edited.
+    @requirements: The new requirements to unlock the item.
+    @score: New default score for the item.
+    @maxScore: New max score for the item.
+    @useForLevel: True or false. If the points achieved in the item either adds to the classroom's level or not.
+    Edits the item saved in the session with the new data.
+  */
   $scope.editItem = function(name, description, requirements, score, maxScore, useForLevel) {
     if (name != undefined && description != undefined && requirements != undefined && score != undefined && maxScore != undefined) {
       var itemRef = firebase.database().ref('items/' + $scope.item.id);
@@ -3228,6 +3358,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     alert($scope.dataChangedAlert);
   }
 
+  /**
+    @item: The item to evaluate.
+    Evaluates students from another array with the item choosed.
+    Checks if the students already have items or not. Also if the student already had this item, and if the student unlocks either an achievement, a mission or both.
+    Plus the item score with the student points if the item has the useForLevel atributte set in true.
+  */
   $scope.evaluateStudents = function(item) {
     for (var pos in $scope.studentsToEvaluate) {
       if ($scope.studentsToEvaluate[pos].items != undefined) {
@@ -3299,6 +3435,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.getNotifications();
   }
 
+  /**
+    @item: The item to evaluate.
+    Evaluates teams from another array with the item choosed.
+    Checks if the team's students already have items or not. Also if the team's student already had this item, and if the team's student unlocks either an achievement, a mission or both.
+    Plus the item score with the tem's student points if the item has the useForLevel atributte set in true.
+  */
   $scope.evaluateTeams = function(item) {
     for (var pos in $scope.teamsToEvaluate) {
       for (var studentId in $scope.teamsToEvaluate[pos].students) {
@@ -3376,6 +3518,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.getNotifications();
   }
 
+  /**
+    Gets all the selected items in the modal and then calls the correspond method depending on the var created when choose an option in the action sheet.
+  */
   $scope.selectItems = function() {
     $scope.closeSelectItemsModal();
     if ($scope.actionSheetItemsType === 'delete') {
@@ -3406,6 +3551,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
 
+  /**
+    @item: The item selected.
+    Checks if the selected item it was already selected or not.
+    Then if the selection purpose is to evaluate or create a mission a popup appears to ask the item's score.
+  */
   $scope.changeSelectedItem = function(item) {
       if (item.selected === false) {
         item.selected = true;
@@ -3447,6 +3597,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
 
+  /**
+    @item: The item that is going to remove its score from the student points
+    Removes points from the student's actual score in the item and then, if the item is used for level, also removes the same quantity of points from the student's actual classroom points.
+  */
   $scope.removePoints = function(item) {
     var studentItemPointsToRemoveRef = firebase.database().ref('students/' + $scope.student.id + '/items/' + item.id + '/points');
     var studentClassPointsToRemoveRef = firebase.database().ref('students/' + $scope.student.id + '/classrooms/' + $scope.classroom.id + '/totalPoints');
@@ -3476,6 +3630,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
 
+  /**
+    @item: The item that is going to add its score to the student points
+    Adds points to the student's actual score in the item and then, if the item is used for level, also adds the same quantity of points to the student's actual classroom points.
+  */
   $scope.addPoints = function(item) {
     var studentItemPointsToAddRef = firebase.database().ref('students/' + $scope.student.id + '/items/' + item.id + '/points');
     var studentClassPointsToAddRef = firebase.database().ref('students/' + $scope.student.id + '/classrooms/' + $scope.classroom.id + '/totalPoints');
@@ -3516,6 +3674,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
                                         /* FUNCTIONS IN ACHIEVEMENTS */
 
+  /**
+    Updates the achievement's picture with an image uploaded from the local storage and saves it on the firebase storage.
+  */
   $scope.updateAchievementPicture = function() {
     var downloadURL;
     var fileButton = document.getElementById('inputAchievementPicture');
@@ -3524,7 +3685,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       if (e.target.files.length > 0) {
         $ionicLoading.show();
         var file = e.target.files[0];
-        var fileExtension = file.name.split('.').pop();
+        var fileExtension = $scope.file.name.split('.').pop().toLowerCase();
         if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
           var storageRef = firebase.storage().ref('Achievement_Pictures/' + $scope.achievement.id + '/achievementPicture');
           var task = storageRef.put(file);
@@ -3552,6 +3713,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     });
   }
 
+  /**
+    Get all the achievements from the item in session and saves them in the session.
+    Asks firebase for the correspond achievements' references.
+    Defines an event for each achievement's reference which is triggered every time that database reference is modified.
+    The event saves every achievement in the session.
+  */
   $scope.getAchievements = function() {
     var itemAchievementsRef = firebase.database().ref('items/' + $scope.item.id + '/achievements');
     var achievementKeys = $firebaseArray(itemAchievementsRef);
@@ -3588,6 +3755,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     });
   }
 
+  /**
+    Copy all the achievements in another array for selection purposes.
+  */
   $scope.getAchievementsForSelection = function() {
     $scope.achievementsForSelection = angular.copy($scope.achievements);
     for (var element in $scope.achievementsForSelection) {
@@ -3620,7 +3790,14 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       $scope.defaultAchievementAvatar = $scope.achievementGalery[$scope.achievementGalery.length-1];
     }
   }
-
+  
+  /**
+    @name: The name for the achievement that is going to be create.
+    @description: A description for the achievement that is going to be created.
+    @requirements: The required point in the session item to unlock the achievement.
+    @maxLevel: Max level for the achievement.
+    Creates an achievement and add its reference to the session item's tree on the firebase database.
+  */
   $scope.createAchievement = function(name, description, requirements, maxLevel) {
     if (requirements > $scope.item.maxScore) {
       alert($scope.cantAskMoreScoreAlert);
@@ -3681,6 +3858,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
 
+  /**
+    @achievement: The achievement that is going to be remove.
+    Removes  the achievement's references on firebase database.
+    Then removes  the achievement's references in the session item's tree on firebase database.
+  */
   $scope.deleteAchievement = function(achievement) {
     var itemAchievementRef = firebase.database().ref('items/' + $scope.item.id + '/achievements/' + achievement.id);
     itemAchievementRef.remove();
@@ -3698,11 +3880,22 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.getAchievements();
   }
 
+  /**
+    @achievement: The achievement that is going to be saved in the session.
+    Saves the achievement selected in the session.
+  */
   $scope.setAchievement = function(achievement) {
     $scope.achievement = achievement;
     $scope.achievementsForm();
   }
 
+  /**
+    @name: The new name for the achievement that is going to be edited.
+    @description: A new description for the achievement that is going to be edited.
+    @requirements: The new required points in the session item to unlock the achievement.
+    @maxLevel: Max level for the achievement.
+    Edits the achievement saved in the session with the new data.
+  */
   $scope.editAchievement = function(name, description, requirements, maxLevel) {
     if (name != undefined && description != undefined && requirements != undefined && maxLevel != undefined) {
       var achievementRef = firebase.database().ref('achievements/' + $scope.achievement.id);
@@ -3740,6 +3933,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     alert($scope.dataChangedAlert);
   }
 
+  /**
+    Gets all the selected achievements in the modal and then calls the correspond method depending on the var created when choose an option in the action sheet.
+  */
   $scope.selectAchievements = function() {
     $scope.closeSelectAchievementsModal();
     if ($scope.actionSheetAchievementsType === 'delete') {
@@ -3752,6 +3948,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
   
+  /**
+    @achievement: The achievement selected.
+    Checks if the selected achievement it was already selected or not.
+  */
   $scope.changeSelectedAchievement = function(achievement) {
     if (achievement.selected === false) {
       achievement.selected = true;
@@ -3760,6 +3960,14 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
 
+  /**
+    @item: The item that was evaluating the student.
+    @student: The student that was being evaluated.
+    @points: The points that are used to evaluate the student.
+    Checks if the student after been evaluated it also unlocked an achievement.
+    Defines an event for each achievement's reference which is triggered every time that database reference is modified.
+    The event checks if the student already had the acheivement unlocked or what level/points it had.
+  */
   $scope.checkAchievements = function(item, student, points) {
     if (item.achievements != undefined) {
       var itemAchievementsRef = firebase.database().ref('items/' + item.id + '/achievements');
@@ -3816,6 +4024,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
                                        /* FUNCTIONS IN TEAMS */
 
+  /**
+    Updates the teams's picture with an image uploaded from the local storage and saves it on the firebase storage.
+  */
   $scope.updateTeamPicture = function() {
     var downloadURL;
     var fileButton = document.getElementById('inputTeamPicture');
@@ -3824,7 +4035,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       if (e.target.files.length > 0) {
         $ionicLoading.show();
         var file = e.target.files[0];
-        var fileExtension = file.name.split('.').pop();
+        var fileExtension = $scope.file.name.split('.').pop().toLowerCase();
         if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
           var storageRef = firebase.storage().ref('Team_Pictures/' + $scope.team.id + '/teamPicture');
           var task = storageRef.put(file);
@@ -3852,6 +4063,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     });
   }
 
+  /**
+    Get all the teams from the classroom and saves them in the session.
+    Asks firebase for the correspond teams' references.
+    Defines an event for each team's reference which is triggered every time that database reference is modified.
+    The event saves every team in the session.
+  */
   $scope.getTeams = function() {
     var classroomTeamsRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/teams');
     var teamKeys = $firebaseArray(classroomTeamsRef);
@@ -3888,6 +4105,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     });
   }
 
+  /**
+    Copy all the students in another array for selection in team.
+  */
   $scope.getStudentsForTeamSelection = function() {
     $scope.studentsForTeamSelection = angular.copy($scope.students);
     if ($scope.editMembers) {
@@ -3909,6 +4129,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
 
+  /**
+    Copy all the teams in another array for selection purposes.
+  */
   $scope.getTeamsForSelection = function() {
     $scope.teamsForSelection = angular.copy($scope.teams);
     for (var element in $scope.teamsForSelection) {
@@ -3916,6 +4139,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
 
+  /**
+    @name: The name for the team that is going to be create.
+    @objective: An objective for the team that is going to be created.
+    Creates a team and add its reference to the classroom's tree on the firebase database.
+    Also add the team's reference to each student member's tree on the firebase database and then the student member's reference to the team's tree on the firebase database.
+  */
   $scope.createTeam = function(name, objective) {
     var teamsNode = $firebaseArray(teamsRef);
     teamsNode.$loaded(function() {
@@ -3948,7 +4177,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         //PICUTRE PART
         if ($scope.file != undefined || $scope.file != null) {
           $ionicLoading.show();
-          var fileExtension = $scope.file.name.split('.').pop();
+          var fileExtension = $scope.file.name.split('.').pop().toLowerCase();
           if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
             var storageRef = firebase.storage().ref('Team_Pictures/' + id + '/teamPicture');
             var task = storageRef.put($scope.file);
@@ -3982,15 +4211,19 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     });
   }
 
-  $scope.createRandomTeams = function(numEquipos) {
-    if (numEquipos > $scope.students.length) {
+  /**
+    @numTeams: The number of teams that are going to be created.
+    Creates a number of teams equal to the numTeams. These teams are going to have a roandom number of students.
+  */
+  $scope.createRandomTeams = function(numTeams) {
+    if (numTeams > $scope.students.length) {
       alert($scope.cantCreateMoreTeamsThanStudentsAlert);
     } else {
       var objective = 'Random';
       var picture = $scope.defaultTeamAvatar;
       var numParticipants = $scope.students.length;
-      var participantsPerTeam = Math.trunc(numParticipants / numEquipos);
-      var lefttovers = numParticipants % numEquipos;
+      var participantsPerTeam = Math.trunc(numParticipants / numTeams);
+      var lefttovers = numParticipants % numTeams;
       randomNumberList = [];
       for (i = 0 ; i < numParticipants ; i++) {
         randomNumberList.push(i);
@@ -3998,7 +4231,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       randomNumberList = randomNumberList.sort(function() { return Math.random() - 0.5 });
       var teamsList = [];
       var teamNamesList = [];
-      for (i = 0 ; i < numEquipos ; i++) {
+      for (i = 0 ; i < numTeams ; i++) {
         var team = [];
         for (j = 0 ; j < participantsPerTeam ; j++) {
           team.push($scope.students[randomNumberList[0]]);
@@ -4009,14 +4242,14 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       }
       if (lefttovers > 0) {
         for ( i = 0 ; i < lefttovers ; i++) {
-          var randomTeam = Math.trunc(Math.random()*numEquipos);
+          var randomTeam = Math.trunc(Math.random()*numTeams);
           teamsList[randomTeam].push($scope.students[randomNumberList[i]]);
         }
       }
       var teamsNode = $firebaseArray(teamsRef);
       teamsNode.$loaded(function() {
         var counter = 0;
-        for (i = 0 ; i < numEquipos ; i++) {
+        for (i = 0 ; i < numTeams ; i++) {
           teamsNode.$add({
             'name' : teamNamesList[i],
             'objective' : objective,
@@ -4989,6 +5222,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     *************************************EVERY SORT FUNCTION GOES HERE***********************
   */
 
+  /**
+    Sorts an array by name.
+  */
   var sortByName = function(a, b) {
     var nameA = a.name.toUpperCase(); // ignore upper and lowercase
     var nameB = b.name.toUpperCase(); // ignore upper and lowercase
@@ -5002,6 +5238,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     return 0;
   }
 
+  /**
+    Sorts an array by surname.
+  */
   var sortBySurname = function(a, b) {
     var surnameA = a.surname.toUpperCase();
     var surnameB = b.surname.toUpperCase();
@@ -5015,6 +5254,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     return 0;
   }
 
+  /**
+    Sorts an array by level.
+  */
   var sortByLevel = function(a, b) {
     var levelA = a.level;
     var levelB = b.level;
@@ -5028,6 +5270,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     return 0;
   }
 
+  /**
+    Sorts an array by date.
+  */
   var sortByDate = function(a, b) {
     var dateA = a.date;
     var dateB = b.date;
