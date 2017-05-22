@@ -1098,6 +1098,8 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           '<div class="teacherAvatar">'+
             '<img src={{defaultAchievementAvatar}} class="avatar">'+
           '</div>'+
+          '<button class="button button-calm galeryLeft" ng-click="galeryBack()"><i class="icon ion-chevron-left"></i></button>'+
+          '<button class="button button-calm galeryRight" ng-click="galeryForward()"><i class="icon ion-chevron-right"></i></button>'+
         '</div>'+
         '<input class="button button-light button-block button-outline" type="file" id="inputNewAchievementBadge" ng-click="updateInputFile(\'inputNewAchievementBadge\')">'+
         '<form id="newAchievementForm" class="list">'+
@@ -1869,6 +1871,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.zeroPointsWillEstablishAlert = $translate.instant('ZERO_SCORE_WILL_ESTABLISH');
   });
 
+  $scope.achievementGalery = ['img/userDefaultAvatar.png', 'img/teamDefaultAvatar.png', 'img/achievementDefaultBadge.png']
   $scope.defaultAvatar = 'img/userDefaultAvatar.png';
   $scope.defaultTeamAvatar = 'img/teamDefaultAvatar.png';
   $scope.defaultAchievementAvatar = 'img/achievementDefaultBadge.png';
@@ -2698,7 +2701,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             var student = snapshot.val();
             student.name = CryptoJS.AES.decrypt(student.name, student.id).toString(CryptoJS.enc.Utf8);
             student.surname =CryptoJS.AES.decrypt(student.surname, student.id).toString(CryptoJS.enc.Utf8);
-            student.picture = student.classrooms[$scope.classroom.id].picture;
+            if (student.classrooms != undefined) {
+              student.picture = student.classrooms[$scope.classroom.id].picture;
+            }
             for (j = 0 ; j < $scope.students.length ; j++) {
               if ($scope.students[j].id == student.id) {
                 change = true;
@@ -2753,7 +2758,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     The new student gets the email auto verified.
   */
   $scope.createNewStudent = function(name, surname) {
-
     var teacherId = $scope.teacher.$id;
     var a = teacherId.substr(teacherId.length -2).toLowerCase();
     var classroomId = $scope.classroom.id;
@@ -3761,6 +3765,32 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
   }
 
+  $scope.galeryForward = function(){
+    var pos = $scope.achievementGalery.indexOf($scope.defaultAchievementAvatar);
+    if(pos == -1){
+      $scope.defaultAchievementAvatar = $scope.achievementGalery[0];
+    }
+    else if(pos != -1 && pos < $scope.achievementGalery.length-1){
+      $scope.defaultAchievementAvatar = $scope.achievementGalery[pos+1];
+    }
+    else {
+      $scope.defaultAchievementAvatar = $scope.achievementGalery[0];
+    }
+  }
+
+  $scope.galeryBack = function(){
+    var pos = $scope.achievementGalery.indexOf($scope.defaultAchievementAvatar);
+    if(pos == -1){
+      $scope.defaultAchievementAvatar = $scope.achievementGalery[$scope.achievementGalery.length-1];
+    }
+    else if(pos != -1 && pos > 0){
+      $scope.defaultAchievementAvatar = $scope.achievementGalery[pos-1];
+    }
+    else {
+      $scope.defaultAchievementAvatar = $scope.achievementGalery[$scope.achievementGalery.length-1];
+    }
+  }
+  
   /**
     @name: The name for the achievement that is going to be create.
     @description: A description for the achievement that is going to be created.

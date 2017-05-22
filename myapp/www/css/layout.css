@@ -201,3 +201,11 @@ padding-left:40px;
 	min-width: 0;
 	min-height: 0;
 }
+
+.galeryRight {
+	position: fixed; right: 0; top:12%; height: 30%; min-width: 0; width: 10%;
+}
+
+.galeryLeft {
+	position: fixed; left: 0; top:12%; height: 30%; min-width: 0; width: 10%;
+}

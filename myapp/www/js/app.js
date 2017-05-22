@@ -16,7 +16,7 @@ angular.module('app', ['ionic', 'app.loginController', 'app.settingsController',
   $translateProvider.useSanitizeValueStrategy('escape');
 })
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $ionicPopup) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -32,7 +32,22 @@ angular.module('app', ['ionic', 'app.loginController', 'app.settingsController',
 
   //Used to prevent the back button's action in smartphones.
   $ionicPlatform.registerBackButtonAction(function(event) {
-    event.preventDefault();
+    if (true) {
+      $ionicPopup.show({
+        title: 'System warning',
+        template: 'Are you sure you want to exit?',
+        buttons: [{
+            text: 'Cancel',
+          },
+          {
+            text: 'OK',
+            onTap: function() {
+              ionic.Platform.exitApp();
+            }
+          },
+        ]
+      })
+    }
   }, 800);//registerBackButton
 
 })
