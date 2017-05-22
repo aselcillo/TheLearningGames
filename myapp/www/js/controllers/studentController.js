@@ -607,7 +607,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
                                           /* FUNCTIONS IN PROFILE */
 
   /**
-    Updates the student's avatar with an image uploaded from the local storage and saves it on the firebase database.
+    Updates the student's avatar with an image uploaded from the local storage and saves it on the firebase storage.
   */
   $scope.updateStudentAvatar = function() {
     var downloadURL;
@@ -617,7 +617,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       if (e.target.files.length > 0) {
         $ionicLoading.show();
         var file = e.target.files[0];
-        var fileExtension = file.name.split('.').pop();
+        var fileExtension = $scope.file.name.split('.').pop().toLowerCase();
         if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
           var storageRef = firebase.storage().ref('Profile_Pictures/' + sessionUser.uid + '/profilePicture');
           var task = storageRef.put(file);
