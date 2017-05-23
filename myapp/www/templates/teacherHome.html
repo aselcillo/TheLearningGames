@@ -11,7 +11,7 @@
         <a id="menu" class="button button-light icon ion-drag" ng-click="openPopoverTeacherHome($event)"></a>
       </header>
       <ion-list id="teacherHome-list16" class="list-elements align-text-center">
-        <ion-item id="teacherHome-list-item47" ng-repeat="class in classrooms" ng-click="setClassroom(class)" ng-hide="class.archived">
+        <ion-item id="teacherHome-list-item47" ng-repeat="class in classrooms" ng-click="setClassroom(class, false)" ng-hide="class.archived">
           <span class="ion-university"></span><br>{{class.name}}
         </ion-item>
       </ion-list>
@@ -21,7 +21,7 @@
       <div ng-show="archivedClassroomsToShow">
         <h3 id="teacherHome-heading1" class="margin-top-null">{{ 'CLASSES_ARCHIVED' | translate }}</h3>
         <ion-list id="teacherHome-list16" class="list-elements align-text-center">
-          <ion-item id="teacherHome-list-item47" ng-repeat="class in classrooms" ng-click="setClassroom(class)" ng-show="class.archived">
+          <ion-item id="teacherHome-list-item47" ng-repeat="class in classrooms" ng-click="setClassroom(class, true)" ng-show="class.archived">
             <span class="ion-university"></span><br>{{class.name}}
           </ion-item>
         </ion-list>
@@ -158,9 +158,9 @@
         </ion-item>
       </ion-list>
       <div class="button-bar action_buttons">
-        <button id="students-button44" id="students-btn44" class="button button-calm  button-block" ng-click="showModalNewStudentDialog()">{{ 'ADD_STUDENT' | translate }}</button>
+        <button id="students-button44" id="students-btn44" class="button button-calm  button-block" ng-click="showModalNewStudentDialog()" ng-disabled="isArchivedClassroom">{{ 'ADD_STUDENT' | translate }}</button>
       </div>
-      <button class="button button-positive button-float addButton" ng-click="showActionsheetClassStudents()">
+      <button class="button button-positive button-float addButton" ng-disabled="isArchivedClassroom" ng-click="showActionsheetClassStudents()">
         <i class="icon ion-plus"></i>
       </button>
     </div>
@@ -190,12 +190,12 @@
         </ion-item>
       </ion-list>
       <div class="button-bar action_buttons">
-        <button id="teams-button44" ng-click="showModalNewTeamDialog()" id="teams-btn44" class="button button-calm  button-block">{{ 'ADD_TEAM' | translate }}</button>
+        <button id="teams-button44" ng-click="showModalNewTeamDialog()" id="teams-btn44" class="button button-calm  button-block" ng-disabled="isArchivedClassroom">{{ 'ADD_TEAM' | translate }}</button>
       </div>
       <div class="button-bar action_buttons">
-        <button id="teams-button44" ng-click="showModalQuantityRandomTeams()" id="teams-btn44" class="button button-calm  button-block">{{ 'CREATE_RANDOM_TEAMS' | translate }}</button>
+        <button id="teams-button44" ng-click="showModalQuantityRandomTeams()" id="teams-btn44" class="button button-calm  button-block" ng-disabled="isArchivedClassroom">{{ 'CREATE_RANDOM_TEAMS' | translate }}</button>
       </div>
-      <button class="button button-positive button-float addButton" ng-click="showActionsheetClassTeams()">
+      <button class="button button-positive button-float addButton" ng-click="showActionsheetClassTeams()" ng-disabled="isArchivedClassroom">
         <i class="icon ion-plus"></i>
       </button>
     </div>
@@ -221,9 +221,9 @@
         </ion-item>
       </ion-list>
       <div class="button-bar action_buttons">
-        <button id="items-button67" ng-click="showModalNewItem()" class="button button-calm  button-block">{{ 'ADD_ITEM' | translate }}</button>
+        <button id="items-button67" ng-click="showModalNewItem()" class="button button-calm  button-block" ng-disabled="isArchivedClassroom">{{ 'ADD_ITEM' | translate }}</button>
       </div>
-      <button class="button button-positive button-float addButton" ng-click="showActionsheetItems()">
+      <button class="button button-positive button-float addButton" ng-click="showActionsheetItems()" ng-disabled="isArchivedClassroom">
         <i class="icon ion-plus"></i>
       </button>
     </div>
@@ -246,32 +246,32 @@
         <form id="editItemForm">
           <label class="item item-input list-elements">
             <span class="input-label">{{ 'NAME' | translate }}</span>
-            <input type="text" placeholder="{{item.name}}" ng-model="modelItem.name">
+            <input type="text" placeholder="{{item.name}}" ng-model="modelItem.name" ng-disabled="isArchivedClassroom">
           </label>
           <label class="item item-input list-elements">
             <span class="input-label">{{ 'DESCRIPTION' | translate }}</span>
-            <input type="text" placeholder="{{item.description}}" ng-model="modelItem.description">
+            <input type="text" placeholder="{{item.description}}" ng-model="modelItem.description" ng-disabled="isArchivedClassroom">
           </label>
           <label class="item item-input list-elements">
             <span class="input-label">{{ 'REQUIREMENTS' | translate }}</span>
-            <input type="text" placeholder="{{item.requirements}}" ng-model="modelItem.requirements">
+            <input type="text" placeholder="{{item.requirements}}" ng-model="modelItem.requirements" ng-disabled="isArchivedClassroom">
           </label>
           <label class="item item-input list-elements">
             <span class="input-label">{{ 'MAX_SCORE' | translate }}</span>
-            <input type="number" placeholder="{{item.maxScore}}" ng-model="modelItem.maxScore">
+            <input type="number" placeholder="{{item.maxScore}}" ng-model="modelItem.maxScore" ng-disabled="isArchivedClassroom">
           </label>
           <label class="item item-input list-elements">
             <span class="input-label">{{ 'SCORE' | translate }}</span>
-            <input type="number" placeholder="{{item.score}}" ng-model="modelItem.score">
+            <input type="number" placeholder="{{item.score}}" ng-model="modelItem.score" ng-disabled="isArchivedClassroom">
           </label>
-         <ion-toggle toggle-class="toggle-calm" ng-model="modelItem.useForLevel" ng-checked="item.useForLevel">{{ 'USE_FOR_LEVEL' | translate }}</ion-toggle>
+         <ion-toggle toggle-class="toggle-calm" ng-model="modelItem.useForLevel" ng-checked="item.useForLevel" ng-disabled="isArchivedClassroom">{{ 'USE_FOR_LEVEL' | translate }}</ion-toggle>
         </form>
       </div>
       <div>
         <form>
           <div class="button-bar action_buttons">
             <button class="button button-calm  button-block" ng-click="rulesForm()">{{ 'CANCEL' | translate }}</button>
-            <button class="button button-calm  button-block" ng-click="editItem(modelItem.name, modelItem.description, modelItem.requirements, modelItem.score, modelItem.maxScore, modelItem.useForLevel)" ng-disabled="!modelItem.name && !modelItem.description && !modelItem.requirements && !modelItem.maxScore && !modelItem.score && !modelItem.useForLevel">{{ 'EDIT' | translate }}</button>
+            <button class="button button-calm  button-block" ng-click="editItem(modelItem.name, modelItem.description, modelItem.requirements, modelItem.score, modelItem.maxScore, modelItem.useForLevel)" ng-disabled="(!modelItem.name && !modelItem.description && !modelItem.requirements && !modelItem.maxScore && !modelItem.score && !modelItem.useForLevel) || isArchivedClassroom">{{ 'EDIT' | translate }}</button>
           </div>
         </form>
       </div>      
@@ -283,9 +283,9 @@
         </ion-item>
       </ion-list>
       <div class="button-bar action_buttons">
-        <button id="achievements-button91" ng-click="showModalNewAchievement()" class="button button-calm  button-block">{{ 'ADD_ACHIEVEMENT' | translate }}</button>
+        <button id="achievements-button91" ng-click="showModalNewAchievement()" class="button button-calm  button-block" ng-disabled="isArchivedClassroom">{{ 'ADD_ACHIEVEMENT' | translate }}</button>
       </div>
-      <button class="button button-positive button-float addButton" ng-click="showActionsheetAchievements()">
+      <button class="button button-positive button-float addButton" ng-click="showActionsheetAchievements()" ng-disabled="isArchivedClassroom">
           <i class="icon ion-plus"></i>
       </button>
     </div>
@@ -311,28 +311,28 @@
               <img src={{achievement.badge}} class="avatar">
             </ion-item>
           </div>
-          <input class="button button-light button-block button-outline" type="file" id="inputAchievementPicture" ng-click="updateAchievementPicture()">
+          <input class="button button-light button-block button-outline" type="file" id="inputAchievementPicture" ng-click="updateAchievementPicture()" ng-disabled="isArchivedClassroom">
           <label class="item item-input list-elements">
             <span class="input-label">{{ 'NAME' | translate }} </span>
-            <input type="text" placeholder="{{achievement.name}}" ng-model="modelAchievement.name">
+            <input type="text" placeholder="{{achievement.name}}" ng-model="modelAchievement.name" ng-disabled="isArchivedClassroom">
           </label>
           <label class="item item-input list-elements">
             <span class="input-label">{{ 'DESCRIPTION' | translate }}</span>
-            <input type="text" placeholder="{{achievement.description}}" ng-model="modelAchievement.description">
+            <input type="text" placeholder="{{achievement.description}}" ng-model="modelAchievement.description" ng-disabled="isArchivedClassroom">
           </label>
           <label class="item item-input list-elements">
             <span class="input-label">{{ 'REQUIREMENTS' | translate }}</span>
-            <input type="number" placeholder="{{achievement.requirements}}" ng-model="modelAchievement.requirements">
+            <input type="number" placeholder="{{achievement.requirements}}" ng-model="modelAchievement.requirements" ng-disabled="isArchivedClassroom">
           </label>
           <label class="item item-input list-elements">
             <span class="input-label">{{ 'MAX_LEVEL' | translate }}</span>
-            <input type="number" placeholder="{{achievement.maxLevel}}" ng-model="modelAchievement.maxLevel">
+            <input type="number" placeholder="{{achievement.maxLevel}}" ng-model="modelAchievement.maxLevel" ng-disabled="isArchivedClassroom">
           </label>
         </ion-list>
       </form>
       <div class="button-bar action_buttons">
         <button class="button button-calm  button-block" ng-click="itemsForm()">{{ 'CANCEL' | translate }}</button>
-        <button class="button button-calm  button-block" ng-click="editAchievement(modelAchievement.name, modelAchievement.description, modelAchievement.requirements, modelAchievement.pointsToLevel, modelAchievement.maxLevel)" ng-disabled="!modelAchievement.name && !modelAchievement.description && !modelAchievement.requirements && !modelAchievement.pointsToLevel && !modelAchievement.maxLevel">{{ 'EDIT_ACHIEVEMENT' | translate }}</button>
+        <button class="button button-calm  button-block" ng-click="editAchievement(modelAchievement.name, modelAchievement.description, modelAchievement.requirements, modelAchievement.pointsToLevel, modelAchievement.maxLevel)" ng-disabled="(!modelAchievement.name && !modelAchievement.description && !modelAchievement.requirements && !modelAchievement.pointsToLevel && !modelAchievement.maxLevel) || isArchivedClassroom">{{ 'EDIT_ACHIEVEMENT' | translate }}</button>
       </div>
     </div>
 
@@ -358,7 +358,7 @@
         </ion-list>
       </div>
       <div class="button-bar action_buttons">
-        <button id="class-button31" ng-click="setNewMissionNamePopup()" class="button button-calm  button-block">AÑADIR MISIÓN</button>
+        <button id="class-button31" ng-click="setNewMissionNamePopup()" class="button button-calm  button-block" ng-disabled="isArchivedClassroom">{{ 'ADD_MISSION' | translate }}</button>
       </div>
       <div ng-show="finishedMissionsToShow">
         <h3 class="margin-top-null">{{ 'MISSIONS_ENDED' | translate }}</h3>
@@ -368,7 +368,7 @@
           </ion-item>
         </ion-list>
       </div>
-      <button class="button button-positive button-float addButton" ng-click="showActionsheetMissions()">
+      <button class="button button-positive button-float addButton" ng-click="showActionsheetMissions()" ng-disabled="isArchivedClassroom">
         <i class="icon ion-plus"></i>
       </button>
     </div>
@@ -393,9 +393,9 @@
         </ion-item>
       </ion-list>
       <div class="button-bar action_buttons">
-        <button id="class-button31" ng-click="showModalNewReward()" class="button button-calm  button-block">{{ 'ADD_REWARD' | translate }}</button>
+        <button id="class-button31" ng-click="showModalNewReward()" class="button button-calm  button-block" ng-disabled="isArchivedClassroom">{{ 'ADD_REWARD' | translate }}</button>
       </div>
-      <button class="button button-positive button-float addButton" ng-click="showActionsheetRewards()">
+      <button class="button button-positive button-float addButton" ng-click="showActionsheetRewards()" ng-disbaled="isArchivedClassroom">
         <i class="icon ion-plus"></i>
       </button>
     </div>

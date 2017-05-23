@@ -1486,7 +1486,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     @reward: The rewards that the student buyed or consumed.
     @operationType: Buy or consume. Tells the method what message send
     @student: The student that buyed or consumed the reward.
-    Creates a notification for the teacher to informa that the student either buyed or consumed the reward.
+    Creates a notification for the teacher to inform that the student either buyed or consumed the reward.
   */
   $scope.createNotificationRewards = function(reward, operationType, student) {
     var teacherNotificationsRef = firebase.database().ref('teachers/' + $scope.classroom.teacher + '/notifications/' + $scope.classroom.id);
@@ -1509,7 +1509,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   }
 
   /**
-    Removes all the notificatiosn from the student's tree.
+    Removes all the notifications from the student's tree.
   */
   $scope.deleteNotifications = function() {
     var notificationToDeleteRef = firebase.database().ref('students/' + $scope.student.id + '/notifications/' + $scope.classroom.id);
