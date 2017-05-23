@@ -16,7 +16,7 @@ angular.module('app', ['ionic', 'app.loginController', 'app.settingsController',
   $translateProvider.useSanitizeValueStrategy('escape');
 })
 
-.run(function($ionicPlatform, $ionicPopup) {
+.run(function($ionicPlatform, $ionicPopup, $translate, $rootScope) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -30,17 +30,37 @@ angular.module('app', ['ionic', 'app.loginController', 'app.settingsController',
     }
   });
 
+  /**
+    Needed for the translations to work in the controller's words.
+  */
+  $translate(['CANCEL', 'OKAY', 'SYSTEM_WARNING', 'YOU_WANT_TO_EXIT']).then(function(translations) {
+    $rootScope.cancelText = translations.CANCEL;
+    $rootScope.okayText = translations.OKAY;
+    $rootScope.systemWarning = translations.SYSTEM_WARNING;
+    $rootScope.sureYouWannaExit = translations.YOU_WANT_TO_EXIT;
+  });
+
+  /**
+    Needed for the translations to change their value in execution time.
+  */
+  $rootScope.$on('$translateChangeSuccess', function () {
+    $rootScope.cancelText = $translate.instant('CANCEL');
+    $rootScope.okayText = $translate.instant('OKAY');
+    $rootScope.systemWarning = $translate.instant('SYSTEM_WARNING');
+    $rootScope.sureYouWannaExit = $translate.instant('YOU_WANT_TO_EXIT');
+  });
+
   //Used to prevent the back button's action in smartphones.
   $ionicPlatform.registerBackButtonAction(function(event) {
     if (true) {
       $ionicPopup.show({
-        title: 'System warning',
-        template: 'Are you sure you want to exit?',
+        title: $rootScope.systemWarning,
+        template: $rootScope.sureYouWannaExit,
         buttons: [{
-            text: 'Cancel',
+            text: $rootScope.cancelText,
           },
           {
-            text: 'OK',
+            text: $rootScope.okayText,
             onTap: function() {
               ionic.Platform.exitApp();
             }
@@ -97,6 +117,7 @@ var translationsEN = {
   ADD_CLASS: 'Add class',
   ADD_ITEM: 'Add Item',
   ADD_LEVEL: 'Add level',
+  ADD_MISSION: 'Add mission',
   ADD_REWARD: 'Añadir recompensa',
   ADD_STUDENT: 'Add student',
   ADD_TEAM: 'Add team',
@@ -277,6 +298,7 @@ var translationsEN = {
   STUDENTS: 'Students',
   STUDENTS_VIEW: 'Student\'s view',
   SURNAME: 'Surname',
+  SYSTEM_WARNING: 'System warning',
   TAKE_ATTENDANCE: 'Take attendance',
   TAKE_PICTURE: 'Take picture',
   TEACHER: 'Teacher',
@@ -298,6 +320,7 @@ var translationsEN = {
   VERIFY_EMAIL: 'Verify your email to get access to your account',
   WRONG_CREDENTIALS: 'Email or password is wrong',
   YOU_HAVE_NOTIFICATIONS: 'You have notifications',
+  YOU_WANT_TO_EXIT: 'Are you sure you want to exit?',
   YOU_WIN_REWARD: 'You have win the reward',
   YOUR_ACTUAL_LEVEL: 'Current level',
   YOUR_PASSWORD: 'Your Password',
@@ -323,6 +346,7 @@ var translationsES= {
   ADD_CLASS: 'Añadir clase',
   ADD_ITEM: 'Añadir item',
   ADD_LEVEL: 'Añadir nivel',
+  ADD_MISSION: 'Añadir misión',
   ADD_REWARD: 'Añadir recompensa',
   ADD_STUDENT: 'Añadir estudiante',
   ADD_TEAM: 'Añadir equipo',
@@ -504,6 +528,7 @@ var translationsES= {
   STUDENT_DOESNT_HAVE_ENOUGH_POINTS: 'El alumno no dispone de suficientes puntos en el item',
   STUDENTS_VIEW: 'Vista de alumnos',
   SURNAME: 'Apellido',
+  SYSTEM_WARNING: 'Aviso de sistema',
   TAKE_ATTENDANCE: 'Tomar asistencia',
   TAKE_PICTURE: 'Seleccionar foto',
   TEACHER: 'Profesor',
@@ -525,6 +550,7 @@ var translationsES= {
   WRONG_CREDENTIALS: 'Email o contraseña son incorrectos',
   VERIFY_EMAIL: 'Verifique su correo para poder acceder a su cuenta',
   YOU_HAVE_NOTIFICATIONS: 'Tienes notificaciones',
+  YOU_WANT_TO_EXIT: '¿Seguro que quiere salir?',
   YOU_WIN_REWARD: 'Has ganado la recompensa',
   YOUR_ACTUAL_LEVEL: 'Tu nivel actual',
   YOUR_PASSWORD: 'Tu contraseña',
