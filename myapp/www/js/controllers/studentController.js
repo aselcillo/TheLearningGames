@@ -105,7 +105,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     $ionicActionSheet.show({
       titleText: $scope.actionsRewardsActionSheet,
       buttons: [
-        { text: $scope.buyRewardsActionSheetOption },
+        { text: '<i class="icon ion-card"></i>' + $scope.buyRewardsActionSheetOption },
       ],
       cancelText: $scope.cancelText,
       cancel: function() {
@@ -141,18 +141,18 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
   $scope.templateStudentHomePopover = '<ion-popover-view>'+
     '<ion-list class="list-elements">'+
-      '<ion-item class="itemPopover" ng-hide="archivedClassroomsToShow" ng-click="showArchivedClassrooms(true)">{{ \'SEE_ARCHIVED_CLASSES\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-show="archivedClassroomsToShow" ng-click="showArchivedClassrooms(false)">{{ \'HIDE_ARCHIVED_CLASSES\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverStudentHome()">{{ \'SETTINGS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-hide="archivedClassroomsToShow" ng-click="showArchivedClassrooms(true)"><i class="icon ion-eye"></i>&nbsp;&nbsp;{{ \'SEE_ARCHIVED_CLASSES\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-show="archivedClassroomsToShow" ng-click="showArchivedClassrooms(false)"><i class="icon ion-eye-disabled"></i>&nbsp;&nbsp;{{ \'HIDE_ARCHIVED_CLASSES\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverStudentHome()"><i class="icon ion-gear-a"></i>&nbsp;&nbsp;{{ \'SETTINGS\' | translate }}</ion-item>'+
     '</ion-list>'+
   '</ion-popover-view>';
 
   $scope.templateStudentDefaultPopover = '<ion-popover-view>'+
     '<ion-list class="list-elements">'+
-      '<ion-item class="itemPopover" ng-click="teamsForm(); closePopoverStudentDefault()">{{ \'SEE_TEAMS\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverStudentDefault()">{{ \'SEE_CLASS_SHOP\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverStudentDefault()">{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverStudentDefault()">{{ \'SETTINGS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="teamsForm(); closePopoverStudentDefault()"><i class="icon ion-person-stalker"></i>&nbsp;&nbsp;{{ \'SEE_TEAMS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverStudentDefault()"><i class="icon ion-bag"></i>&nbsp;&nbsp;{{ \'SEE_CLASS_SHOP\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverStudentDefault()"><i class="icon ion-map"></i>&nbsp;&nbsp;{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverStudentDefault()"><i class="icon ion-gear-a"></i>&nbsp;&nbsp;{{ \'SETTINGS\' | translate }}</ion-item>'+
     '</ion-list>'+
   '</ion-popover-view>';
 
@@ -617,7 +617,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       if (e.target.files.length > 0) {
         $ionicLoading.show();
         var file = e.target.files[0];
-        var fileExtension = $scope.file.name.split('.').pop().toLowerCase();
+        var fileExtension = file.name.split('.').pop().toLowerCase();
         if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
           var storageRef = firebase.storage().ref('Profile_Pictures/' + sessionUser.uid + '/profilePicture');
           var task = storageRef.put(file);
