@@ -106,11 +106,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $ionicActionSheet.show({
       titleText: $scope.actionTeacherHomePopover,
       buttons: [
-        { text: $scope.archiveClassroomsActionSheetOption },
-        { text: $scope.unarchiveClassroomsActionSheetOption },
-        { text: $scope.backupActionSheetOption },
+        { text: '<i class="icon ion-archive"></i>' + $scope.archiveClassroomsActionSheetOption },
+        { text: '<i class="icon ion-share"></i>' + $scope.unarchiveClassroomsActionSheetOption },
       ],
-      destructiveText: $scope.deleteClassroomsActionSheetOption,
+      destructiveText: '<i class="icon ion-trash-b"></i>' + $scope.deleteClassroomsActionSheetOption,
       cancelText: $scope.cancelText,
       cancel: function() {
         //CANCEL ACTION
@@ -126,8 +125,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           $scope.actionSheetTeacherHomeType = 'unArchive';
           $scope.toShow = false;
           $scope.showSelectClassroomsModal();
-        } else if (index === 2) {
-          //BACKUP ACTION
         }
         return true;
       },
@@ -147,12 +144,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $ionicActionSheet.show({
       titleText: $scope.actionClassroomStudentsActionSheet,
       buttons: [
-        { text: $scope.takeAttendanceActionSheetOption },
-        { text: $scope.evaluateStudentsActionSheetOption },
-        { text: $scope.sendMessageActionSheetOption },
-        { text: $scope.randomStudentActionSheetOption },
+        { text: '<i class="icon ion-funnel"></i>' + $scope.takeAttendanceActionSheetOption },
+        { text: '<i class="icon ion-wand"></i>' + $scope.evaluateStudentsActionSheetOption },
+        { text: '<i class="icon ion-email"></i>' + $scope.sendMessageActionSheetOption },
+        { text: '<i class="icon ion-shuffle"></i>' + $scope.randomStudentActionSheetOption },
       ],
-      destructiveText: $scope.deleteStudentsActionSheetOption,
+      destructiveText: '<i class="icon ion-trash-b"></i>' + $scope.deleteStudentsActionSheetOption,
       cancelText: $scope.cancelText,
       cancel: function() {
         //CANCEL ACTION
@@ -191,11 +188,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $ionicActionSheet.show({
       titleText: $scope.actionClassroomTeamsActionSheet,
       buttons: [
-        { text: $scope.evaluateTeamsActionSheetoption },
-        { text: $scope.sendMessageActionSheetOption },
-        { text: $scope.randomTeamActionSheetOption },
+        { text: '<i class="icon ion-wand"></i>' + $scope.evaluateTeamsActionSheetoption },
+        { text: '<i class="icon ion-email"></i>' + $scope.sendMessageActionSheetOption },
+        { text: '<i class="icon ion-shuffle"></i>' + $scope.randomTeamActionSheetOption },
       ],
-      destructiveText: $scope.deleteTeamsActionSheetOption,
+      destructiveText: '<i class="icon ion-trash-b"></i>' + $scope.deleteTeamsActionSheetOption,
       cancelText: $scope.cancelText,
       cancel: function() {
         //CANCEL ACTION
@@ -229,7 +226,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.showActionsheetItems = function() {
     $ionicActionSheet.show({
       titleText: $scope.actionItemsActionSheet,
-      destructiveText: $scope.deleteItemsActionSheetOption,
+      destructiveText: '<i class="icon ion-trash-b"></i>' + $scope.deleteItemsActionSheetOption,
       cancelText: $scope.cancelText,
       cancel: function() {
         //CANCEL ACTION
@@ -248,7 +245,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.showActionsheetAchievements = function() {
     $ionicActionSheet.show({
       titleText: $scope.actionAchievementsActionSheet,
-      destructiveText: $scope.deleteAchievementsActionSheetOption,
+      destructiveText: '<i class="icon ion-trash-b"></i>' + $scope.deleteAchievementsActionSheetOption,
       cancelText: $scope.cancelText,
       cancel: function() {
         //CANCEL ACTION
@@ -267,7 +264,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.showActionsheetRewards = function() {
     $ionicActionSheet.show({
       titleText: $scope.actionRewardsActionSheet,
-      destructiveText: $scope.deleteRewardsActionSheetOption,
+      destructiveText: '<i class="icon ion-trash-b"></i>' + $scope.deleteRewardsActionSheetOption,
       cancelText: $scope.cancelText,
       cancel: function() {
         //CANCEL ACTION
@@ -286,7 +283,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.showActionsheetMissions = function() {
     $ionicActionSheet.show({
       titleText: $scope.actionMissionsActionSheet,
-      destructiveText: $scope.deleteMissionsActionSheetOption,
+      destructiveText: '<i class="icon ion-trash-b"></i>' + $scope.deleteMissionsActionSheetOption,
       cancelText: $scope.cancelText,
       cancel: function() {
         //CANCEL ACTION
@@ -320,64 +317,53 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   $scope.templateTeacherHomePopover = '<ion-popover-view>'+
     '<ion-list class="list-elements">'+
-      '<ion-item class="itemPopover" ng-click="createDemoClassroom()">{{ \'CREATE_DEMO_CLASS\' | translate}}</ion-item>'+
-      '<ion-item class="itemPopover">{{ \'IMPORT\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover">{{ \'EXPORT\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-hide="archivedClassroomsToShow" ng-click="showArchivedClassrooms(true)">{{ \'SEE_ARCHIVED_CLASSES\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-show="archivedClassroomsToShow" ng-click="showArchivedClassrooms(false)">{{ \'HIDE_ARCHIVED_CLASSES\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverTeacherHome()">{{ \'SETTINGS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="createDemoClassroom()"><i class="icon ion-university"></i>&nbsp;&nbsp;{{ \'CREATE_DEMO_CLASS\' | translate}}</ion-item>'+
+      '<ion-item class="itemPopover" ng-hide="archivedClassroomsToShow" ng-click="showArchivedClassrooms(true)"><i class="icon ion-eye"></i>&nbsp;&nbsp;{{ \'SEE_ARCHIVED_CLASSES\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-show="archivedClassroomsToShow" ng-click="showArchivedClassrooms(false)"><i class="icon ion-eye-disabled"></i>&nbsp;&nbsp;{{ \'HIDE_ARCHIVED_CLASSES\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverTeacherHome()"><i class="icon ion-gear-a"></i>&nbsp;&nbsp;{{ \'SETTINGS\' | translate }}</ion-item>'+
     '</ion-list>'+
   '</ion-popover-view>';
 
   $scope.templateClassStudentsPopover = '<ion-popover-view>'+
     '<ion-list class="list-elements">'+
-      '<ion-item class="itemPopover" ng-click="closePopoverClassStudents()">{{ \'IMPORT\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="closePopoverClassStudents()">{{ \'EXPORT\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="showConfigureLevelsModal()">{{ \'CONFIGURE_LEVELS\' | translate }}</ion-item>'+
-      '<ion-toggle class="itemPopover" ng-model="checkboxStudentsView" ng-checked="classroom.studentsView" ng-click="setStudentsView(checkboxStudentsView)" toggle-class="toggle-calm">{{ \'SHOW_IMAGES\' | translate }}</ion-toggle>'+
-      '<ion-toggle class="itemPopover" ng-model="checkboxNotifications" ng-checked="classroom.notifications" ng-click="setNotifications(checkboxNotifications)" toggle-class="toggle-calm">{{ \'NOTIFICATIONS\' | translate }}</ion-toggle>'+
-      '<ion-toggle class="itemPopover" ng-model="checkboxOpening" ng-checked="classroom.open" ng-click="setOpening(checkboxOpening)" toggle-class="toggle-calm">{{ \'OPENING\' | translate }}</ion-toggle>'+
-      '<ion-item class="itemPopover" ng-click="showHashcodePopup()">{{ \'SEE_CLASS_HASHCODE\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="rulesForm(); closePopoverClassStudents()">{{ \'SEE_RULES\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverClassStudents()">{{ \'SEE_CLASS_SHOP\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverClassStudents()">{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverClassStudents()">{{ \'SETTINGS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="showConfigureLevelsModal()"><i class="icon ion-levels"></i>&nbsp;&nbsp;{{ \'CONFIGURE_LEVELS\' | translate }}</ion-item>'+
+      '<ion-toggle class="itemPopover" ng-model="checkboxStudentsView" ng-checked="classroom.studentsView" ng-click="setStudentsView(checkboxStudentsView)" toggle-class="toggle-calm"><i class="icon ion-image"></i>&nbsp;&nbsp;{{ \'SHOW_IMAGES\' | translate }}</ion-toggle>'+
+      '<ion-toggle class="itemPopover" ng-model="checkboxNotifications" ng-checked="classroom.notifications" ng-click="setNotifications(checkboxNotifications)" toggle-class="toggle-calm"><i class="icon ion-alert"></i>&nbsp;&nbsp;{{ \'NOTIFICATIONS\' | translate }}</ion-toggle>'+
+      '<ion-toggle class="itemPopover" ng-model="checkboxOpening" ng-checked="classroom.open" ng-click="setOpening(checkboxOpening)" toggle-class="toggle-calm"><i class="icon ion-unlocked"></i>&nbsp;&nbsp;{{ \'OPENING\' | translate }}</ion-toggle>'+
+      '<ion-item class="itemPopover" ng-click="showHashcodePopup()"><i class="icon ion-key"></i>&nbsp;&nbsp;{{ \'SEE_CLASS_HASHCODE\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="rulesForm(); closePopoverClassStudents()"><i class="icon ion-clipboard"></i>&nbsp;&nbsp;{{ \'SEE_RULES\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverClassStudents()"><i class="icon ion-bag"></i>&nbsp;&nbsp;{{ \'SEE_CLASS_SHOP\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverClassStudents()"><i class="icon ion-map"></i>&nbsp;&nbsp;{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverClassStudents()"><i class="icon ion-gear-a"></i>&nbsp;&nbsp;{{ \'SETTINGS\' | translate }}</ion-item>'+
     '</ion-list>'+
   '</ion-popover-view>';
 
   $scope.templateClassTeamsPopover = '<ion-popover-view>'+
     '<ion-list class="list-elements">'+
-      '<ion-item class="itemPopover" ng-click="closePopoverClassTeams()">{{ \'IMPORT\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="closePopoverClassTeams()">{{ \'EXPORT\' | translate }}</ion-item>'+
-      '<ion-toggle class="itemPopover" ng-model="modelcheckboxotifications" ng-checked="classroom.notifications" ng-click="setNotifications(checkboxNotifications)" toggle-class="toggle-calm">{{ \'NOTIFICATIONS\' | translate }}</ion-toggle>'+
-      '<ion-item class="itemPopover" ng-click="rulesForm(); closePopoverClassTeams()">{{ \'SEE_RULES\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverClassTeams()">{{ \'SEE_CLASS_SHOP\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverClassTeams()">{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverClassTeams()">{{ \'SETTINGS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="rulesForm(); closePopoverClassTeams()"><i class="icon ion-clipboard"></i>&nbsp;&nbsp;{{ \'SEE_RULES\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverClassTeams()"><i class="icon ion-bag"></i>&nbsp;&nbsp;{{ \'SEE_CLASS_SHOP\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverClassTeams()"><i class="icon ion-map"></i>&nbsp;&nbsp;{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverClassTeams()"><i class="icon ion-gear-a"></i>&nbsp;&nbsp;{{ \'SETTINGS\' | translate }}</ion-item>'+
     '</ion-list>'+
   '</ion-popover-view>';
 
   $scope.templateMissionsPopover = '<ion-popover-view>'+
     '<ion-list class="list-elements">'+
-      '<ion-item class="itemPopover" ng-click="closePopoverMissions()">{{ \'IMPORT\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="closePopoverMissions()">{{ \'EXPORT\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-hide="finishedMissionsToShow" ng-click="showFinishedMissions(true)">{{ \'SEE_MISSIONS_ENDED\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-show="finishedMissionsToShow" ng-click="showFinishedMissions(false)">{{ \'HIDE_MISSIONS_ENDED\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="rulesForm(); closePopoverMissions()">{{ \'SEE_RULES\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverMissions()">{{ \'SEE_CLASS_SHOP\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverMissions()">{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverMissions()">{{ \'SETTINGS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-hide="finishedMissionsToShow" ng-click="showFinishedMissions(true)"><i class="icon ion-eye"></i>&nbsp;&nbsp;{{ \'SEE_MISSIONS_ENDED\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-show="finishedMissionsToShow" ng-click="showFinishedMissions(false)"><i class="icon ion-eye-disabled"></i>&nbsp;&nbsp;{{ \'HIDE_MISSIONS_ENDED\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="rulesForm(); closePopoverMissions()"><i class="icon ion-clipboard"></i>&nbsp;&nbsp;{{ \'SEE_RULES\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverMissions()"><i class="icon ion-bag"></i>&nbsp;&nbsp;{{ \'SEE_CLASS_SHOP\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverMissions()"><i class="icon ion-map"></i>&nbsp;&nbsp;{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverMissions()"><i class="icon ion-gear-a"></i>&nbsp;&nbsp;{{ \'SETTINGS\' | translate }}</ion-item>'+
     '</ion-list>'+
   '</ion-popover-view>';
 
   $scope.templateTeacherDefaultPopover = '<ion-popover-view>'+
     '<ion-list class="list-elements">'+
-      '<ion-item class="itemPopover" ng-click="closePopoverTeacherDefault()">{{ \'IMPORT\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="closePopoverTeacherDefault()">{{ \'EXPORT\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="rulesForm(); closePopoverTeacherDefault()">{{ \'SEE_RULES\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverTeacherDefault()">{{ \'SEE_CLASS_SHOP\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverTeacherDefault()">{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverTeacherDefault()">{{ \'SETTINGS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="rulesForm(); closePopoverTeacherDefault()"><i class="icon ion-clipboard"></i>&nbsp;&nbsp;{{ \'SEE_RULES\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverTeacherDefault()"><i class="icon ion-bag"></i>&nbsp;&nbsp;{{ \'SEE_CLASS_SHOP\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverTeacherDefault()"><i class="icon ion-map"></i>&nbsp;&nbsp;{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverTeacherDefault()"><i class="icon ion-gear-a"></i>&nbsp;&nbsp;{{ \'SETTINGS\' | translate }}</ion-item>'+
     '</ion-list>'+
   '</ion-popover-view>';
 
@@ -2111,6 +2097,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     for (var studentId in classroom.students) {
       var studentClassToDeleteRef = firebase.database().ref('students/' + studentId + '/classrooms/' + classroom.id);
       studentClassToDeleteRef.remove();
+
+      var imagesRef = firebase.storage().ref().child('Profile_Pictures/' + studentId + '/' + classroom.id + '/classroomPicture');
+      imagesRef.delete().then(function() {
+      }).catch(function(error) {
+      });
     }
 
     var teacherClassToDelefeRef = firebase.database().ref('teachers/' + sessionUser.uid + '/classrooms/' + classroom.id);
@@ -2124,7 +2115,21 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     
     for (var itemId in classroom.items) {
       var classItemToDeleteRef = firebase.database().ref('items/' + itemId);
-      classItemToDeleteRef.remove();
+      classItemToDeleteRef.once('value').then(function(snapshot) {
+        var item = snapshot.val();
+        for (var achievementId in item.achievements) {
+          var imagesRef = firebase.storage().ref().child('Achievement_Pictures/' + achievementId + '/achievementPicture');
+          imagesRef.delete().then(function() {
+            console.log('Funciona');
+            console.log(item);
+          }).catch(function(error) {
+            console.log('Error');
+            console.log(item);
+          });
+        }
+        classItemToDeleteRef.remove();
+      });
+
       for (var studentId in classroom.students) {
         var studentItemToDeleteRef = firebase.database().ref('students/' + studentId + '/items/' + itemId);
         studentItemToDeleteRef.remove();
@@ -2143,6 +2148,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     for (var teamId in classroom.teams) {
       var classTeamToDeleteRef = firebase.database().ref('teams/' + teamId);
       classTeamToDeleteRef.remove();
+
+      var imagesRef = firebase.storage().ref().child('Team_Pictures/' + teamId + '/teamPicture');
+      imagesRef.delete().then(function() {
+      }).catch(function(error) {
+      });
+
       for (var studentId in classroom.students) {
         var studentTeamToDeleteRef = firebase.database().ref('students/' + studentId + '/teams/' + teamId);
         studentTeamToDeleteRef.remove();
@@ -2409,7 +2420,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       if (e.target.files.length > 0) {
         $ionicLoading.show();
         var file = e.target.files[0];
-        var fileExtension = $scope.file.name.split('.').pop().toLowerCase();
+        var fileExtension = file.name.split('.').pop().toLowerCase();
         if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
           var storageRef = firebase.storage().ref('Profile_Pictures/' + sessionUser.uid + '/profilePicture');
           var task = storageRef.put(file);
@@ -2652,7 +2663,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       if (e.target.files.length > 0) {
         $ionicLoading.show();
         var file = e.target.files[0];
-        var fileExtension = $scope.file.name.split('.').pop().toLowerCase();
+        var fileExtension = file.name.split('.').pop().toLowerCase();
         if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
           var storageRef = firebase.storage().ref('Profile_Pictures/' + $scope.student.id + '/' + $scope.classroom.id + '/classroomPicture');
           var task = storageRef.put(file);
@@ -2701,7 +2712,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             var student = snapshot.val();
             student.name = CryptoJS.AES.decrypt(student.name, student.id).toString(CryptoJS.enc.Utf8);
             student.surname =CryptoJS.AES.decrypt(student.surname, student.id).toString(CryptoJS.enc.Utf8);
-            if (student.classrooms != undefined) {
+            if (student.classrooms != undefined && student.classrooms[$scope.classroom.id] != undefined) {
               student.picture = student.classrooms[$scope.classroom.id].picture;
             }
             for (j = 0 ; j < $scope.students.length ; j++) {
@@ -2899,6 +2910,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       var studentMissionsToDeleteRef = firebase.database().ref('students/' + student.id + '/missions/' + $scope.missions[mission].id);
       studentMissionsToDeleteRef.remove();
     }
+
+    var imagesRef = firebase.storage().ref().child('Profile_Pictures/' + student.id + '/' + $scope.classroom.id + '/classroomPicture');
+    imagesRef.delete().then(function() {
+    }).catch(function(error) {
+    });
   }
 
   /**
@@ -3280,6 +3296,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     for (var achievementId in item.achievements) {
       var itemAchievementsToDeleteRef = firebase.database().ref('achievements/' + achievementId);
       itemAchievementsToDeleteRef.remove();
+
+      var imagesRef = firebase.storage().ref().child('Achievement_Pictures/' + achievementId + '/achievementPicture');
+      imagesRef.delete().then(function() {
+      }).catch(function(error) {
+      });
     }
 
     $scope.getItems();
@@ -3685,7 +3706,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       if (e.target.files.length > 0) {
         $ionicLoading.show();
         var file = e.target.files[0];
-        var fileExtension = $scope.file.name.split('.').pop().toLowerCase();
+        var fileExtension = file.name.split('.').pop().toLowerCase();
         if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
           var storageRef = firebase.storage().ref('Achievement_Pictures/' + $scope.achievement.id + '/achievementPicture');
           var task = storageRef.put(file);
@@ -3870,6 +3891,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var achievementToDeleteRef = firebase.database().ref('achievements/' + achievement.id);
     achievementToDeleteRef.remove();
 
+    var imagesRef = firebase.storage().ref().child('Achievement_Pictures/' + achievement.id + '/achievementPicture');
+    imagesRef.delete().then(function() {
+    }).catch(function(error) {
+    });
+
     for (var student in $scope.students) {
       if ($scope.students[student].items != undefined && $scope.students[student].items[$scope.item.id] != undefined 
         && $scope.students[student].items[$scope.item.id].achievements != undefined) {
@@ -4035,7 +4061,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       if (e.target.files.length > 0) {
         $ionicLoading.show();
         var file = e.target.files[0];
-        var fileExtension = $scope.file.name.split('.').pop().toLowerCase();
+        var fileExtension = file.name.split('.').pop().toLowerCase();
         if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
           var storageRef = firebase.storage().ref('Team_Pictures/' + $scope.team.id + '/teamPicture');
           var task = storageRef.put(file);
@@ -4293,6 +4319,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
     var classroomTeamToDelete = firebase.database().ref('classrooms/' + $scope.classroom.id + '/teams/' + team.id);
     classroomTeamToDelete.remove();
+
+    var imagesRef = firebase.storage().ref().child('Team_Pictures/' + team.id + '/teamPicture');
+    imagesRef.delete().then(function() {
+    }).catch(function(error) {
+    });
 
     $scope.getTeams();
   }
