@@ -44,7 +44,11 @@
               <img src={{teacher.avatar}} class="avatar">
             </ion-item>
           </div>
-          <input class="button button-light button-block button-outline" type="file" id="inputAvatar" ng-click="updateTeacherAvatar()">
+          <label ng-show="!isIOS" class="button button-calm inputfile">
+            {{ 'SELECT_IMAGE' | translate }}
+            <input class="button button-light button-block button-outline" type="file" id="inputAvatar" ng-click="updateTeacherAvatar()">
+          </label>
+          <input class="button button-light button-block button-outline" ng-show="isIOS" type="file" id="inputAvatar" ng-click="updateTeacherAvatar()">
           <label class="item item-input list-elements" id="signUp-input3">
             <span class="inputLabelProfile">
               <i class="icon ion-person"></i>&nbsp;&nbsp;{{ 'NAME' | translate }}
@@ -296,7 +300,11 @@
               <img src={{achievement.badge}} class="avatar">
             </ion-item>
           </div>
-          <input class="button button-light button-block button-outline" type="file" id="inputAchievementPicture" ng-click="updateAchievementPicture()" ng-disabled="isArchivedClassroom">
+          <label ng-show="!isIOS" class="button button-calm inputfile">
+            {{ 'SELECT_IMAGE' | translate }}
+            <input class="button button-light button-block button-outline" type="file" id="inputAchievementPicture" ng-click="updateAchievementPicture()" ng-disabled="isArchivedClassroom">
+          </label>
+          <input class="button button-light button-block button-outline" ng-show="isIOS" type="file" id="inputAchievementPicture" ng-click="updateAchievementPicture()" ng-disabled="isArchivedClassroom">
           <label class="item item-input list-elements">
             <span class="input-label">{{ 'NAME' | translate }} </span>
             <input type="text" placeholder="{{achievement.name}}" ng-model="modelAchievement.name" ng-disabled="isArchivedClassroom">

@@ -150,7 +150,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   $scope.templateStudentDefaultPopover = '<ion-popover-view>'+
     '<ion-list class="list-elements">'+
       '<ion-item class="itemPopover" ng-click="teamsForm(); closePopoverStudentDefault()"><i class="icon ion-person-stalker"></i>&nbsp;&nbsp;{{ \'SEE_TEAMS\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverStudentDefault()"><i class="icon ion-bag"></i>&nbsp;&nbsp;{{ \'SEE_CLASS_SHOP\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverStudentDefault()"><i class="icon ion-bag"></i>&nbsp;&nbsp;{{ \'REWARD_SHOP\' | translate }}</ion-item>'+
       '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverStudentDefault()"><i class="icon ion-map"></i>&nbsp;&nbsp;{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
       '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverStudentDefault()"><i class="icon ion-gear-a"></i>&nbsp;&nbsp;{{ \'SETTINGS\' | translate }}</ion-item>'+
     '</ion-list>'+
@@ -335,7 +335,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
           '<p>{{(student.rewards[reward.id].amount != undefined) ? student.rewards[reward.id].amount : 0}}</p>'+
         '</span>'+
       '</label>'+
-      '<button class="button button-positive button-block" ng-show="possessedReward" ng-click="consumeReward(reward)">{{ \'USE_REWARD\' | translate }}</button>'+
+      '<button class="button button-positive button-block" ng-show="possessedReward" ng-disabled="isArchivedClassroom" ng-click="consumeReward(reward)">{{ \'USE_REWARD\' | translate }}</button>'+
       '<button ng-click="closeModalRewardDialog()" class="button button-positive button-block icon ion-arrow-return-left"></button>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -586,6 +586,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   });
 
   $scope.defaultAvatar = 'img/userDefaultAvatar.png';
+
+  $scope.isArchivedClassroom = false;
+  $scope.isIOS = ionic.Platform.isIOS() || ionic.Platform.isIPad();
   
   var itemModal;
   var sessionUser
@@ -643,7 +646,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
             }
           });
         } else {
-          alert($scope.fileInvalidAlert);
+          $ionicPopup.alert({
+            template: $scope.fileInvalidAlert,
+          });
         }
       }
     });
@@ -678,7 +683,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     }
 
     $scope.settingsForm();
-    alert($scope.dataChangedAlert);
+    $ionicPopup.alert({
+      template: $scope.dataChangedAlert,
+    });
   }
 
   /**
@@ -687,7 +694,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   $scope.updateStudentPassword = function(newPassword) {
     sessionUser.updatePassword(newPassword).then(function() {
       $scope.settingsForm();
-      alert($scope.passwordChangedAlert);
+      $ionicPopup.alert({
+        template: $scope.passwordChangedAlert,
+      });
     });
   }
 
@@ -699,7 +708,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       var studentEmailRef = firebase.database().ref('students/' + sessionUser.uid + '/email');
       studentEmailRef.set(email);
       $scope.settingsForm();
-      alert($scope.emailChangedAlert);
+      $ionicPopup.alert({
+        template: $scope.emailChangedAlert,
+      });
     });
   }
 
@@ -794,7 +805,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
           var classToEditRef = firebase.database().ref('classrooms/' + classToAdd.id + '/students/' + $scope.student.$id);
           classToEditRef.set(true);
         } else {
-          alert($scope.classroomClosedAlert);
+          $ionicPopup.alert({
+            template: $scope.classroomClosedAlert,
+          });
         }
       }).then(function() {
         $scope.getClassrooms();
@@ -1262,7 +1275,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
       $scope.getRewards();
     } else {
-      alert($scope.notEnoughPointsAlert + ' ' + reward.name);
+      $ionicPopup.alert({
+        template: $scope.notEnoughPointsAlert + ' ' + reward.name,
+      });
     }
   }
 

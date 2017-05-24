@@ -102,7 +102,9 @@ function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading, $trans
               'avatar' : avatar,
             }).then(function() {
               sessionUser.sendEmailVerification();
-              alert($scope.checkEmailToVerify);
+              $ionicPopup.alert({
+                template: $scope.checkEmailToVerify,
+              });
               $state.go('login');
               firebase.auth().signOut();
               $scope.modelSignUp = {};
@@ -120,7 +122,9 @@ function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading, $trans
               'emailVerified' : false,
             }).then(function() {
               sessionUser.sendEmailVerification();
-              alert($scope.checkEmailToVerify);
+              $ionicPopup.alert({
+                template: $scope.checkEmailToVerify,
+              });
               $state.go('login');
               firebase.auth().signOut();
               $scope.modelSignUp = {};
@@ -133,16 +137,24 @@ function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading, $trans
       if (error) {
         switch (error.code) {
     			case "auth/weak-password":
-    				alert($scope.weakPasswordAlert);
+            $ionicPopup.alert({
+              template: $scope.weakPasswordAlert,
+            });
     				break;
     			case "auth/email-already-in-use":
-    				alert($scope.errorEmailUsedAlert);
+            $ionicPopup.alert({
+              template: $scope.errorEmailUsedAlert,
+            });
     				break;
     			case "auth/invalid-email":
-    				alert($scope.emailInvalidAlert);
+            $ionicPopup.alert({
+              template: $scope.emailInvalidAlert,
+            });
     				break;
     			default:
-    				alert($scope.errorUnknowAlert);
+            $ionicPopup.alert({
+              template: $scope.errorUnknowAlert,
+            });
         }
         $ionicLoading.hide();
 		  }
