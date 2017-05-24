@@ -131,11 +131,15 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
             $scope.allFalseForm();
             $ionicLoading.hide();
           } else if (sessionUser.emailVerified == false && teachersArray.$getRecord(sessionUser.uid)){
-            alert($scope.verifyEmailAlert);
+            $ionicPopup.alert({
+              template: $scope.verifyEmailAlert,
+            });
             firebase.auth().signOut();
             $ionicLoading.hide();
           } else {
-            alert($scope.accountTeacherNotExistAlert);
+            $ionicPopup.alert({
+              template: $scope.accountTeacherNotExistAlert,
+            });
             $ionicLoading.hide();
           }
         });
@@ -147,16 +151,24 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
       if (error) {
         switch (error.code) {
     			case "auth/wrong-password":
-    				alert($scope.wronCredentialsAlert);
+            $ionicPopup.alert({
+              template: $scope.wronCredentialsAlert,
+            });
     				break;
     			case "auth/user-not-found":
-    				alert($scope.userNotFoundAlert);
+            $ionicPopup.alert({
+              template: $scope.userNotFoundAlert,
+            });
     				break;
     			case "auth/invalid-email":
-    				alert($scope.emailInvalidAlert);
+            $ionicPopup.alert({
+              template: $scope.emailInvalidAlert,
+            });
     				break;
     			default:
-    				alert($scope.errorUnknowAlert);
+            $ionicPopup.alert({
+              template: scope.errorUnknowAlert,
+            });
     				break;
   			}
         $ionicLoading.hide();
@@ -192,12 +204,16 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
               $scope.allFalseForm();
               $ionicLoading.hide();
             } else {
-              alert($scope.verifyEmailAlert);
+              $ionicPopup.alert({
+                template: $scope.verifyEmailAlert,
+              });
               firebase.auth().signOut();
               $ionicLoading.hide();
             }
           } else {
-            alert($scope.accountStudentNotExistAlert);
+            $ionicPopup.alert({
+              template: $scope.accountStudentNotExistAlert,
+            });
             $ionicLoading.hide();
           }
         });
@@ -209,16 +225,24 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
       if (error) {
         switch (error.code) {
     			case "auth/wrong-password":
-    				alert($scope.wronCredentialsAlert);
+            $ionicPopup.alert({
+              template: $scope.wronCredentialsAlert,
+            });
     				break;
     			case "auth/user-not-found":
-    				alert($scope.userNotFoundAlert);
+            $ionicPopup.alert({
+              template: $scope.userNotFoundAlert,
+            });
     				break;
     			case "auth/invalid-email":
-    				alert($scope.emailInvalidAlert);
+            $ionicPopup.alert({
+              template: $scope.emailInvalidAlert,
+            });
     				break;
     			default:
-    				alert($scope.errorUnknowAlert);
+            $ionicPopup.alert({
+              template: $scope.errorUnknowAlert,
+            });
     				break;
     		}
         $ionicLoading.hide();

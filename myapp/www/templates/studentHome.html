@@ -42,7 +42,11 @@
           <ion-item class ="teacherAvatar">
             <img src={{student.avatar}} class="avatar">
           </ion-item>
-          <input class="button button-light button-block button-outline" type="file" id="inputAvatar" ng-click="updateStudentAvatar()">
+          <label ng-show="!isIOS" class="button button-calm inputfile">
+            {{ 'SELECT_IMAGE' | translate }}
+            <input class="button button-light button-block button-outline" type="file" id="inputAvatar" ng-click="updateStudentAvatar()">
+          </label>
+          <input class="button button-light button-block button-outline" ng-show="isIOS" type="file" id="inputAvatar" ng-click="updateStudentAvatar()">
           <label class="item item-input list-elements" id="signUp-input3">
             <span class="inputLabelProfile">
               <i class="icon ion-person"></i>&nbsp;&nbsp;{{ 'NAME' | translate }}
