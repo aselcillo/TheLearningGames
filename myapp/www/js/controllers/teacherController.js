@@ -812,7 +812,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           '<img src="{{!classroom.studentsView ? student.avatar : student.picture}}" class="avatar">'+
         '</div>'+
       '</div>'+
-      '<label ng-show="!isIOS" class="button button-calm inputfile" ng-show="classroom.studentsView">'+
+      '<label ng-show="!isIOS" class="button button-calm inputfile" ng-show="classroom.studentsView" ng-disabled="isArchivedClassroom">'+
         '{{ \'SELECT_IMAGE\' | translate }}'+
         '<input class="button button-light button-block button-outline" type="file" id="inputStudentPicture" ng-click="updateStudentPicture()" ng-disabled="isArchivedClassroom">'+
       '</label>'+
@@ -887,7 +887,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             '<img src={{team.picture}} class="avatar">'+
           '</div>'+
         '</div>'+
-        '<input class="button button-light button-block button-outline" type="file" id="inputTeamPicture" ng-click="updateTeamPicture()" ng-disabled="isArchivedClassroom">'+
+        '<label ng-disabled="isArchivedClassroom" ng-show="!isIOS" class="button button-calm inputfile">'+
+          '{{ \'SELECT_IMAGE\' | translate }}'+
+          '<input class="button button-light button-block button-outline" type="file" id="inputTeamPicture" ng-click="updateTeamPicture()">'+
+        '</label>'+
+        '<input class="button button-light button-block button-outline" ng-show="isIOS" type="file" id="inputTeamPicture" ng-click="updateTeamPicture()" ng-disabled="isArchivedClassroom">'+
         '<form id="teamDialogForm">'+
           '<label class="item item-input list-elements">'+
             '<span class="input-label">{{ \'NAME\' | translate }}</span>'+
@@ -926,7 +930,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             '<img src={{defaultTeamAvatar}} class="avatar">'+
           '</div>'+
         '</div>'+
-        '<input class="button button-light button-block button-outline" type="file" id="inputNewTeamPicture" ng-click="updateInputFile(\'inputNewTeamPicture\')">'+
+        '<label ng-show="!isIOS" class="button button-calm inputfile">'+
+          '{{ \'SELECT_IMAGE\' | translate }}'+
+          '<input class="button button-light button-block button-outline" type="file" id="inputNewTeamPicture" ng-click="updateInputFile(\'inputNewTeamPicture\')">'+
+        '</label>'+
+        '<input class="button button-light button-block button-outline" ng-show="isIOS" type="file" id="inputNewTeamPicture" ng-click="updateInputFile(\'inputNewTeamPicture\')">'+
         '<form id="newTeamForm">'+
           '<label class="item item-input list-elements">'+
             '<span class="input-label">{{ \'NAME\' | translate }}</span>'+
@@ -1102,7 +1110,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         '<label ng-show="!isIOS" class="button button-calm inputfile">'+
           '{{ \'SELECT_IMAGE\' | translate }}'+
           '<input class="button button-light button-block button-outline" type="file" id="inputNewAchievementBadge" ng-click="updateInputFile(\'inputNewAchievementBadge\')">'+
-        '</label>'
+        '</label>'+
         '<input class="button button-light button-block button-outline" ng-show="isIOS" type="file" id="inputNewAchievementBadge" ng-click="updateInputFile(\'inputNewAchievementBadge\')">'+
         '<form id="newAchievementForm" class="list">'+
           '<ion-list>'+
