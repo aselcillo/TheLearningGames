@@ -9,7 +9,14 @@
 */
 
 /* Background */
-ion-view, ion-modal-view{ background:url('../img/bg.jpg') no-repeat; background-size: cover; }
+/*ion-view, ion-modal-view{ background:url('../img/bg.jpg') no-repeat; background-size: cover; }*/
+.scroll-content {
+	background:url('../img/bg.jpg') no-repeat; background-size: cover;
+}
+
+ion-nav-bar {
+	display: none;
+}
 
 /* Logout button */
 .logout{ color: rgba(255, 255, 255, 0.8) !important; }

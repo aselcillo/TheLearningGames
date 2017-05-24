@@ -26,9 +26,6 @@
           </ion-item>
         </ion-list>
       </div>
-      <button class="button button-positive button-float addButton" ng-click="showActionsheetTeacherHome()">
-        <i class="icon ion-plus"></i>
-      </button>
     </div>
 
     <!-- Profile Page -->
@@ -160,9 +157,6 @@
       <div class="button-bar action_buttons">
         <button id="students-button44" id="students-btn44" class="button button-calm  button-block" ng-click="showModalNewStudentDialog()" ng-disabled="isArchivedClassroom">{{ 'ADD_STUDENT' | translate }}</button>
       </div>
-      <button class="button button-positive button-float addButton" ng-disabled="isArchivedClassroom" ng-click="showActionsheetClassStudents()">
-        <i class="icon ion-plus"></i>
-      </button>
     </div>
 
     <!-- Class Teams Page -->
@@ -195,9 +189,6 @@
       <div class="button-bar action_buttons">
         <button id="teams-button44" ng-click="showModalQuantityRandomTeams()" id="teams-btn44" class="button button-calm  button-block" ng-disabled="isArchivedClassroom">{{ 'CREATE_RANDOM_TEAMS' | translate }}</button>
       </div>
-      <button class="button button-positive button-float addButton" ng-click="showActionsheetClassTeams()" ng-disabled="isArchivedClassroom">
-        <i class="icon ion-plus"></i>
-      </button>
     </div>
 
     <!-- Rules Page -->
@@ -223,9 +214,6 @@
       <div class="button-bar action_buttons">
         <button id="items-button67" ng-click="showModalNewItem()" class="button button-calm  button-block" ng-disabled="isArchivedClassroom">{{ 'ADD_ITEM' | translate }}</button>
       </div>
-      <button class="button button-positive button-float addButton" ng-click="showActionsheetItems()" ng-disabled="isArchivedClassroom">
-        <i class="icon ion-plus"></i>
-      </button>
     </div>
 
     <!-- Items Page -->
@@ -285,9 +273,6 @@
       <div class="button-bar action_buttons">
         <button id="achievements-button91" ng-click="showModalNewAchievement()" class="button button-calm  button-block" ng-disabled="isArchivedClassroom">{{ 'ADD_ACHIEVEMENT' | translate }}</button>
       </div>
-      <button class="button button-positive button-float addButton" ng-click="showActionsheetAchievements()" ng-disabled="isArchivedClassroom">
-          <i class="icon ion-plus"></i>
-      </button>
     </div>
 
     <!-- Achievements Page -->
@@ -368,9 +353,6 @@
           </ion-item>
         </ion-list>
       </div>
-      <button class="button button-positive button-float addButton" ng-click="showActionsheetMissions()" ng-disabled="isArchivedClassroom">
-        <i class="icon ion-plus"></i>
-      </button>
     </div>
 
     <!-- Rewards Page -->
@@ -395,10 +377,40 @@
       <div class="button-bar action_buttons">
         <button id="class-button31" ng-click="showModalNewReward()" class="button button-calm  button-block" ng-disabled="isArchivedClassroom">{{ 'ADD_REWARD' | translate }}</button>
       </div>
-      <button class="button button-positive button-float addButton" ng-click="showActionsheetRewards()" ng-disbaled="isArchivedClassroom">
-        <i class="icon ion-plus"></i>
-      </button>
     </div>
 
   </ion-content>
+
+  <ion-footer>
+
+    <button ng-show="teacherHomeView" class="button button-positive button-float addButton" ng-click="showActionsheetTeacherHome()">
+      <i class="icon ion-plus"></i>
+    </button>
+
+    <button ng-show="classStudentsView" class="button button-positive button-float addButton" ng-disabled="isArchivedClassroom" ng-click="showActionsheetClassStudents()">
+      <i class="icon ion-plus"></i>
+    </button>
+
+    <button ng-show="classTeamsView" class="button button-positive button-float addButton" ng-click="showActionsheetClassTeams()" ng-disabled="isArchivedClassroom">
+      <i class="icon ion-plus"></i>
+    </button>
+
+    <button ng-show="rulesView" class="button button-positive button-float addButton" ng-click="showActionsheetItems()" ng-disabled="isArchivedClassroom">
+      <i class="icon ion-plus"></i>
+    </button>
+
+    <button ng-show="itemsView" class="button button-positive button-float addButton" ng-click="showActionsheetAchievements()" ng-disabled="isArchivedClassroom">
+        <i class="icon ion-plus"></i>
+    </button>
+
+    <button ng-show="missionsView" class="button button-positive button-float addButton" ng-click="showActionsheetMissions()" ng-disabled="isArchivedClassroom">
+      <i class="icon ion-plus"></i>
+    </button>
+
+    <button ng-show="rewardShopView" class="button button-positive button-float addButton" ng-click="showActionsheetRewards()" ng-disbaled="isArchivedClassroom">
+      <i class="icon ion-plus"></i>
+    </button>
+
+  </ion-footer>
+
 </ion-view>
