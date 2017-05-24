@@ -340,6 +340,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   $scope.templateClassTeamsPopover = '<ion-popover-view>'+
     '<ion-list class="list-elements">'+
+      '<ion-item class="itemPopover" ng-click="showConfigureLevelsModal()"><i class="icon ion-levels"></i>&nbsp;&nbsp;{{ \'CONFIGURE_LEVELS\' | translate }}</ion-item>'+
+      '<ion-toggle class="itemPopover" ng-model="checkboxNotifications" ng-checked="classroom.notifications" ng-click="setNotifications(checkboxNotifications)" toggle-class="toggle-calm" ng-disabled="isArchivedClassroom"><i class="icon ion-alert"></i>&nbsp;&nbsp;{{ \'NOTIFICATIONS\' | translate }}</ion-toggle>'+
+      '<ion-toggle class="itemPopover" ng-model="checkboxOpening" ng-checked="classroom.open" ng-click="setOpening(checkboxOpening)" toggle-class="toggle-calm" ng-disabled="isArchivedClassroom"><i class="icon ion-unlocked"></i>&nbsp;&nbsp;{{ \'OPENING\' | translate }}</ion-toggle>'+
+      '<ion-item class="itemPopover" ng-click="showHashcodePopup()"><i class="icon ion-key"></i>&nbsp;&nbsp;{{ \'SEE_CLASS_HASHCODE\' | translate }}</ion-item>'+
       '<ion-item class="itemPopover" ng-click="rulesForm(); closePopoverClassTeams()"><i class="icon ion-clipboard"></i>&nbsp;&nbsp;{{ \'SEE_RULES\' | translate }}</ion-item>'+
       '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverClassTeams()"><i class="icon ion-bag"></i>&nbsp;&nbsp;{{ \'REWARD_SHOP\' | translate }}</ion-item>'+
       '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverClassTeams()"><i class="icon ion-map"></i>&nbsp;&nbsp;{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
@@ -1429,7 +1433,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.secondaryMenuModal.show();  
   }
   $scope.closeModalSecondary = function() {
-	$scope.clearFormSecundaryModal();
+    $scope.clearFormSecundaryModal();
     $scope.secondaryMenuModal.hide();
     if (modalFirst != undefined) {
       if (modalFirst == 1)
@@ -2130,21 +2134,23 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var classToDeleteRef = firebase.database().ref('classrooms/' + classroom.id);
     classToDeleteRef.remove();
     
+    var itemIdList = [];
     for (var itemId in classroom.items) {
+      itemIdList.push(itemId);
       var classItemToDeleteRef = firebase.database().ref('items/' + itemId);
       classItemToDeleteRef.once('value').then(function(snapshot) {
         var item = snapshot.val();
         for (var achievementId in item.achievements) {
+          var achievementToDeleteRef = firebase.database().ref('achievements/' + achievementId);
+          achievementToDeleteRef.remove();
           var imagesRef = firebase.storage().ref().child('Achievement_Pictures/' + achievementId + '/achievementPicture');
           imagesRef.delete().then(function() {
-            console.log('Funciona');
-            console.log(item);
           }).catch(function(error) {
-            console.log('Error');
-            console.log(item);
           });
         }
-        classItemToDeleteRef.remove();
+        if (item.id === itemId) {
+          $scope.deleteItemReferences(itemIdList);
+        }
       });
 
       for (var studentId in classroom.students) {
@@ -2187,6 +2193,19 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
 
     $scope.getClassrooms();
+  }
+
+  /**
+    @itemIdList: List with all the items' ids to delete.
+    Deletes all the items' references on the firebase database. This function is apart of the previous function because
+    it has to handle with an event, making the iteration useless to iterate between items' ids. So they are stored in an
+    array to being deleted here.
+  */
+  $scope.deleteItemReferences = function(itemIdList) {
+    for (var element in itemIdList) {
+      var classItemToDeleteRef = firebase.database().ref('items/' + itemIdList[element]);
+      classItemToDeleteRef.remove();
+    }
   }
 
   /**

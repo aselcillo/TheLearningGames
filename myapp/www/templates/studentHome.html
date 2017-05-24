@@ -312,9 +312,6 @@
           </ion-item>
         </ion-list>
       </div>
-      <button class="button button-positive button-float addButton" ng-click="showActionsheetRewards()">
-        <i class="icon ion-plus"></i>
-      </button>
     </div>
 
     <!-- Missions Page -->
@@ -339,4 +336,11 @@
     </div>
     
   </ion-content>
+  <ion-footer>
+
+    <button ng-show="rewardShopView" ng-disabled="isArchivedClassroom" class="button button-positive button-float addButton" ng-click="showActionsheetRewards()">
+      <i class="icon ion-plus"></i>
+    </button>
+
+  </ion-footer>
 </ion-view>
