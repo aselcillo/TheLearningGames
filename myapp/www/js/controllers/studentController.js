@@ -322,12 +322,6 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       '</label>'+
       '<label class="item item-input list-elements">'+
         '<span class="inputLabelProfile">'+
-          '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;{{ \'PERMISSION\' | translate }}'+
-          '<p>{{reward.permission}}</p>'+
-        '</span>'+
-      '</label>'+
-      '<label class="item item-input list-elements">'+
-        '<span class="inputLabelProfile">'+
           '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;{{ \'PRICE\' | translate }}'+
           '<p>{{reward.price}}</p>'+
         '</span>'+
@@ -519,7 +513,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   
   /**
     Checks if there is a user signed up in the application.
-    It is used to prevent the users to enter this page without permission.
+    It is used to prevent the users to enter this page without.
   */
   if (firebase.auth().currentUser === null) {
     $state.go('login');
@@ -594,7 +588,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   $scope.isIOS = ionic.Platform.isIOS() || ionic.Platform.isIPad();
   
   var itemModal;
-  var sessionUser
+  var sessionUser;
+
+  $scope.hasLevel = false;
   
   var rootRef = firebase.database().ref();
 
@@ -800,6 +796,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     Adds that classroom's reference in the student's tree on the firebase database and all the information needed in any classroom.
   */
   $scope.addClass = function(hashcode) {
+    hashcode = hashcode.toUpperCase();
     var hashcodesArray = $firebaseArray(hashcodesRef);
     hashcodesArray.$loaded(function() {
       var classToAdd = hashcodesArray.$getRecord(hashcode);
@@ -927,10 +924,10 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
           if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
             $scope.$apply();
           }
-          $scope.getStudentLevel();
         });
       }
     });
+    $scope.getStudentLevel();
   }
 
   /**
@@ -967,7 +964,11 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       for (var element in classroomLevelsArray) {
         if ($scope.student.classrooms[$scope.classroom.id].totalPoints >= classroomLevelsArray[element].requiredPoints) {
           $scope.studentLevel = classroomLevelsArray[element];
+          $scope.hasLevel = true;
         }
+      }
+      if($scope.studentLevel.title == undefined) {
+        $scope.hasLevel = false;
       }
     });
   }
