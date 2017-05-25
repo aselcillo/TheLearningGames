@@ -148,7 +148,8 @@
         <label class="item item-input list-elements" id="signUp-input3">
           <span class="inputLabelProfile">
             <i class="icon ion-thumbsup"></i>&nbsp;&nbsp;{{ 'LEVEL_IN_CLASS' | translate }}:
-            <span>{{studentLevel.level}}&nbsp;({{studentLevel.title}})</span>
+            <span ng-show="hasLevel">{{studentLevel.level}}&nbsp;({{studentLevel.title}})</span>
+            <span ng-show="!hasLevel">{{ 'YOU_DONT_HAVE_LEVEL' | translate }}</span>
           </span>
         </label>
         <label class="item item-input list-elements" id="signUp-input3">
@@ -214,18 +215,9 @@
               <p>{{item.description}}</p>
             </label>
             <label class="item item-input list-elements">
-              <span class="input-label">{{ 'REQUIREMENTS' | translate }}</span>
-              <p>{{item.requirements}}</p>
-            </label>
-            <label class="item item-input list-elements">
               <span class="input-label">{{ 'MAX_SCORE' | translate }}</span>
               <p>{{item.maxScore}}</p>
             </label>
-            <label class="item item-input list-elements">
-              <span class="input-label">{{ 'SCORE' | translate }}</span>
-              <p>{{item.score}}</p>
-            </label>
-            <ion-toggle toggle-class="toggle-calm" ng-model="modelItem.useForLevel" ng-disabled="true" ng-checked="item.useForLevel">{{ 'USE_FOR_LEVEL' | translate }}</ion-toggle>
         </form>
       </div>
       <div ng-show="unlockedAchievementsExist">

@@ -1075,10 +1075,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             '<input type="text" placeholder="{{ \'DESCRIPTION\' | translate }}" ng-model="modelNewItem.description">'+
           '</label>'+
           '<label class="item item-input list-elements">'+
-            '<span class="input-label">{{ \'REQUIREMENTS\' | translate }}</span>'+
-            '<input type="text" placeholder="{{ \'REQUIREMENTS\' | translate }}" ng-model="modelNewItem.requirements">'+
-          '</label>'+
-          '<label class="item item-input list-elements">'+
             '<span class="input-label">{{ \'SCORE\' | translate }}</span>'+
             '<input type="number" placeholder="{{ \'SCORE\' | translate }}" ng-model="modelNewItem.score">'+
           '</label>'+
@@ -1091,7 +1087,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       '</form>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm  button-block" ng-click="closeModalNewItem()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button class="button button-calm  button-block" ng-click="createItem(modelNewItem.name, modelNewItem.description, modelNewItem.requirements, modelNewItem.score, modelNewItem.maxScore, modelNewItem.useForLevel)" ng-disabled="!modelNewItem.name || !modelNewItem.description || !modelNewItem.requirements || !modelNewItem.score">{{ \'ADD_ITEM\' | translate }}</button>'+
+        '<button class="button button-calm  button-block" ng-click="createItem(modelNewItem.name, modelNewItem.description, modelNewItem.score, modelNewItem.maxScore, modelNewItem.useForLevel)" ng-disabled="!modelNewItem.name || !modelNewItem.description || !modelNewItem.score">{{ \'ADD_ITEM\' | translate }}</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -1154,10 +1150,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             '<input type="text" placeholder="{{ \'DESCRIPTION\' | translate }}" ng-model="modelNewReward.description">'+
           '</label>'+
           '<label class="item item-input list-elements">'+
-            '<span class="input-label">{{ \'PERMISSION\' | translate }}</span>'+
-            '<input type="text" placeholder="{{ \'PERMISSION\' | translate }}" ng-model="modelNewReward.permission">'+
-          '</label>'+
-          '<label class="item item-input list-elements">'+
             '<span class="input-label">{{ \'PRICE\' | translate }}</span>'+
             '<input type="number" placeholder="{{ \'PRICE\' | translate }}" ng-model="modelNewReward.price">'+
           '</label>'+
@@ -1165,7 +1157,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       '</form>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm  button-block" ng-click="closeModalNewReward()" >{{ \'CANCEL\' | translate }}</button>'+
-        '<button class="button button-calm  button-block" ng-click="createReward(modelNewReward.name, modelNewReward.description, modelNewReward.permission, modelNewReward.price)" ng-disabled=" !modelNewReward.name || !modelNewReward.description || !modelNewReward.permission || !modelNewReward.price">{{ \'ADD_REWARD\' | translate }}</button>'+
+        '<button class="button button-calm  button-block" ng-click="createReward(modelNewReward.name, modelNewReward.description, modelNewReward.price)" ng-disabled=" !modelNewReward.name || !modelNewReward.description || !modelNewReward.price">{{ \'ADD_REWARD\' | translate }}</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -1184,10 +1176,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             '<input type="text" placeholder="{{reward.description}}" ng-model="modelEditReward.description" ng-disabled="isArchivedClassroom">'+
           '</label>'+
           '<label class="item item-input list-elements">'+
-            '<span class="input-label">{{ \'PERMISSION\' | translate }}</span>'+
-            '<input type="text" placeholder="{{reward.permission}}" ng-model="modelEditReward.permission" ng-disabled="isArchivedClassroom">'+
-          '</label>'+
-          '<label class="item item-input list-elements">'+
             '<span class="input-label">{{ \'PRICE\' | translate }}</span>'+
             '<input type="number" placeholder="{{reward.price}}" ng-model="modelEditReward.price" ng-disabled="isArchivedClassroom">'+
           '</label>'+
@@ -1195,7 +1183,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       '</form>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm  button-block" ng-click="closeModalEditReward()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button class="button button-calm  button-block" ng-disabled="(!modelEditReward.name && !modelEditReward.description && !modelEditReward.permission && !modelEditReward.price) || isArchivedClassroom" ng-click="editReward(modelEditReward.name, modelEditReward.description, modelEditReward.permission, modelEditReward.price)">{{ \'EDIT_REWARD\' | translate }}</button>'+
+        '<button class="button button-calm  button-block" ng-disabled="(!modelEditReward.name && !modelEditReward.description && !modelEditReward.price) || isArchivedClassroom" ng-click="editReward(modelEditReward.name, modelEditReward.description, modelEditReward.price)">{{ \'EDIT_REWARD\' | translate }}</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -2341,7 +2329,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                 'score' : item.score,
                 'maxScore' : item.maxScore,
                 'useForLevel' : item.useForLevel,
-                'requirements' : item.requirements,
               }).then(function(refItem) {
                 var newItemId = refItem.key;
   
@@ -2393,7 +2380,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             rewardsArray.$add({
               'name' : reward.name,
               'description' : reward.description,
-              'permission' : reward.permission,
               'price' : reward.price,
             }).then(function(ref) {
               var id = ref.key;
@@ -2704,9 +2690,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       $scope.$apply();
     }
     $scope.closeEditLevelModal();
-    $ionicPopup.alert({
-      template: $scope.dataChangedAlert,
-    });
   }
 
   /**
@@ -3301,13 +3284,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   /**
     @name: The name for the item that is going to be create.
     @description: A description for the item that is going to be created.
-    @requirements: The requirements to unlock the item.
     @score: Default score for the item.
     @maxScore: Max score for the item.
     @useForLevel: True or false. If the points achieved in the item either adds to the classroom's level or not.
     Creates an item and add its reference to the classroom's tree on the firebase database.
   */
-  $scope.createItem = function (name, description, requirements, score, maxScore, useForLevel) {
+  $scope.createItem = function (name, description, score, maxScore, useForLevel) {
     if (useForLevel == undefined) {
       useForLevel = false;
     }
@@ -3319,7 +3301,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       itemsNode.$add({
         'name' : name,
         'description' : description,
-        'requirements' : requirements,
         'score' : score,
         'maxScore' : maxScore,
         'useForLevel' : useForLevel
@@ -3390,14 +3371,13 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   /**
     @name: The new name for the item that is going to be edited.
     @description: A new description for the item that is going to be edited.
-    @requirements: The new requirements to unlock the item.
     @score: New default score for the item.
     @maxScore: New max score for the item.
     @useForLevel: True or false. If the points achieved in the item either adds to the classroom's level or not.
     Edits the item saved in the session with the new data.
   */
-  $scope.editItem = function(name, description, requirements, score, maxScore, useForLevel) {
-    if (name != undefined && description != undefined && requirements != undefined && score != undefined && maxScore != undefined) {
+  $scope.editItem = function(name, description, score, maxScore, useForLevel) {
+    if (name != undefined && description != undefined && score != undefined && maxScore != undefined) {
       var itemRef = firebase.database().ref('items/' + $scope.item.id);
       if (useForLevel != $scope.item.useForLevel && useForLevel != undefined) {
         var itemUse = useForLevel
@@ -3408,7 +3388,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         'id' : $scope.item.id,
         'name' : name,
         'description' : description,
-        'requirements' : requirements,
         'score' : score,
         'maxScore' : maxScore,
         'useForLevel' : itemUse,
@@ -3423,11 +3402,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       if (description != undefined) {
         var itemDescriptionRef = firebase.database().ref('items/' + $scope.item.id + '/description');
         itemDescriptionRef.set(description);
-      }
-
-      if (requirements != undefined) {
-        var itemRequirementsRef = firebase.database().ref('items/' + $scope.item.id + '/requirements');
-        itemRequirementsRef.set(requirements);
       }
 
       if (score != undefined) {
@@ -3446,9 +3420,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       }
     }
     $scope.rulesForm();
-    $ionicPopup.alert({
-      template: $scope.dataChangedAlert,
-    });
   }
 
   /**
@@ -3705,7 +3676,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.removePoints = function(item) {
     var studentItemPointsToRemoveRef = firebase.database().ref('students/' + $scope.student.id + '/items/' + item.id + '/points');
     var studentClassPointsToRemoveRef = firebase.database().ref('students/' + $scope.student.id + '/classrooms/' + $scope.classroom.id + '/totalPoints');
-    if ((Number($scope.student.items[item.id].points) - Number(item.score)) < 0) {
+    if ((Number($scope.student.items[item.id].points) - 1) < 0) {
       $ionicPopup.alert({
         template: $scope.studentDoesNotHaveEnougPointsAlert + ', ' + $scope.zeroPointsWillEstablishAlert,
       });
@@ -3714,8 +3685,8 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       $scope.createNotificationItems($scope.student.id, item, 'lose');
       $scope.checkAchievements(item, $scope.student, 0);
     } else {
-      studentItemPointsToRemoveRef.set((Number($scope.student.items[item.id].points) - Number(item.score)));
-      $scope.student.items[item.id].points = (Number($scope.student.items[item.id].points) - Number(item.score));
+      studentItemPointsToRemoveRef.set((Number($scope.student.items[item.id].points) - 1));
+      $scope.student.items[item.id].points = (Number($scope.student.items[item.id].points) - 1);
       $scope.createNotificationItems($scope.student.id, item, 'lose');
       $scope.checkAchievements(item, $scope.student, Number($scope.student.items[item.id].points));
     }
@@ -3723,12 +3694,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     item.points = $scope.student.items[item.id].points;
 
     if (item.useForLevel) {
-      if (($scope.student.classrooms[$scope.classroom.id].totalPoints - item.score) < 0) {
+      if (($scope.student.classrooms[$scope.classroom.id].totalPoints - 1) < 0) {
         studentClassPointsToRemoveRef.set(0);
         $scope.student.classrooms[$scope.classroom.id].totalPoints = 0;
       } else {
-        studentClassPointsToRemoveRef.set($scope.student.classrooms[$scope.classroom.id].totalPoints - item.score); 
-        $scope.student.classrooms[$scope.classroom.id].totalPoints = Number($scope.student.classrooms[$scope.classroom.id].totalPoints) - Number(item.score);
+        studentClassPointsToRemoveRef.set($scope.student.classrooms[$scope.classroom.id].totalPoints - 1); 
+        $scope.student.classrooms[$scope.classroom.id].totalPoints = Number($scope.student.classrooms[$scope.classroom.id].totalPoints) - 1;
       }
     }
   }
@@ -3740,7 +3711,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.addPoints = function(item) {
     var studentItemPointsToAddRef = firebase.database().ref('students/' + $scope.student.id + '/items/' + item.id + '/points');
     var studentClassPointsToAddRef = firebase.database().ref('students/' + $scope.student.id + '/classrooms/' + $scope.classroom.id + '/totalPoints');
-    if ((Number($scope.student.items[item.id].points) + Number(item.score)) > item.maxScore) {
+    if ((Number($scope.student.items[item.id].points) + 1) > item.maxScore) {
       $ionicPopup.alert({
         template: $scope.studentDoesNotHaveEnougPointsAlert + ', ' + $scope.maxPointsWillEstablishAlert,
       });
@@ -3750,27 +3721,27 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       $scope.checkAchievements(item, $scope.student, item.maxScore);
       for (var element in $scope.items) {
         if ($scope.items[element].id == item.id) {
-          $scope.checkMissions($scope.items[element], $scope.student, item.score);
+          $scope.checkMissions($scope.items[element], $scope.student, 1);
         }
       }
     } else {
-      studentItemPointsToAddRef.set((Number($scope.student.items[item.id].points) + Number(item.score)));
-      $scope.student.items[item.id].points = (Number($scope.student.items[item.id].points) + Number(item.score));
+      studentItemPointsToAddRef.set((Number($scope.student.items[item.id].points) + 1));
+      $scope.student.items[item.id].points = (Number($scope.student.items[item.id].points) + 1);
       $scope.createNotificationItems($scope.student.id, item, 'win');
       $scope.checkAchievements(item, $scope.student, Number($scope.student.items[item.id].points));
       for (var element in $scope.items) {
         if ($scope.items[element].id == item.id) {
-          $scope.checkMissions($scope.items[element], $scope.student, item.score);
+          $scope.checkMissions($scope.items[element], $scope.student, 1);
         }
       }
-      $scope.checkMissions(item, $scope.student, item.score);
+      $scope.checkMissions(item, $scope.student, 1);
     }
 
     item.points = $scope.student.items[item.id].points;
 
     if (item.useForLevel) {
-      studentClassPointsToAddRef.set($scope.student.classrooms[$scope.classroom.id].totalPoints + item.score);
-      $scope.student.classrooms[$scope.classroom.id].totalPoints = $scope.student.classrooms[$scope.classroom.id].totalPoints + item.score;
+      studentClassPointsToAddRef.set($scope.student.classrooms[$scope.classroom.id].totalPoints + 1);
+      $scope.student.classrooms[$scope.classroom.id].totalPoints = $scope.student.classrooms[$scope.classroom.id].totalPoints + 1;
     }
   }
 
@@ -4054,9 +4025,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       }
     }
     $scope.itemsForm();
-    $ionicPopup.alert({
-      template: $scope.dataChangedAlert,
-    });
   }
 
   /**
@@ -4481,9 +4449,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       teamObjectiveRef.set(objective);
     }
     $scope.closeModalTeamDialog();
-    $ionicPopup.alert({
-      template: $scope.dataChangedAlert,
-    });
   }
 
   /**
@@ -4659,17 +4624,15 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   /**
     @name: The name for the reward that is going to be create.
     @description: The description for the reward that is going to be created.
-    @permission: The permission for the reward that is going to be created.
     @price: The price for the reward that is going to be created.
     Creates a reward and add its reference to the classroom's tree on the firebase database.
   */
-  $scope.createReward = function(name, description, permission, price) {
+  $scope.createReward = function(name, description, price) {
     var rewardsNode = $firebaseArray(rewardsRef);
     rewardsNode.$loaded(function() {
       rewardsNode.$add({
         'name' : name,
         'description' : description,
-        'permission' : permission,
         'price' : price,
       }).then(function(ref) {
         var id = ref.key;
@@ -4725,17 +4688,15 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   /**
     @name: The new name for the reward that is going to be edited.
     @description: The new description for the reward that is going to be edited.
-    @permission: The new permission for the reward that is going to be edited.
     @price: The new price for the reward that is going to be edited.
     Edits the reward saved in the session with the new data.
   */
-  $scope.editReward = function(name, description, permission, price) {
-    if (name != undefined && description != undefined && permission != undefined && price != undefined) {
+  $scope.editReward = function(name, description, price) {
+    if (name != undefined && description != undefined && price != undefined) {
       var reward = {
         'id' : $scope.reward.id,
         'name' : name,
         'description' : description,
-        'permission' : permission,
         'price' : price,
       }
       var rewardRef = firebase.database().ref('rewards/' + $scope.reward.id);
@@ -4753,12 +4714,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         rewardDescriptionRef.set(description);
       }
 
-      if (permission != undefined) {
-        $scope.reward.permission = permission;
-        var rewardPermissionRef = firebase.database().ref('rewards/' + $scope.reward.id + '/permission');
-        rewardPermissionRef.set(permission);
-      }
-
       if (price != undefined) {
         $scope.reward.price = price;
         var rewardPriceRef = firebase.database().ref('rewards/' + $scope.reward.id + '/price');
@@ -4766,9 +4721,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       }
     }
     $scope.closeModalEditReward();
-    $ionicPopup.alert({
-      template: $scope.dataChangedAlert,
-    });
   }
 
   /**
@@ -5100,9 +5052,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       }
     }
     $scope.closeModalEditMission();
-    $ionicPopup.alert({
-      template: $scope.dataChangedAlert,
-    });
   }
 
   /**
@@ -5445,13 +5394,13 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       if (operationType == 'win') {
         studentNoticationsArray.$add({
           'type' : $scope.notificationTypeItem,
-          'message' : $scope.notificationWin + ' ' + item.score + ' ' + $scope.pointOnTheitemSet + ': ' + item.name,
+          'message' : $scope.notificationWin + ' 1 ' + $scope.pointOnTheitemSet + ': ' + item.name,
           'date' : Date.now(),
         });
       } else if (operationType == 'lose') {
         studentNoticationsArray.$add({
           'type' : $scope.notificationTypeItem,
-          'message' : $scope.notificationLose + ' ' + Math.abs(item.score) + ' ' + $scope.pointOnTheitemSet + ': ' + item.name,
+          'message' : $scope.notificationLose + ' 1 ' + $scope.pointOnTheitemSet + ': ' + item.name,
           'date' : Date.now(),
         });
       }
