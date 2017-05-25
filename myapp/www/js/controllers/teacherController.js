@@ -317,57 +317,62 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   $scope.templateTeacherHomePopover = '<ion-popover-view>'+
     '<ion-list class="list-elements">'+
-      '<ion-item class="itemPopover" ng-click="createDemoClassroom()"><i class="icon ion-university"></i>&nbsp;&nbsp;{{ \'CREATE_DEMO_CLASS\' | translate}}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverTeacherHome(); createDemoClassroom()"><i class="icon ion-university"></i>&nbsp;&nbsp;{{ \'CREATE_DEMO_CLASS\' | translate}}</ion-item>'+
       '<ion-item class="itemPopover" ng-hide="archivedClassroomsToShow" ng-click="showArchivedClassrooms(true)"><i class="icon ion-eye"></i>&nbsp;&nbsp;{{ \'SEE_ARCHIVED_CLASSES\' | translate }}</ion-item>'+
       '<ion-item class="itemPopover" ng-show="archivedClassroomsToShow" ng-click="showArchivedClassrooms(false)"><i class="icon ion-eye-disabled"></i>&nbsp;&nbsp;{{ \'HIDE_ARCHIVED_CLASSES\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverTeacherHome()"><i class="icon ion-gear-a"></i>&nbsp;&nbsp;{{ \'SETTINGS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverTeacherHome(); settingsForm()"><i class="icon ion-gear-a"></i>&nbsp;&nbsp;{{ \'SETTINGS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover log-out-button" ng-click="closePopoverTeacherHome(); logOut()"><i class="icon ion-log-out"></i>&nbsp;&nbsp;{{ \'LOG_OUT\' | translate }}</ion-item>'+
     '</ion-list>'+
   '</ion-popover-view>';
 
   $scope.templateClassStudentsPopover = '<ion-popover-view>'+
     '<ion-list class="list-elements">'+
-      '<ion-item class="itemPopover" ng-click="showConfigureLevelsModal()"><i class="icon ion-levels"></i>&nbsp;&nbsp;{{ \'CONFIGURE_LEVELS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverClassStudents(); showConfigureLevelsModal()"><i class="icon ion-levels"></i>&nbsp;&nbsp;{{ \'CONFIGURE_LEVELS\' | translate }}</ion-item>'+
       '<ion-toggle class="itemPopover" ng-model="checkboxStudentsView" ng-checked="classroom.studentsView" ng-click="setStudentsView(checkboxStudentsView)" toggle-class="toggle-calm"><i class="icon ion-image"></i>&nbsp;&nbsp;{{ \'SHOW_IMAGES\' | translate }}</ion-toggle>'+
       '<ion-toggle class="itemPopover" ng-model="checkboxNotifications" ng-checked="classroom.notifications" ng-click="setNotifications(checkboxNotifications)" toggle-class="toggle-calm" ng-disabled="isArchivedClassroom"><i class="icon ion-alert"></i>&nbsp;&nbsp;{{ \'NOTIFICATIONS\' | translate }}</ion-toggle>'+
       '<ion-toggle class="itemPopover" ng-model="checkboxOpening" ng-checked="classroom.open" ng-click="setOpening(checkboxOpening)" toggle-class="toggle-calm" ng-disabled="isArchivedClassroom"><i class="icon ion-unlocked"></i>&nbsp;&nbsp;{{ \'OPENING\' | translate }}</ion-toggle>'+
-      '<ion-item class="itemPopover" ng-click="showHashcodePopup()"><i class="icon ion-key"></i>&nbsp;&nbsp;{{ \'SEE_CLASS_HASHCODE\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="rulesForm(); closePopoverClassStudents()"><i class="icon ion-clipboard"></i>&nbsp;&nbsp;{{ \'SEE_RULES\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverClassStudents()"><i class="icon ion-bag"></i>&nbsp;&nbsp;{{ \'REWARD_SHOP\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverClassStudents()"><i class="icon ion-map"></i>&nbsp;&nbsp;{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverClassStudents()"><i class="icon ion-gear-a"></i>&nbsp;&nbsp;{{ \'SETTINGS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverClassStudents(); showHashcodePopup()"><i class="icon ion-key"></i>&nbsp;&nbsp;{{ \'SEE_CLASS_HASHCODE\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverClassStudents(); rulesForm()"><i class="icon ion-clipboard"></i>&nbsp;&nbsp;{{ \'SEE_RULES\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverClassStudents(); rewardShopForm()"><i class="icon ion-bag"></i>&nbsp;&nbsp;{{ \'REWARD_SHOP\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverClassStudents(); missionsForm()"><i class="icon ion-map"></i>&nbsp;&nbsp;{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverClassStudents(); settingsForm()"><i class="icon ion-gear-a"></i>&nbsp;&nbsp;{{ \'SETTINGS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover log-out-button" ng-click="closePopoverClassStudents(); logOut()"><i class="icon ion-log-out"></i>&nbsp;&nbsp;{{ \'LOG_OUT\' | translate }}</ion-item>'+
     '</ion-list>'+
   '</ion-popover-view>';
 
   $scope.templateClassTeamsPopover = '<ion-popover-view>'+
     '<ion-list class="list-elements">'+
-      '<ion-item class="itemPopover" ng-click="showConfigureLevelsModal()"><i class="icon ion-levels"></i>&nbsp;&nbsp;{{ \'CONFIGURE_LEVELS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverClassTeams(); showConfigureLevelsModal()"><i class="icon ion-levels"></i>&nbsp;&nbsp;{{ \'CONFIGURE_LEVELS\' | translate }}</ion-item>'+
       '<ion-toggle class="itemPopover" ng-model="checkboxNotifications" ng-checked="classroom.notifications" ng-click="setNotifications(checkboxNotifications)" toggle-class="toggle-calm" ng-disabled="isArchivedClassroom"><i class="icon ion-alert"></i>&nbsp;&nbsp;{{ \'NOTIFICATIONS\' | translate }}</ion-toggle>'+
       '<ion-toggle class="itemPopover" ng-model="checkboxOpening" ng-checked="classroom.open" ng-click="setOpening(checkboxOpening)" toggle-class="toggle-calm" ng-disabled="isArchivedClassroom"><i class="icon ion-unlocked"></i>&nbsp;&nbsp;{{ \'OPENING\' | translate }}</ion-toggle>'+
-      '<ion-item class="itemPopover" ng-click="showHashcodePopup()"><i class="icon ion-key"></i>&nbsp;&nbsp;{{ \'SEE_CLASS_HASHCODE\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="rulesForm(); closePopoverClassTeams()"><i class="icon ion-clipboard"></i>&nbsp;&nbsp;{{ \'SEE_RULES\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverClassTeams()"><i class="icon ion-bag"></i>&nbsp;&nbsp;{{ \'REWARD_SHOP\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverClassTeams()"><i class="icon ion-map"></i>&nbsp;&nbsp;{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverClassTeams()"><i class="icon ion-gear-a"></i>&nbsp;&nbsp;{{ \'SETTINGS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverClassTeams(); showHashcodePopup()"><i class="icon ion-key"></i>&nbsp;&nbsp;{{ \'SEE_CLASS_HASHCODE\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverClassTeams(); rulesForm()"><i class="icon ion-clipboard"></i>&nbsp;&nbsp;{{ \'SEE_RULES\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverClassTeams(); rewardShopForm()"><i class="icon ion-bag"></i>&nbsp;&nbsp;{{ \'REWARD_SHOP\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverClassTeams(); missionsForm()"><i class="icon ion-map"></i>&nbsp;&nbsp;{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverClassTeams(); settingsForm()"><i class="icon ion-gear-a"></i>&nbsp;&nbsp;{{ \'SETTINGS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover log-out-button" ng-click="closePopoverClassTeams(); logOut()"><i class="icon ion-log-out"></i>&nbsp;&nbsp;{{ \'LOG_OUT\' | translate }}</ion-item>'+
     '</ion-list>'+
   '</ion-popover-view>';
 
   $scope.templateMissionsPopover = '<ion-popover-view>'+
     '<ion-list class="list-elements">'+
-      '<ion-item class="itemPopover" ng-hide="finishedMissionsToShow" ng-click="showFinishedMissions(true)"><i class="icon ion-eye"></i>&nbsp;&nbsp;{{ \'SEE_MISSIONS_ENDED\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-show="finishedMissionsToShow" ng-click="showFinishedMissions(false)"><i class="icon ion-eye-disabled"></i>&nbsp;&nbsp;{{ \'HIDE_MISSIONS_ENDED\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="rulesForm(); closePopoverMissions()"><i class="icon ion-clipboard"></i>&nbsp;&nbsp;{{ \'SEE_RULES\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverMissions()"><i class="icon ion-bag"></i>&nbsp;&nbsp;{{ \'REWARD_SHOP\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverMissions()"><i class="icon ion-map"></i>&nbsp;&nbsp;{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverMissions()"><i class="icon ion-gear-a"></i>&nbsp;&nbsp;{{ \'SETTINGS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-hide="finishedMissionsToShow" ng-click="closePopoverMissions(); showFinishedMissions(true)"><i class="icon ion-eye"></i>&nbsp;&nbsp;{{ \'SEE_MISSIONS_ENDED\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-show="finishedMissionsToShow" ng-click="closePopoverMissions(); showFinishedMissions(false)"><i class="icon ion-eye-disabled"></i>&nbsp;&nbsp;{{ \'HIDE_MISSIONS_ENDED\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverMissions(); rulesForm()"><i class="icon ion-clipboard"></i>&nbsp;&nbsp;{{ \'SEE_RULES\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverMissions(); rewardShopForm()"><i class="icon ion-bag"></i>&nbsp;&nbsp;{{ \'REWARD_SHOP\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverMissions(); missionsForm()"><i class="icon ion-map"></i>&nbsp;&nbsp;{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverMissions(); settingsForm()"><i class="icon ion-gear-a"></i>&nbsp;&nbsp;{{ \'SETTINGS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover log-out-button" ng-click="closePopoverMissions(); logOut()"><i class="icon ion-log-out"></i>&nbsp;&nbsp;{{ \'LOG_OUT\' | translate }}</ion-item>'+
     '</ion-list>'+
   '</ion-popover-view>';
 
   $scope.templateTeacherDefaultPopover = '<ion-popover-view>'+
     '<ion-list class="list-elements">'+
-      '<ion-item class="itemPopover" ng-click="rulesForm(); closePopoverTeacherDefault()"><i class="icon ion-clipboard"></i>&nbsp;&nbsp;{{ \'SEE_RULES\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverTeacherDefault()"><i class="icon ion-bag"></i>&nbsp;&nbsp;{{ \'REWARD_SHOP\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverTeacherDefault()"><i class="icon ion-map"></i>&nbsp;&nbsp;{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverTeacherDefault()"><i class="icon ion-gear-a"></i>&nbsp;&nbsp;{{ \'SETTINGS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverTeacherDefault(); rulesForm()"><i class="icon ion-clipboard"></i>&nbsp;&nbsp;{{ \'SEE_RULES\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverTeacherDefault(); rewardShopForm()"><i class="icon ion-bag"></i>&nbsp;&nbsp;{{ \'REWARD_SHOP\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverTeacherDefault(); missionsForm()"><i class="icon ion-map"></i>&nbsp;&nbsp;{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverTeacherDefault(); settingsForm()"><i class="icon ion-gear-a"></i>&nbsp;&nbsp;{{ \'SETTINGS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover log-out-button" ng-click="closePopoverTeacherDefault(); logOut()"><i class="icon ion-log-out"></i>&nbsp;&nbsp;{{ \'LOG_OUT\' | translate }}</ion-item>'+
     '</ion-list>'+
   '</ion-popover-view>';
 
@@ -1946,7 +1951,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     });
 
     alertPopup.then(function(res) {
-      $scope.closePopoverClassStudents();
     });
   };
 
@@ -1960,12 +1964,25 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   */
   $scope.logOut = function() {
     if (firebase.auth().currentUser) {
-      var userData = {};
-      localStorageService.set('userCredentials', userData);
+      $ionicPopup.show({
+        title: $rootScope.systemWarning,
+        template: $rootScope.sureYouWannaExit,
+        buttons: [{
+            text: $rootScope.cancelText,
+          },
+          {
+            text: $rootScope.okayText,
+            onTap: function() {
+              var userData = {};
+              localStorageService.set('userCredentials', userData);
 
-      firebase.auth().signOut();
-      $state.go('login');
-      $scope.teacherHomeForm();
+              firebase.auth().signOut();
+              $state.go('login');
+              $scope.teacherHomeForm();
+            }
+          },
+        ]
+      })
     }
   }
 
@@ -2110,7 +2127,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     Creates a demo classroom
   */
   $scope.createDemoClassroom = function() {
-    $scope.closePopoverTeacherHome();
     demoClassroom = true;
     $scope.createClassroom('Demo Classroom');
   }
@@ -5077,7 +5093,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   */
   $scope.showFinishedMissions = function(value) {
     $scope.finishedMissionsToShow = value;
-    $scope.closePopoverMissions();
   }
 
   /**

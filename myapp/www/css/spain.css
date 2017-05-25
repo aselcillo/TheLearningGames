@@ -76,9 +76,9 @@ ion-nav-bar {
 	width: 60%; max-width: 100%; 
 	text-transform: uppercase;
 }
-	.platform-browser .popover .itemPopover { border-radius: 4px !important; border:none; background: none; color: white !important; }
-	.platform-android .popover .itemPopover { border-radius: 4px !important; border:none; background: none; color: white !important; }
-	.platform-ios .popover .itemPopover { border-radius: 4px !important; border:none; background: none; color: white !important; }
+	.platform-browser .popover .itemPopover { border-radius: 4px !important; border:none; background: none; color: white; }
+	.platform-android .popover .itemPopover { border-radius: 4px !important; border:none; background: none; color: white; }
+	.platform-ios .popover .itemPopover { border-radius: 4px !important; border:none; background: none; color: white; }
 	.popover .itemPopover:hover { background: rgba(0, 0, 0, 0.5);}
 	.popover .input-label{ color: white; }
 	.popover .item-select select { background: rgba(0,0,0,.5) !important; color: white;}
