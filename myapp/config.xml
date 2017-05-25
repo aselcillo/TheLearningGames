@@ -77,5 +77,5 @@
     <plugin name="cordova-plugin-splashscreen" spec="~4.0.1" />
     <plugin name="cordova-plugin-statusbar" spec="~2.2.3" />
     <plugin name="cordova-plugin-whitelist" spec="git+https://github.com/apache/cordova-plugin-whitelist.git" />
-    <plugin name="ionic-plugin-keyboard" spec="~2.2.1" />
+    <plugin name="ionic-plugin-keyboard" spec="https://github.com/driftyco/ionic-plugins-keyboard.git" />
 </widget>

@@ -229,3 +229,12 @@ padding-left:40px;
     text-align: right;
     top: 0;
 }
+
+.log-out-button {
+	color: red !important;
+	font-weight: bold;
+}
+
+.password-show {
+	padding-right: 8%;
+}
