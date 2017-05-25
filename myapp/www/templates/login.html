@@ -19,7 +19,7 @@
         <label class="item item-input list-elements" id="login-input2" id="pass">
           <span class="input-label">{{ 'PASSWORD' | translate }}</span>
           <input id="passInputTeacher" type="password" placeholder="{{ 'YOUR_PASSWORD' | translate }}" ng-model="modelLoginTeacher.password">
-          <a href="javascript:void();" onmouseout="document.getElementById('passInputTeacher').type='password'" 
+          <a class="password-show" href="javascript:void();" onmouseout="document.getElementById('passInputTeacher').type='password'" 
             onmouseover="document.getElementById('passInputTeacher').type='text'"><span class="ion-eye verPass"></span>
           </a>
         </label>
@@ -43,7 +43,7 @@
         <label class="item item-input list-elements" id="login-input2" id="pass">
           <span class="input-label">{{ 'PASSWORD' | translate }}</span>
           <input id="passInputStudent" type="password" placeholder="{{ 'YOUR_PASSWORD' | translate }}" ng-model="modelLoginStudent.password">
-          <a href="javascript:void();" onmouseout="document.getElementById('passInputStudent').type='password'" 
+          <a class="password-show" href="javascript:void();" onmouseout="document.getElementById('passInputStudent').type='password'" 
             onmouseover="document.getElementById('passInputStudent').type='text'"><span class="ion-eye verPass"></span>
           </a>
         </label>

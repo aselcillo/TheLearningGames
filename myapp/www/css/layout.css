@@ -234,3 +234,7 @@ padding-left:40px;
 	color: red !important;
 	font-weight: bold;
 }
+
+.password-show {
+	padding-right: 8%;
+}
