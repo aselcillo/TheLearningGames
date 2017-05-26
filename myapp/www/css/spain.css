@@ -58,7 +58,7 @@ ion-nav-bar {
 	.popup .button:hover{ background-color: rgba(0, 0, 0, .5) !important; color: white  !important; }	
 	.popup input{ border:1px solid #cdcdcd; border-radius: 5px; text-indent: 10px; }
 
-.popup-container .popup { width: auto; max-width: 90% }
+.popup-container .popup { width: auto; max-width: 90%; min-width: 70%; }
 
 /* Menú desplegable */
 .platform-browser .popover{ 
