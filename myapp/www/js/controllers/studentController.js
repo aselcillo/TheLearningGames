@@ -340,6 +340,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   $scope.missionDialogModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3>{{mission.name}}</h3>'+
+      '<h4 style="text-align: center;">{{ \'FINISH_DATE\' | translate }}</h4><input class="dateInput" type="text" value="{{date | date:\'dd-MM-yyyy\'}}" readonly />'+
         '<form class="list">'+
           '<ion-list>'+
             '<label class="item item-input list-elements">'+
@@ -474,7 +475,8 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     animation: 'slide-in-up'
   });
   $scope.showModalMissionDialog = function() {
-    $scope.missionDialogModal.show();  
+    $scope.missionDialogModal.show();
+    $scope.date = $scope.mission.date.getTime();   
   }
   $scope.closeModalMissionDialog = function() {
     $scope.missionDialogModal.hide();
@@ -606,6 +608,25 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
 
 
+
+                                          /* ALERTS POPUP */
+  /**
+    @title: The tile of the popup, either an icon or a text.
+    @content: The message of the popup.
+    Used to create alert popups
+  */
+  $scope.popupAlertCreate = function(title, content) {
+    $ionicPopup.show({
+      title: title,
+      template: '<p style="text-align:center;">'+content+'</p>',
+      buttons: [
+        {text: $scope.okayText,}
+      ]
+    });
+  }
+
+
+
                                           /* FUNCTIONS IN PROFILE */
 
   /**
@@ -645,9 +666,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
             }
           });
         } else {
-          $ionicPopup.alert({
-            template: $scope.fileInvalidAlert,
-          });
+          $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
         }
       }
     });
@@ -682,9 +701,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     }
 
     $scope.settingsForm();
-    $ionicPopup.alert({
-      template: $scope.dataChangedAlert,
-    });
+    $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.fileInvalidAlert);
   }
 
   /**
@@ -693,9 +710,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   $scope.updateStudentPassword = function(newPassword) {
     sessionUser.updatePassword(newPassword).then(function() {
       $scope.settingsForm();
-      $ionicPopup.alert({
-        template: $scope.passwordChangedAlert,
-      });
+      $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.passwordChangedAlert);
     });
   }
 
@@ -707,9 +722,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       var studentEmailRef = firebase.database().ref('students/' + sessionUser.uid + '/email');
       studentEmailRef.set(email);
       $scope.settingsForm();
-      $ionicPopup.alert({
-        template: $scope.emailChangedAlert,
-      });
+      $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.emailChangedAlert);
     });
   }
 
@@ -724,13 +737,13 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   $scope.logOut = function() {
     if (firebase.auth().currentUser) {
       $ionicPopup.show({
-        title: $rootScope.systemWarning,
-        template: $rootScope.sureYouWannaExit,
+        title: $scope.systemWarning,
+        template: $scope.sureYouWannaExit,
         buttons: [{
-            text: $rootScope.cancelText,
+            text: $scope.cancelText,
           },
           {
-            text: $rootScope.okayText,
+            text: $scope.okayText,
             onTap: function() {
               var userData = {};
               localStorageService.set('userCredentials', userData);
@@ -818,9 +831,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
           var classToEditRef = firebase.database().ref('classrooms/' + classToAdd.id + '/students/' + $scope.student.$id);
           classToEditRef.set(true);
         } else {
-          $ionicPopup.alert({
-            template: $scope.classroomClosedAlert,
-          });
+          $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.classroomClosedAlert);
         }
       }).then(function() {
         $scope.getClassrooms();
@@ -1291,9 +1302,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
       $scope.getRewards();
     } else {
-      $ionicPopup.alert({
-        template: $scope.notEnoughPointsAlert + ' ' + reward.name,
-      });
+      $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.notEnoughPointsAlert + ' ' + reward.name);
     }
   }
 
@@ -1434,6 +1443,8 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   */
   $scope.setMission = function(mission) {
     $scope.mission = mission;
+    var dateTimeStamp = new Date($scope.mission.date);
+    $scope.mission.date = dateTimeStamp;  
     $scope.getClassroomItems();
     $scope.missionItems = [];
     $scope.missionRewards = [];
