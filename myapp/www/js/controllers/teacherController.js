@@ -1,3 +1,61 @@
+/**
+  THIS IS THE CONTROLLER'S STRUCTURE
+    *DECLARATIONS FOR NG-SHOW
+    *ACTION SHEETS
+    *POPOVERS
+    *POPOVERS' FUNCTIONS
+      -LANGUAGES POPOVER
+      -TEACHER HOME POPOVER
+      -CLASS STUDENTS POPOVER
+      -CLASS TEAMS POPOVER
+      -MISSIONS POPOVER
+      -DEFAULT POPOVER
+    *MODALS
+    *MODALS' FUNCTIONS
+      -CONFIGURE LEVELS MODAL
+      -NEW LEVEL MODAL
+      -EDIT LEVEL MODAL
+      -ATTENDANCE MODAL
+      -SELECT CLASSROOMS MODAL
+      -SELECT STUDENTS MODAL
+      -SELECT ITEMS MODAL
+      -SELECT ACHIEVEMENTS MODAL
+      -SELECT TEAMS MODAL
+      -SELECT REWARDS MODAL
+      -SELECT MISSIONS MODAL
+      -NEW CLASS MODAL
+      -SECONDARY MENU MODAL
+      -NEW STUDENT DIALOG MODAL
+      -STUDENT DIALOG MODAL
+      -QUANTIY RANDOM TEAMS MODAL
+      -TEAM DIALOG MODAL
+      -NEW TEAM DIALOG MODAL
+      -EDIT TEAM MEMBERS MODAL
+      -EDIT MISSION MODAL
+      -EDIT MISSION REWARDS MODAL
+      -EDIT MISSION MEMBERS MODAL
+      -NEW TIEM MODAL
+      -NEW ACHIEVEMENT MODAL
+      -NEW REWARD MODAL
+      -EDIT REWARD MODAL
+      -NOTIFICATIONS MODAL
+    *DECLARATIONS OF NEEDED VARIABLES AND FUNCTIONS
+    *FUNCTIONS IN THE SCREENS
+      -UPDATE INPUT FILE
+      -ALERTS POPUP
+      -HASHCODE POPUP
+      -FUNCTIONS IN SETTINGS
+      -FUNCTIONS IN HOME
+      -FUNCTIONS IN PROFILE
+      -FUNCTIONS IN CLASS
+      -FUNCTIONS IN ITEMS
+      -FUNCTIONS IN ACHIEVEMENTS
+      -FUNCTIONS IN TEAMS
+      -FUNCTIONS IN REWARDS
+      -FUNCTIONS IN MISSIONS
+      -FUNCTIONS NOTIFICATIONS
+    *SORT FUNCTIONS
+*/
 angular.module('app.teacherController', ['pascalprecht.translate'])
 
 .controller('teacherHomeCtrl', ['$scope', '$stateParams', '$ionicModal', '$http', '$state', '$ionicPopover', '$ionicActionSheet', '$firebaseObject', '$firebaseArray', '$ionicPopup', 'sharedData', '$ionicLoading', 'localStorageService', '$translate', '$rootScope',
@@ -1744,7 +1802,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     'HAS_LOST_MIN_POINTS_IN_ITEM', 'HAS_LOST_MIN_POINTS_IN_ITEM', 
     'HAS_RECIBED_MAX_POINTS_IN_ITEM', 'HAS_UNLOCKED_LEVEL_ACHIEVEMENT', 'HAVE_FINISHED_MISSION', 'HAVE_LOST_ACHIEVEMENT',  'HAVE_UNLOCKED_LEVEL_ACHIEVEMENT', 'IN_THE_ACHIEVEMENT', 
     'INTRODUCE_FINISH_DATE', 'INTRODUCE_MISSION_NAME', 'ITEM', 'MAX_SCORE_ESTABLISEHD', 'MAX_SCORE_WILL_ESTABLISH', 'MISSION',
-    'NEXT', 'NOTIFICATION_OF_MISSION', 'NOTIFICATION_OF_STUDENT', 'NOTIFICATION_HAS_LOST' , 'NOTIFICATION_HAS_WIN', 'PASSWORD_CHANGED', 'POINTS_ON_THE_ITEM',
+    'NEXT', 'NOTIFICATION_OF_MISSION', 'NOTIFICATION_OF_STUDENT', 'NOTIFICATION_HAS_LOST' , 'NOTIFICATION_HAS_WIN', 'PASSWORD_CHANGED', 'OKAY', 'POINTS_ON_THE_ITEM',
     'RANDOM_STUDENT', 'RANDOM_TEAM', 'REWARD', 'SEND_MESSAGE', 'STUDENT_DOESNT_HAVE_ENOUGH_POINTS', 'TAKE_ATTENDANCE', 'TEACHER_MESSAGE', 'TIME_TO_FINISH_MISSION', 
     'UNARCHIVE_CLASSES', 'USE_DEFAULT_POINT', 'YOU_WIN_REWARD', 'ZERO_SCORE_ESTABLISHED', 'ZERO_SCORE_WILL_ESTABLISH']).then(function(translations) {
     $scope.actionAchievementsActionSheet = translations.ACTIONS_ACHIEVEMENTS;
@@ -1806,6 +1864,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.notificationLostAchievementStudentSide = translations.HAVE_LOST_ACHIEVEMENT;
     $scope.notificationLostAchievementTeacherSide = translations.HAS_LOST_ACHIEVEMENT;
     $scope.notificationWin = translations.NOTIFICATION_HAS_WIN;
+    $scope.okayText = translations.OKAY;
     $scope.passwordChangedAlert = translations.PASSWORD_CHANGED;
     $scope.pointOnTheitemSet = translations.POINTS_ON_THE_ITEM;
     $scope.randomStudentActionSheetOption = translations.RANDOM_STUDENT;
@@ -1885,6 +1944,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.notificationLostAchievementStudentSide = $translate.instant('HAVE_LOST_ACHIEVEMENT');
     $scope.notificationLostAchievementTeacherSide = $translate.instant('HAS_LOST_ACHIEVEMENT');
     $scope.notificationWin = $translate.instant('NOTIFICATION_HAS_WIN');
+    $scope.okayText = $translate.instant('OKAY');
     $scope.passwordChangedAlert = $translate.instant('PASSWORD_CHANGED');
     $scope.pointOnTheitemSet = $translate.instant('POINTS_ON_THE_ITEM');
     $scope.randomStudentActionSheetOption = $translate.instant('RANDOM_STUDENT');
@@ -1956,6 +2016,24 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
 
 
+                                        /* ALERTS POPUP */
+  /**
+    @title: The tile of the popup, either an icon or a text.
+    @content: The message of the popup.
+    Used to create alert popups
+  */
+  $scope.popupAlertCreate = function(title, content) {
+    $ionicPopup.show({
+      title: title,
+      template: '<p style="text-align:center;">'+content+'</p>',
+      buttons: [
+        {text: $scope.okayText,}
+      ]
+    });
+  }
+
+
+
                                         /* HASHCODE POPUP */
 
   /**
@@ -1982,13 +2060,13 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.logOut = function() {
     if (firebase.auth().currentUser) {
       $ionicPopup.show({
-        title: $rootScope.systemWarning,
-        template: $rootScope.sureYouWannaExit,
+        title: $scope.systemWarning,
+        template: $scope.sureYouWannaExit,
         buttons: [{
-            text: $rootScope.cancelText,
+            text: $scope.cancelText,
           },
           {
-            text: $rootScope.okayText,
+            text: $scope.okayText,
             onTap: function() {
               var userData = {};
               localStorageService.set('userCredentials', userData);
@@ -1999,7 +2077,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             }
           },
         ]
-      })
+      });
     }
   }
 
@@ -2532,9 +2610,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             }
           });
         } else {
-          $ionicPopup.alert({
-            template: $scope.fileInvalidAlert,
-          });
+          $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
         }
       }
     });
@@ -2569,9 +2645,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
 
     $scope.settingsForm();
-    $ionicPopup.alert({
-      template: $scope.dataChangedAlert,
-    });
+    $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.dataChangedAlert);
   }
 
   /**
@@ -2580,9 +2654,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.updateTeacherPassword = function(newPassword) {
     sessionUser.updatePassword(newPassword).then(function() {
       $scope.settingsForm();
-      $ionicPopup.alert({
-        template: $scope.passwordChangedAlert,
-      });
+      $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.passwordChangedAlert);
     });
   }
 
@@ -2594,9 +2666,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       var teacherEmailRef = firebase.database().ref('teachers/' + sessionUser.uid + '/email');
       teacherEmailRef.set(email);
       $scope.settingsForm();
-      $ionicPopup.alert({
-        template: $scope.emailChangedAlert,
-      });
+      $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.emailChangedAlert);
     });
   }
 
@@ -2778,9 +2848,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             }
           });
         } else {
-          $ionicPopup.alert({
-            template: $scope.fileInvalidAlert,
-          });
+          $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
         }
       }
     });
@@ -2935,9 +3003,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                   }
                 });
               } else {
-                $ionicPopup.alert({
-                  template: $scope.fileInvalidAlert,
-                });
+                $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
               }
               $scope.file = undefined;
             } else {
@@ -2960,27 +3026,19 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }).catch(function(error) {
       if (error) {
         switch (error.code) {
-      case "auth/weak-password":
-        $ionicPopup.alert({
-          template: $scope.weakPasswordAlert,
-        });
-        break;
-      case "auth/email-already-in-use":
-        $ionicPopup.alert({
-          template: $scope.errorEmailUsedAlert,
-        });
-        break;
-      case "auth/invalid-email":
-        $ionicPopup.alert({
-          template: $scope.emailInvalidAlert,
-        });
-        break;
-      default:
-        $ionicPopup.alert({
-          template: $scope.errorUnknowAlert,
-        });
+          case "auth/weak-password":
+            $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.weakPasswordAlert);
+            break;
+          case "auth/email-already-in-use":
+            $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.errorEmailUsedAlert);
+            break;
+          case "auth/invalid-email":
+            $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.emailInvalidAlert);
+            break;
+          default:
+            $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.errorUnknowAlert);
+        }
       }
-    }
     });
   }
 
@@ -3275,14 +3333,8 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   */
   $scope.getRandomStudent = function() {
     var randomStudent = Math.trunc(Math.random()*$scope.students.length);
-    
-    var alertPopup = $ionicPopup.alert({
-      title: $scope.randomStudentActionSheetOption,
-      template: $scope.students[randomStudent].name + ' ' + $scope.students[randomStudent].surname,
-    });
 
-    alertPopup.then(function(res) {
-    });
+    $scope.popupAlertCreate($scope.randomStudentActionSheetOption, $scope.students[randomStudent].name + ' ' + $scope.students[randomStudent].surname);
   }
   
   
@@ -3513,9 +3565,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             $scope.createNotificationItems($scope.studentsToEvaluate[pos].id, item, 'win');
             $scope.checkAchievements(item, $scope.studentsToEvaluate[pos], item.maxScore);
             $scope.checkMissions(item, $scope.studentsToEvaluate[pos], item.score);
-            $ionicPopup.alert({
-              template: $scope.notificationOfStudent + ': ' + $scope.studentsToEvaluate[pos].name + ' ' + $scope.studentsToEvaluate[pos].surname + ' ' + $scope.hasRecibedMaxPointsItemAlert + ': ' + item.name + ', ' + $scope.maxPointsHasBeenEstablishedAlert,
-            });
+            $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.notificationOfStudent + ': ' + $scope.studentsToEvaluate[pos].name + ' ' + $scope.studentsToEvaluate[pos].surname + ' ' + $scope.hasRecibedMaxPointsItemAlert + ': ' + item.name + ', ' + $scope.maxPointsHasBeenEstablishedAlert);
           } else {
             studentItemRef.set({
               'id' : item.id,
@@ -3535,9 +3585,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               });
               $scope.createNotificationItems($scope.studentsToEvaluate[pos].id, item, 'lose');
               $scope.checkAchievements(item, $scope.studentsToEvaluate[pos], 0);
-              $ionicPopup.alert({
-                template: $scope.notificationOfStudent + ': ' + $scope.studentsToEvaluate[pos].name + ' ' + $scope.studentsToEvaluate[pos].surname + ' ' + $scope.hasLostMinPointItemAlert + ': ' + item.name + ', ' + $scope.zeroPointEstablishedAlert,
-              });
+              $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.notificationOfStudent + ': ' + $scope.studentsToEvaluate[pos].name + ' ' + $scope.studentsToEvaluate[pos].surname + ' ' + $scope.hasLostMinPointItemAlert + ': ' + item.name + ', ' + $scope.zeroPointEstablishedAlert);
             }
           }
         }   
@@ -3596,9 +3644,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                   $scope.createNotificationItems($scope.students[studentPos].id, item, 'win');
                   $scope.checkAchievements(item, $scope.students[studentPos], item.maxScore);
                   $scope.checkMissions(item, $scope.students[studentPos], item.score);
-                  $ionicPopup.alert({
-                    template: $scope.notificationOfStudent + ': ' + $scope.students[studentPos].name + ' ' + $scope.students[studentPos].surname  + ' ' + $scope.hasRecibedMaxPointsItemAlert + ': ' + item.name + ', ' + $scope.maxPointsHasBeenEstablishedAlert,
-                  });
+                  $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.notificationOfStudent + ': ' + $scope.students[studentPos].name + ' ' + $scope.students[studentPos].surname  + ' ' + $scope.hasRecibedMaxPointsItemAlert + ': ' + item.name + ', ' + $scope.maxPointsHasBeenEstablishedAlert);
                 } else {
                   studentItemRef.set({
                     'id' : item.id,
@@ -3618,9 +3664,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                     });
                     $scope.createNotificationItems($scope.students[studentPos].id, item, 'lose');
                     $scope.checkAchievements(item, $scope.students[studentPos], 0);
-                    $ionicPopup.alert({
-                      template: $scope.notificationOfStudent + ': ' + $scope.students[studentPos].name + ' ' + $scope.students[studentPos].surname + ' ' + $scope.hasLostMinPointItemAlert + ': ' + item.name + ', ' + $scope.zeroPointEstablishedAlert,
-                    });
+                    $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.notificationOfStudent + ': ' + $scope.students[studentPos].name + ' ' + $scope.students[studentPos].surname + ' ' + $scope.hasLostMinPointItemAlert + ': ' + item.name + ', ' + $scope.zeroPointEstablishedAlert);
                   }
                 }
               }
@@ -3753,9 +3797,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var studentItemPointsToRemoveRef = firebase.database().ref('students/' + $scope.student.id + '/items/' + item.id + '/points');
     var studentClassPointsToRemoveRef = firebase.database().ref('students/' + $scope.student.id + '/classrooms/' + $scope.classroom.id + '/totalPoints');
     if ((Number($scope.student.items[item.id].points) - 1) < 0) {
-      $ionicPopup.alert({
-        template: $scope.studentDoesNotHaveEnougPointsAlert + ', ' + $scope.zeroPointsWillEstablishAlert,
-      });
+      $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.studentDoesNotHaveEnougPointsAlert + ', ' + $scope.zeroPointsWillEstablishAlert);
       studentItemPointsToRemoveRef.set(0);
       $scope.student.items[item.id].points = 0;
       $scope.createNotificationItems($scope.student.id, item, 'lose');
@@ -3788,9 +3830,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var studentItemPointsToAddRef = firebase.database().ref('students/' + $scope.student.id + '/items/' + item.id + '/points');
     var studentClassPointsToAddRef = firebase.database().ref('students/' + $scope.student.id + '/classrooms/' + $scope.classroom.id + '/totalPoints');
     if ((Number($scope.student.items[item.id].points) + 1) > item.maxScore) {
-      $ionicPopup.alert({
-        template: $scope.studentDoesNotHaveEnougPointsAlert + ', ' + $scope.maxPointsWillEstablishAlert,
-      });
+      $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.studentDoesNotHaveEnougPointsAlert + ', ' + $scope.maxPointsWillEstablishAlert);
       studentItemPointsToAddRef.set(item.maxScore);
       $scope.student.items[item.id].points = item.maxScore;
       $scope.createNotificationItems($scope.student.id, item, 'win');
@@ -3859,9 +3899,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             }
           });
         } else {
-          $ionicPopup.alert({
-            template: $scope.fileInvalidAlert,
-          });
+          $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
         }
       }
     });
@@ -3960,9 +3998,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   */
   $scope.createAchievement = function(name, description, requirements, maxLevel) {
     if (requirements > $scope.item.maxScore) {
-      $ionicPopup.alert({
-        template: $scope.cantAskMoreScoreAlert,
-      });
+      $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.cantAskMoreScoreAlert);
     } else {
       var achievementsNode = $firebaseArray(achievementsRef);
       achievementsNode.$loaded(function() {
@@ -4004,9 +4040,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                 }
               });
             } else {
-              $ionicPopup.alert({
-                template: $scope.fileInvalidAlert,
-              });
+              $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
             }
             $scope.file = undefined;
           } else {
@@ -4235,9 +4269,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             }
           });
         } else {
-          $ionicPopup.alert({
-            template: $scope.fileInvalidAlert,
-          });
+          $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
         }
       }
     });
@@ -4375,9 +4407,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               }
             });
           } else {
-            $ionicPopup.alert({
-              template: $scope.fileInvalidAlert,
-            });
+            $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
           }
           $scope.file = undefined;
         } else {
@@ -4399,9 +4429,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   */
   $scope.createRandomTeams = function(numTeams) {
     if (numTeams > $scope.students.length) {
-      $ionicPopup.alert({
-        template: $scope.cantCreateMoreTeamsThanStudentsAlert,
-      });
+      $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.cantCreateMoreTeamsThanStudentsAlert);
     } else {
       var objective = 'Random';
       var picture = $scope.defaultTeamAvatar;
@@ -4646,11 +4674,8 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   */
   $scope.getRandomTeam = function() {
     var randomTeam = Math.trunc(Math.random()*$scope.teams.length);
-    
-    var alertPopup = $ionicPopup.alert({
-      title: $scope.randomTeamActionSheetOption,
-      template: $scope.teams[randomTeam].name,
-    });
+
+    $scope.popupAlertCreate($scope.randomTeamActionSheetOption, $scope.teams[randomTeam].name);
 
     alertPopup.then(function(res) {
     });

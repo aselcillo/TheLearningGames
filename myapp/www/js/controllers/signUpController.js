@@ -1,9 +1,9 @@
 angular.module('app.signUpController', ['pascalprecht.translate'])
 
-.controller('signUpCtrl', ['$scope', '$stateParams', '$http', '$state', 'sharedData', '$ionicLoading', '$translate', '$rootScope',
+.controller('signUpCtrl', ['$scope', '$stateParams', '$http', '$state', 'sharedData', '$ionicLoading', '$translate', '$rootScope', '$ionicPopup',
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading, $translate, $rootScope) {
+function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading, $translate, $rootScope, $ionicPopup) {
 
   /**
     *************************************CLEAN FORM FUNCTIONS GOES HERE*******************************
@@ -62,6 +62,26 @@ function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading, $trans
     *************************************EVERY FUNCTIONALITY FUNCTION GOES HERE***********************
   */
 
+
+
+
+
+                                          /* ALERTS POPUP */
+  /**
+    @title: The tile of the popup, either an icon or a text.
+    @content: The message of the popup.
+    Used to create alert popups
+  */
+  $scope.popupAlertCreate = function(title, content) {
+    $ionicPopup.show({
+      title: title,
+      template: '<p style="text-align:center;">'+content+'</p>',
+      buttons: [
+        {text: $scope.okayText,}
+      ]
+    });
+  }
+
   /**
     Checks the sign up type and then signs up the user with their correspond account's type on the firebase database.
   */
@@ -102,9 +122,7 @@ function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading, $trans
               'avatar' : avatar,
             }).then(function() {
               sessionUser.sendEmailVerification();
-              $ionicPopup.alert({
-                template: $scope.checkEmailToVerify,
-              });
+              $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.checkEmailToVerify);
               $state.go('login');
               firebase.auth().signOut();
               $scope.modelSignUp = {};
@@ -122,9 +140,7 @@ function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading, $trans
               'emailVerified' : false,
             }).then(function() {
               sessionUser.sendEmailVerification();
-              $ionicPopup.alert({
-                template: $scope.checkEmailToVerify,
-              });
+              $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.checkEmailToVerify);
               $state.go('login');
               firebase.auth().signOut();
               $scope.modelSignUp = {};
@@ -137,24 +153,16 @@ function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading, $trans
       if (error) {
         switch (error.code) {
     			case "auth/weak-password":
-            $ionicPopup.alert({
-              template: $scope.weakPasswordAlert,
-            });
+            $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.weakPasswordAlert);
     				break;
     			case "auth/email-already-in-use":
-            $ionicPopup.alert({
-              template: $scope.errorEmailUsedAlert,
-            });
+            $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.errorEmailUsedAlert);
     				break;
     			case "auth/invalid-email":
-            $ionicPopup.alert({
-              template: $scope.emailInvalidAlert,
-            });
+            $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.emailInvalidAlert);
     				break;
     			default:
-            $ionicPopup.alert({
-              template: $scope.errorUnknowAlert,
-            });
+            $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.errorUnknowAlert);
         }
         $ionicLoading.hide();
 		  }
