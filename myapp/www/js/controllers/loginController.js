@@ -105,6 +105,26 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
     *************************************EVERY FUNCTIONALITY FUNCTION GOES HERE***********************
   */
 
+
+
+
+
+                                          /* ALERTS POPUP */
+  /**
+    @title: The tile of the popup, either an icon or a text.
+    @content: The message of the popup.
+    Used to create alert popups
+  */
+  $scope.popupAlertCreate = function(title, content) {
+    $ionicPopup.show({
+      title: title,
+      template: '<p style="text-align:center;">'+content+'</p>',
+      buttons: [
+        {text: $scope.okayText,}
+      ]
+    });
+  }
+
   /**
     Logs a user with teacher role if the credentials (email and password) are correct else shows an alert with the error.
   */
@@ -131,15 +151,11 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
             $scope.allFalseForm();
             $ionicLoading.hide();
           } else if (sessionUser.emailVerified == false && teachersArray.$getRecord(sessionUser.uid)){
-            $ionicPopup.alert({
-              template: $scope.verifyEmailAlert,
-            });
+            $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.verifyEmailAlert);
             firebase.auth().signOut();
             $ionicLoading.hide();
           } else {
-            $ionicPopup.alert({
-              template: $scope.accountTeacherNotExistAlert,
-            });
+            $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.accountTeacherNotExistAlert);
             firebase.auth().signOut();
             $ionicLoading.hide();
           }
@@ -152,24 +168,16 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
       if (error) {
         switch (error.code) {
     			case "auth/wrong-password":
-            $ionicPopup.alert({
-              template: $scope.wronCredentialsAlert,
-            });
+            $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.wronCredentialsAlert);
     				break;
     			case "auth/user-not-found":
-            $ionicPopup.alert({
-              template: $scope.userNotFoundAlert,
-            });
+            $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.userNotFoundAlert);
     				break;
     			case "auth/invalid-email":
-            $ionicPopup.alert({
-              template: $scope.emailInvalidAlert,
-            });
+            $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.emailInvalidAlert);
     				break;
     			default:
-            $ionicPopup.alert({
-              template: scope.errorUnknowAlert,
-            });
+            $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.errorUnknowAlert);
     				break;
   			}
         $ionicLoading.hide();
@@ -205,16 +213,12 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
               $scope.allFalseForm();
               $ionicLoading.hide();
             } else {
-              $ionicPopup.alert({
-                template: $scope.verifyEmailAlert,
-              });
+              $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.verifyEmailAlert);
               firebase.auth().signOut();
               $ionicLoading.hide();
             }
           } else {
-            $ionicPopup.alert({
-              template: $scope.accountStudentNotExistAlert,
-            });
+            $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.accountStudentNotExistAlert);
             firebase.auth().signOut();
             $ionicLoading.hide();
           }
@@ -227,24 +231,16 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
       if (error) {
         switch (error.code) {
     			case "auth/wrong-password":
-            $ionicPopup.alert({
-              template: $scope.wronCredentialsAlert,
-            });
+            $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.wronCredentialsAlert);
     				break;
     			case "auth/user-not-found":
-            $ionicPopup.alert({
-              template: $scope.userNotFoundAlert,
-            });
+            $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.userNotFoundAlert);
     				break;
     			case "auth/invalid-email":
-            $ionicPopup.alert({
-              template: $scope.emailInvalidAlert,
-            });
+            $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.emailInvalidAlert);
     				break;
     			default:
-            $ionicPopup.alert({
-              template: $scope.errorUnknowAlert,
-            });
+            $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.errorUnknowAlert);
     				break;
     		}
         $ionicLoading.hide();
@@ -272,10 +268,10 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
               if (error) {
                 switch (error.code) {
                   case "auth/argument-error":
-                    alert($scope.insertEmailValidAlert);
+                    $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.insertEmailValidAlert);
                     break;
                   default:
-                    alert($scope.insertEmailValidAlert);
+                    $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.insertEmailValidAlert);
                     break;
                 }
               }
