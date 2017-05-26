@@ -987,6 +987,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             '<input type="text" ng-disabled="mission.finished || isArchivedClassroom" placeholder="{{mission.name}}" ng-model="modelEditMission.name">'+
           '</label>'+
           '<label class="item item-input list-elements">'+
+            '<span class="input-label">FECHA DE FINALIZACIÓN</span>'+
+            '<input type="date" ng-disabled="mission.finished || isArchivedClassroom" placeholder="{{mission.date}}" ng-model="modelEditMission.date">'+
+          '</label>'+
+          '<label class="item item-input list-elements">'+
             '<span class="input-label">{{ \'ADDITIONAL_POINTS_MISSION\' | translate }}</span>'+
             '<input type="text" ng-disabled="mission.finished || isArchivedClassroom" placeholder="{{mission.additionalPoints}}" ng-model="modelEditMission.additionalPoints">'+
           '</label>'+
@@ -994,7 +998,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       '</form>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm  button-block" ng-click="closeModalEditMission()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button class="button button-calm  button-block" ng-disabled="!modelEditMission.name && !modelEditMission.additionalPoints" ng-click="editMission(modelEditMission.name, modelEditMission.additionalPoints)">EDITAR MISIÓN</button>'+
+        '<button class="button button-calm  button-block" ng-disabled="(!modelEditMission.name && !modelEditMission.additionalPoints && !modelEditMission.date) || mission.finished" ng-click="editMission(modelEditMission.name, modelEditMission.additionalPoints, modelEditMission.date)">EDITAR MISIÓN</button>'+
       '</div>'+
       '<h3 id="teams-heading5" class="teams-hdg5">{{ \'ITEMS\' | translate }}</h3>'+
       '<ion-list id="items-list9">'+
@@ -1554,7 +1558,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.showModalEditMission = function() {
     if (modalMissions != undefined) {
       if (modalMissions == 0) {
-        $scope.modelEditMission = {};  
+        $scope.modelEditMission = {};
+        var dateTimeStamp = new Date($scope.mission.date);
+        $scope.modelEditMission.date = dateTimeStamp;  
       }
     }
     $scope.editMissionModal.show();  
@@ -1734,11 +1740,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     'BACKUP', 'BECAUSE_COMPLETE_MISSION', 'CANCEL', 'CANT_ASK_MORE_SCORE_THAN_MAX', 'CANT_CREATE_MORE_TEAMS_THAN_STUDENT', 'CHANGE_SCORE', 'CLASS_CODE', 'DATA_CHANGED',
     'DELETE_ACHIEVEMENTS', 'DELETE_CLASSROOMS', 'DELETE_ITEMS', 'DELETE_MISSIONS', 'DELETE_REWARDS', 'DELETE_STUDENTS', 'DELETE_TEAMS', 'EDIT_SCORE', 'EMAIL_ALREADY_USED', 
     'EMAIL_CHANGED', 'EMAIL_INVALID', 'EVALUATE_STUDENTS', 'EVALUATE_TEAMS', 'EXPORT', 'FILE_INVALID', 'IMPORT', 'INTRODUCE_MISSION_NAME', 
-    'INTRODUCE_ADDITIONAL_POINTS', 'ERROR_ACCESS_UNKNOW', 'ERROR_WEAK_PASSWORD', 'HAS_FINISHED', 'HAS_FINISHED_MISSION', 'HAS_LOST_ACHIEVEMENT', 'HAS_LOST_MIN_POINTS_IN_ITEM', 'HAS_LOST_MIN_POINTS_IN_ITEM', 
+    'INTRODUCE_ADDITIONAL_POINTS', 'ERROR_ACCESS_UNKNOW', 'ERROR_WEAK_PASSWORD', 'HAS_EXPIRED', 'HAS_FINISHED', 'HAS_FINISHED_MISSION', 'HAS_LOST_ACHIEVEMENT', 
+    'HAS_LOST_MIN_POINTS_IN_ITEM', 'HAS_LOST_MIN_POINTS_IN_ITEM', 
     'HAS_RECIBED_MAX_POINTS_IN_ITEM', 'HAS_UNLOCKED_LEVEL_ACHIEVEMENT', 'HAVE_FINISHED_MISSION', 'HAVE_LOST_ACHIEVEMENT',  'HAVE_UNLOCKED_LEVEL_ACHIEVEMENT', 'IN_THE_ACHIEVEMENT', 
-    'INTRODUCE_MISSION_NAME', 'ITEM', 'MAX_SCORE_ESTABLISEHD', 'MAX_SCORE_WILL_ESTABLISH', 'MISSION',
+    'INTRODUCE_FINISH_DATE', 'INTRODUCE_MISSION_NAME', 'ITEM', 'MAX_SCORE_ESTABLISEHD', 'MAX_SCORE_WILL_ESTABLISH', 'MISSION',
     'NEXT', 'NOTIFICATION_OF_MISSION', 'NOTIFICATION_OF_STUDENT', 'NOTIFICATION_HAS_LOST' , 'NOTIFICATION_HAS_WIN', 'PASSWORD_CHANGED', 'POINTS_ON_THE_ITEM',
-    'RANDOM_STUDENT', 'RANDOM_TEAM', 'REWARD', 'SEND_MESSAGE', 'STUDENT_DOESNT_HAVE_ENOUGH_POINTS', 'TAKE_ATTENDANCE', 'TEACHER_MESSAGE', 
+    'RANDOM_STUDENT', 'RANDOM_TEAM', 'REWARD', 'SEND_MESSAGE', 'STUDENT_DOESNT_HAVE_ENOUGH_POINTS', 'TAKE_ATTENDANCE', 'TEACHER_MESSAGE', 'TIME_TO_FINISH_MISSION', 
     'UNARCHIVE_CLASSES', 'USE_DEFAULT_POINT', 'YOU_WIN_REWARD', 'ZERO_SCORE_ESTABLISHED', 'ZERO_SCORE_WILL_ESTABLISH']).then(function(translations) {
     $scope.actionAchievementsActionSheet = translations.ACTIONS_ACHIEVEMENTS;
     $scope.actionClassroomStudentsActionSheet = translations.ACTIONS_CLASSROOM_STUDENTS;
@@ -1777,6 +1784,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.hasRecibedMaxPointsItemAlert = translations.HAS_RECIBED_MAX_POINTS_IN_ITEM;
     $scope.importPopoverOption = translations.IMPORT;
     $scope.inTheAchievementText = translations.IN_THE_ACHIEVEMENT;
+    $scope.introduceFinishDateText = translations.INTRODUCE_FINISH_DATE;
     $scope.introduceMissionName = translations.INTRODUCE_MISSION_NAME;
     $scope.introduceAdditionalPoints = translations.INTRODUCE_ADDITIONAL_POINTS;
     $scope.maxPointsHasBeenEstablishedAlert = translations.MAX_SCORE_ESTABLISEHD;
@@ -1784,10 +1792,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.nextText = translations.NEXT;
     $scope.notificationFinishedMissionStudentSide = translations.HAVE_FINISHED_MISSION;
     $scope.notificationsFinishedMissionTeacherSide = translations.HAS_FINISHED_MISSION;
+    $scope.notificationMissionExpired = translations.HAS_EXPIRED;
     $scope.notificationMissionEnded = translations.HAS_FINISHED;
     $scope.notificationOfMission = translations.NOTIFICATION_OF_MISSION;
     $scope.notificationOfStudent = translations.NOTIFICATION_OF_STUDENT;
     $scope.notificationLose = translations.NOTIFICATION_HAS_LOST;
+    $scope.notificationTimeToFinishMissionText = translations.TIME_TO_FINISH_MISSION;
     $scope.notificationTypeItem = translations.ITEM;
     $scope.notificationTypeMission = translations.MISSION;
     $scope.notificationTypeReward = translations.REWARD;
@@ -1853,6 +1863,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.hasRecibedMaxPointsItemAlert = $translate.instant('HAS_RECIBED_MAX_POINTS_IN_ITEM');
     $scope.importPopoverOption = $translate.instant('IMPORT');
     $scope.inTheAchievementText = $translate.instant('IN_THE_ACHIEVEMENT');
+    $scope.introduceFinishDateText = $translate.instant('INTRODUCE_FINISH_DATE');
     $scope.introduceMissionName = $translate.instant('INTRODUCE_MISSION_NAME');
     $scope.introduceAdditionalPoints = $translate.instant('INTRODUCE_ADDITIONAL_POINTS');
     $scope.maxPointsHasBeenEstablishedAlert = $translate.instant('MAX_SCORE_ESTABLISEHD');
@@ -1860,10 +1871,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.nextText = $translate.instant('NEXT');
     $scope.notificationFinishedMissionStudentSide = $translate.instant('HAVE_FINISHED_MISSION');
     $scope.notificationsFinishedMissionTeacherSide = $translate.instant('HAS_FINISHED_MISSION');
+    $scope.notificationMissionExpired = $translate.instant('HAS_EXPIRED');
     $scope.notificationMissionEnded = $translate.instant('HAS_FINISHED');
     $scope.notificationOfMission = $translate.instant('NOTIFICATION_OF_MISSION');
     $scope.notificationOfStudent = $translate.instant('NOTIFICATION_OF_STUDENT');
     $scope.notificationLose = $translate.instant('NOTIFICATION_HAS_LOST');
+    $scope.notificationTimeToFinishMissionText = $translate.instant('TIME_TO_FINISH_MISSION');
     $scope.notificationTypeItem = $translate.instant('ITEM');
     $scope.notificationTypeMission = $translate.instant('MISSION');
     $scope.notificationTypeReward = $translate.instant('REWARD');
@@ -4850,6 +4863,8 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     Asks firebase for the correspond missions' references.
     Defines an event for each mission's reference which is triggered every time that database reference is modified.
     The event saves every mission in the session.
+    In the event is checked if a mission's finish date is less than the actual date. In that case the mission is set to finished and removes the mission's reference
+    on the students' tree on firebase database. Then sends a notification to the teacher.
   */
   $scope.getMissions = function() {
     var classroomMissionsRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/missions');
@@ -4864,6 +4879,17 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             var change = false;
             var index = -1;
             var mission = snapshot.val();
+            if(mission.date < Date.now() && mission.finished == false) {
+              var missionStateRef = firebase.database().ref('missions/' + mission.id + '/finished');
+              missionStateRef.set(true);
+              mission.finisehd = true;
+
+              for(var studentId in mission.students) {
+                var studentMissionToDeleteRef = firebase.database().ref('students/' + studentId + '/missions/' + mission.id);
+                studentMissionToDeleteRef.remove();
+              }
+              $scope.createNotificationsMissionFinishedByTime($scope.teacher, mission);
+            }
             for (j = 0 ; j < $scope.missions.length ; j++) {
               if (mission.id == $scope.missions[j].id) {
                 change = true;
@@ -4981,6 +5007,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     Then adds the mission's reference in the mission's students' trees as well as it adds the students' references in the mission's tree on the firebase database.
   */
   $scope.createMission = function(mission) {
+    var date = mission.date.getTime();
     if (mission.additionalPoints == undefined) {
       mission.additionalPoints = 0;
     }
@@ -4989,6 +5016,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       missionsNode.$add({
         'name' : mission.name,
         'additionalPoints' : mission.additionalPoints,
+        'date': date,
         'finished' : false,
       }).then(function(ref) {
         var id = ref.key;
@@ -5121,20 +5149,27 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   /**
     @name: The new name for the mission that is going to be edited.
     @additionalPoints: The new addditional points for the mission that is going to be edited.
+    @date: The new finish date for the mission that is going to be edited.
     Edits the mission saved in the session with the new data.
   */
-  $scope.editMission = function(name, additionalPoints) {
+  $scope.editMission = function(name, additionalPoints, date) {
+    var dateTimeStamp = date.getTime();
     var missionNameRef = firebase.database().ref('missions/' + $scope.mission.id + '/name');
     var missionAdditionalPointsRef = firebase.database().ref('missions/' + $scope.mission.id + '/additionalPoints');
-    if (name != undefined && additionalPoints != undefined) {
+    var missionDateRef = firebase.database().ref('missions/' + $scope.mission.id + '/date');
+    if (name != undefined && additionalPoints != undefined && date != undefined) {
       missionNameRef.set(name);
       missionAdditionalPointsRef.set(additionalPoints);
+      missionDateRef.set(dateTimeStamp);
     } else {
       if (name != undefined) {
         missionNameRef.set(name);
       }
       if (additionalPoints != undefined) {
         missionAdditionalPointsRef.set(additionalPoints);
+      }
+      if (date != undefined) {
+        missionDateRef.set(dateTimeStamp);
       }
     }
     $scope.closeModalEditMission();
@@ -5309,6 +5344,8 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
 
   /**
     Shows a popup to set a name for the mission that is about to be created.
+    Then opens another popup to set the additional points for the same mission.
+    Finally opens a final popup to set the finish date of the mission.
   */
   $scope.setNewMissionNamePopup = function() {
     $scope.newMission = {};
@@ -5330,12 +5367,32 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                 {text: $scope.cancelText},
                 {text: $scope.nextText,
                   onTap : function(e) {
-                    $scope.actionSheetItemsType = 'newMissionCreation';
-                    $scope.showSelectItemsModal();
-                  }},
+                    var missionDatePopup = $ionicPopup.show({
+                      title: $scope.introduceFinishDateText,
+                      template: '<input type="date" ng-model="newMission.date">',
+                      scope : $scope,
+
+                      buttons: [
+                        {text: $scope.cancelText},
+                        {text: $scope.nextText,
+                          onTap : function(e) {
+                            if($scope.newMission.date != undefined && $scope.newMission.date.getTime() > Date.now()) {
+                              $scope.actionSheetItemsType = 'newMissionCreation';
+                              $scope.showSelectItemsModal();
+                            } else {
+                              //THINGS TO DO
+                              //POPUP DE ALERTA
+                            }
+                          }
+                        },
+                      ]
+                    });
+                  }
+                },
               ]
             });
-         }},
+          }
+        },
       ]
     });
   };
@@ -5602,6 +5659,23 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       studentNoticationsArray.$add({
         'type' : $scope.notificationTypeReward,
         'message' : $scope.youHaveWinTheReward + ' ' + reward.name + ' ' + $scope.becouseCompleteMission + ' ' + mission.name,
+        'date' : Date.now(),
+      });
+    });
+  }
+
+  /**
+    @user: The user that is going to recieve the notification.
+    @mission: The missions that its time has expired.
+    Creates a notification for the teacher to inform that a mission's time has expired.
+  */
+  $scope.createNotificationsMissionFinishedByTime = function(user, mission) {
+    var teacherNotificationsRef = firebase.database().ref('teachers/' + user.$id + '/notifications/' + $scope.classroom.id);
+    var teacherNotificationsArray = $firebaseArray(teacherNotificationsRef);
+    teacherNotificationsArray.$loaded(function() {
+      teacherNotificationsArray.$add({
+        'type' : $scope.notificationTypeMission,
+        'message' : $scope.notificationTimeToFinishMissionText + ' ' + mission.name + ' ' + $scope.notificationMissionExpired,
         'date' : Date.now(),
       });
     });
