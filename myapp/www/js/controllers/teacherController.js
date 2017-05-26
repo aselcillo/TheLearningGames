@@ -1801,7 +1801,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     'INTRODUCE_ADDITIONAL_POINTS', 'ERROR_ACCESS_UNKNOW', 'ERROR_WEAK_PASSWORD', 'HAS_EXPIRED', 'HAS_FINISHED', 'HAS_FINISHED_MISSION', 'HAS_LOST_ACHIEVEMENT', 
     'HAS_LOST_MIN_POINTS_IN_ITEM', 'HAS_LOST_MIN_POINTS_IN_ITEM', 
     'HAS_RECIBED_MAX_POINTS_IN_ITEM', 'HAS_UNLOCKED_LEVEL_ACHIEVEMENT', 'HAVE_FINISHED_MISSION', 'HAVE_LOST_ACHIEVEMENT',  'HAVE_UNLOCKED_LEVEL_ACHIEVEMENT', 'IN_THE_ACHIEVEMENT', 
-    'INTRODUCE_FINISH_DATE', 'INTRODUCE_MISSION_NAME', 'ITEM', 'MAX_SCORE_ESTABLISEHD', 'MAX_SCORE_WILL_ESTABLISH', 'MISSION',
+    'INTRODUCE_FINISH_DATE', 'INTRODUCE_MISSION_NAME', 'ITEM', 'MAX_SCORE_ESTABLISEHD', 'MAX_SCORE_WILL_ESTABLISH', 'MISSION', 'MUST_SET_A_VALID_OR_MAYOR_DATE', 'MUST_SET_NAME_IN_MISSION',
     'NEXT', 'NOTIFICATION_OF_MISSION', 'NOTIFICATION_OF_STUDENT', 'NOTIFICATION_HAS_LOST' , 'NOTIFICATION_HAS_WIN', 'PASSWORD_CHANGED', 'OKAY', 'POINTS_ON_THE_ITEM',
     'RANDOM_STUDENT', 'RANDOM_TEAM', 'REWARD', 'SEND_MESSAGE', 'STUDENT_DOESNT_HAVE_ENOUGH_POINTS', 'TAKE_ATTENDANCE', 'TEACHER_MESSAGE', 'TIME_TO_FINISH_MISSION', 
     'UNARCHIVE_CLASSES', 'USE_DEFAULT_POINT', 'YOU_WIN_REWARD', 'ZERO_SCORE_ESTABLISHED', 'ZERO_SCORE_WILL_ESTABLISH']).then(function(translations) {
@@ -1847,6 +1847,8 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.introduceAdditionalPoints = translations.INTRODUCE_ADDITIONAL_POINTS;
     $scope.maxPointsHasBeenEstablishedAlert = translations.MAX_SCORE_ESTABLISEHD;
     $scope.maxPointsWillEstablishAlert = translations.MAX_SCORE_WILL_ESTABLISH;
+    $scope.mustSetNameMission = translations.MUST_SET_NAME_IN_MISSION;
+    $scope.mustSetValidDatePopup = translations.MUST_SET_A_VALID_OR_MAYOR_DATE;
     $scope.nextText = translations.NEXT;
     $scope.notificationFinishedMissionStudentSide = translations.HAVE_FINISHED_MISSION;
     $scope.notificationsFinishedMissionTeacherSide = translations.HAS_FINISHED_MISSION;
@@ -1927,6 +1929,8 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.introduceAdditionalPoints = $translate.instant('INTRODUCE_ADDITIONAL_POINTS');
     $scope.maxPointsHasBeenEstablishedAlert = $translate.instant('MAX_SCORE_ESTABLISEHD');
     $scope.maxPointsWillEstablishAlert = $translate.instant('MAX_SCORE_WILL_ESTABLISH');
+    $scope.mustSetNameMission = $translate.instant('MUST_SET_NAME_IN_MISSION');
+    $scope.mustSetValidDatePopup = $translate.instant('MUST_SET_A_VALID_OR_MAYOR_DATE');
     $scope.nextText = $translate.instant('NEXT');
     $scope.notificationFinishedMissionStudentSide = $translate.instant('HAVE_FINISHED_MISSION');
     $scope.notificationsFinishedMissionTeacherSide = $translate.instant('HAS_FINISHED_MISSION');
@@ -5382,8 +5386,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       buttons: [
         {text: $scope.cancelText},
         {text: $scope.nextText,
-         onTap: function(e) {
-           var missionAdditionalPointsPopup = $ionicPopup.show({
+        onTap: function(e) {
+          if($scope.newMission.name !=undefined) {
+            var missionAdditionalPointsPopup = $ionicPopup.show({
               title: $scope.introduceAdditionalPoints,
               template: '<input type="number" ng-model="newMission.additionalPoints">',
               scope : $scope,
@@ -5405,8 +5410,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                               $scope.actionSheetItemsType = 'newMissionCreation';
                               $scope.showSelectItemsModal();
                             } else {
-                              //THINGS TO DO
-                              //POPUP DE ALERTA
+                              $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.mustSetValidDatePopup);
                             }
                           }
                         },
@@ -5416,7 +5420,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                 },
               ]
             });
+          } else {
+             $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.mustSetNameMission);
           }
+        }
         },
       ]
     });
