@@ -9,7 +9,14 @@
 */
 
 /* Background */
-ion-view, ion-modal-view{ background:url('../img/bg.jpg') no-repeat; background-size: cover; }
+/*ion-view, ion-modal-view{ background:url('../img/bg.jpg') no-repeat; background-size: cover; }*/
+.scroll-content {
+	background:url('../img/bg.jpg') no-repeat; background-size: cover;
+}
+
+ion-nav-bar {
+	display: none;
+}
 
 /* Logout button */
 .logout{ color: rgba(255, 255, 255, 0.8) !important; }
@@ -51,7 +58,7 @@ ion-view, ion-modal-view{ background:url('../img/bg.jpg') no-repeat; background-
 	.popup .button:hover{ background-color: rgba(0, 0, 0, .5) !important; color: white  !important; }	
 	.popup input{ border:1px solid #cdcdcd; border-radius: 5px; text-indent: 10px; }
 
-.popup-container .popup { width: auto; max-width: 90% }
+.popup-container .popup { width: auto; max-width: 90%; min-width: 70%; }
 
 /* Menú desplegable */
 .platform-browser .popover{ 
@@ -69,9 +76,9 @@ ion-view, ion-modal-view{ background:url('../img/bg.jpg') no-repeat; background-
 	width: 60%; max-width: 100%; 
 	text-transform: uppercase;
 }
-	.platform-browser .popover .itemPopover { border-radius: 4px !important; border:none; background: none; color: white !important; }
-	.platform-android .popover .itemPopover { border-radius: 4px !important; border:none; background: none; color: white !important; }
-	.platform-ios .popover .itemPopover { border-radius: 4px !important; border:none; background: none; color: white !important; }
+	.platform-browser .popover .itemPopover { border-radius: 4px !important; border:none; background: none; color: white; }
+	.platform-android .popover .itemPopover { border-radius: 4px !important; border:none; background: none; color: white; }
+	.platform-ios .popover .itemPopover { border-radius: 4px !important; border:none; background: none; color: white; }
 	.popover .itemPopover:hover { background: rgba(0, 0, 0, 0.5);}
 	.popover .input-label{ color: white; }
 	.popover .item-select select { background: rgba(0,0,0,.5) !important; color: white;}

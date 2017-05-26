@@ -16,7 +16,7 @@ angular.module('app', ['ionic', 'app.loginController', 'app.settingsController',
   $translateProvider.useSanitizeValueStrategy('escape');
 })
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $ionicPopup, $translate, $rootScope) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -30,9 +30,44 @@ angular.module('app', ['ionic', 'app.loginController', 'app.settingsController',
     }
   });
 
+  /**
+    Needed for the translations to work in the controller's words.
+  */
+  $translate(['CANCEL', 'OKAY', 'SYSTEM_WARNING', 'YOU_WANT_TO_EXIT']).then(function(translations) {
+    $rootScope.cancelText = translations.CANCEL;
+    $rootScope.okayText = translations.OKAY;
+    $rootScope.systemWarning = translations.SYSTEM_WARNING;
+    $rootScope.sureYouWannaExit = translations.YOU_WANT_TO_EXIT;
+  });
+
+  /**
+    Needed for the translations to change their value in execution time.
+  */
+  $rootScope.$on('$translateChangeSuccess', function () {
+    $rootScope.cancelText = $translate.instant('CANCEL');
+    $rootScope.okayText = $translate.instant('OKAY');
+    $rootScope.systemWarning = $translate.instant('SYSTEM_WARNING');
+    $rootScope.sureYouWannaExit = $translate.instant('YOU_WANT_TO_EXIT');
+  });
+
   //Used to prevent the back button's action in smartphones.
   $ionicPlatform.registerBackButtonAction(function(event) {
-    event.preventDefault();
+    if (true) {
+      $ionicPopup.show({
+        title: $rootScope.systemWarning,
+        template: $rootScope.sureYouWannaExit,
+        buttons: [{
+            text: $rootScope.cancelText,
+          },
+          {
+            text: $rootScope.okayText,
+            onTap: function() {
+              ionic.Platform.exitApp();
+            }
+          },
+        ]
+      })
+    }
   }, 800);//registerBackButton
 
 })
@@ -71,18 +106,19 @@ var translationsEN = {
   ACCOUNT_STUDENT_NOT_EXIST: 'It doesn\'t exist an student\'s account like that',
   ACCOUNT_TEACHER_NOT_EXIST: 'It doesn\'t exist an teacher\'s account like that',
   ACHIEVEMENT: 'Achievement',
-  ACTIONS_ACHIEVEMENTS: 'Actions achievements',
-  ACTIONS_CLASSROOM_STUDENTS: 'Actions students',
-  ACTIONS_CLASSROOM_TEAMS: 'Actions teams',
-  ACTIONS_ITEMS: 'Actions items',
-  ACTION_MISSIONS: 'Actions missions',
-  ACTIONS_TEACHER_HOME: 'Actions teacher home',
-  ACTIONS_REWARDS: 'Actions rewards',
+  ACTIONS_ACHIEVEMENTS: 'Achievements\' actions',
+  ACTIONS_CLASSROOM_STUDENTS: 'Students\' actions',
+  ACTIONS_CLASSROOM_TEAMS: 'Teams\' actions',
+  ACTIONS_ITEMS: 'Items\' actions',
+  ACTION_MISSIONS: 'Missions\' actions',
+  ACTIONS_TEACHER_HOME: 'Teacher home actions',
+  ACTIONS_REWARDS: 'Rewards\' actions',
   ADD_ACHIEVEMENT: 'Add achievement',
   ADD_CLASS: 'Add class',
   ADD_ITEM: 'Add Item',
   ADD_LEVEL: 'Add level',
-  ADD_REWARD: 'Añadir recompensa',
+  ADD_MISSION: 'Add mission',
+  ADD_REWARD: 'Add reward',
   ADD_STUDENT: 'Add student',
   ADD_TEAM: 'Add team',
   ADDITIONAL_POINTS_MISSION: 'Additional points (Optional)',
@@ -155,6 +191,7 @@ var translationsEN = {
   EXPORT: 'Export',
   FILE_INVALID: 'The file is not a valid image',
   FORGOT_PASSWORD: 'Forgot password?',
+  HAS_EXPIRED: 'has expired',
   HAS_FINISHED: 'has finished',
   HAS_FINISHED_MISSION: 'has ended the mission',
   HAS_LOST_ACHIEVEMENT: 'has lost the achievement',
@@ -169,6 +206,7 @@ var translationsEN = {
   IMAGE: 'Image',
   IMPORT: 'Import',
   IN_THE_ACHIEVEMENT: 'in the achievement',
+  INTRODUCE_FINISH_DATE: 'Introduce a finish date',
   INSERT_CLASS_CODE: 'Insert a class code',
   INSERT_EMAIL_CORRECT: 'Insert an email valid',
   INTRODUCE_MISSION_NAME: 'Introduce a missions name',
@@ -234,15 +272,15 @@ var translationsEN = {
   SAVE_CHANGES: 'Save changes',
   SCORE: 'Score',
   SEE_ARCHIVED_CLASSES: 'Show archived',
-  SEE_CLASS_HASHCODE: 'See classroom\'s hashcode',
-  SEE_CLASS_SHOP: 'Show classroom\'s shop',
-  SEE_MISSIONS: 'Show misions',
+  SEE_CLASS_HASHCODE: 'Classroom\'s hashcode',
+  SEE_MISSIONS: 'Misions',
   SEE_MISSIONS_ENDED: 'Show ended',
-  SEE_RULES: 'Show rules',
-  SEE_TEAMS: 'Show teams',
+  SEE_RULES: 'Rules',
+  SEE_TEAMS: 'Teams',
   SELECT: 'Select',
   SELECT_ACHIEVEMENTS: 'Select achievements',
   SELECT_CLASSROOMS: 'Select classrooms',
+  SELECT_IMAGE: 'Select image',
   SELECT_ITEMS: 'Select items',
   SELECT_MISIONS: 'Select missions',
   SELECT_QUANTITY_RANDOM_TEAMS: 'Select quantity of random teams to create',
@@ -262,6 +300,7 @@ var translationsEN = {
   STUDENTS: 'Students',
   STUDENTS_VIEW: 'Student\'s view',
   SURNAME: 'Surname',
+  SYSTEM_WARNING: 'System warning',
   TAKE_ATTENDANCE: 'Take attendance',
   TAKE_PICTURE: 'Take picture',
   TEACHER: 'Teacher',
@@ -270,6 +309,7 @@ var translationsEN = {
   TEAMS: 'Teams',
   TEAM_OBJECTIVE: 'Objective',
   TERMS_CONDITIONS: 'Terms and conditions',
+  TIME_TO_FINISH_MISSION: 'Time to finish mission',
   TOTAL_POINTS_CLASS: 'Total points',
   UNARCHIVE_CLASSES: 'Unarchive classrooms',
   UNLOCKED_ACHIEVEMENTS: 'Unlocked achievements',
@@ -282,7 +322,9 @@ var translationsEN = {
   USE_REWARD: 'Use reward',
   VERIFY_EMAIL: 'Verify your email to get access to your account',
   WRONG_CREDENTIALS: 'Email or password is wrong',
+  YOU_DONT_HAVE_LEVEL: 'You don\'t have a level',
   YOU_HAVE_NOTIFICATIONS: 'You have notifications',
+  YOU_WANT_TO_EXIT: 'Are you sure you want to exit?',
   YOU_WIN_REWARD: 'You have win the reward',
   YOUR_ACTUAL_LEVEL: 'Current level',
   YOUR_PASSWORD: 'Your Password',
@@ -308,6 +350,7 @@ var translationsES= {
   ADD_CLASS: 'Añadir clase',
   ADD_ITEM: 'Añadir item',
   ADD_LEVEL: 'Añadir nivel',
+  ADD_MISSION: 'Añadir misión',
   ADD_REWARD: 'Añadir recompensa',
   ADD_STUDENT: 'Añadir estudiante',
   ADD_TEAM: 'Añadir equipo',
@@ -338,7 +381,7 @@ var translationsES= {
   CLASS_CODE: 'Código de la clase',
   CLASS_CLOSED: 'La clase se encuentra cerrada',
   CLASSES_ARCHIVED: 'Clases archivadas',
-  CLEAR_NOTIFICATIONS: 'Limpiar notificaciones',
+  CLEAN_NOTIFICATIONS: 'Limpiar notificaciones',
   CONFIGURE_LEVELS: 'Configurar niveles',
   CONFIRM_PASSWORD: 'Confirmar contraseña',
   COPY_ELEMENTS_FROM_ANOTHER_CLASS: 'Copiar elementos de otra clase',
@@ -381,6 +424,7 @@ var translationsES= {
   EXPORT: 'Exportar',
   FILE_INVALID: 'El archivo no es una imagen válida',
   FORGOT_PASSWORD: '¿Se te olvidó tu contraseña?',
+  HAS_EXPIRED: 'ha expirado',
   HAS_FINISHED: 'ha finalizado',
   HAS_FINISHED_MISSION: 'ha terminado la misión',
   HAS_LOST_MIN_POINTS_IN_ITEM: 'ha perdido más puntuacion de la máxima establecida en el item',
@@ -396,6 +440,7 @@ var translationsES= {
   IMAGE: 'Imagen',
   IMPORT: 'Importar',
   IN_THE_ACHIEVEMENT: 'en el logro',
+  INTRODUCE_FINISH_DATE: 'Introduzca una fecha de finalización',
   INSERT_CLASS_CODE: 'Introduzca un código de clase',
   INSERT_EMAIL_CORRECT: 'Introduzca un email correcto',
   INTRODUCE_MISSION_NAME: 'Introduzca un nombre de misión',
@@ -461,15 +506,15 @@ var translationsES= {
   SAVE_CHANGES: 'Salvar cambios',
   SCORE: 'Puntuación',
   SEE_ARCHIVED_CLASSES: 'Ver archivadas',
-  SEE_CLASS_HASHCODE: 'Ver hashcode de la clase',
-  SEE_CLASS_SHOP: 'Ver tienda de clase',
-  SEE_MISSIONS: 'Ver misiones',
+  SEE_CLASS_HASHCODE: 'Hashcode de la clase',
+  SEE_MISSIONS: 'Misiones',
   SEE_MISSIONS_ENDED: 'Ver finalizadas',
-  SEE_RULES: 'Ver reglas',
-  SEE_TEAMS: 'Ver equipos',
+  SEE_RULES: 'Reglas',
+  SEE_TEAMS: 'Equipos',
   SELECT: 'Seleccionar',
   SELECT_ACHIEVEMENTS: 'Selecciona logros',
   SELECT_CLASSROOMS: 'Selecciona clases',
+  SELECT_IMAGE: 'Seleccionar imagen',
   SELECT_ITEMS: 'Selecciona items',
   SELECT_MISIONS: 'Selecciona misiones',
   SELECT_QUANTITY_RANDOM_TEAMS: 'Selecciona cantidad de equipos a crear',
@@ -489,6 +534,7 @@ var translationsES= {
   STUDENT_DOESNT_HAVE_ENOUGH_POINTS: 'El alumno no dispone de suficientes puntos en el item',
   STUDENTS_VIEW: 'Vista de alumnos',
   SURNAME: 'Apellido',
+  SYSTEM_WARNING: 'Aviso de sistema',
   TAKE_ATTENDANCE: 'Tomar asistencia',
   TAKE_PICTURE: 'Seleccionar foto',
   TEACHER: 'Profesor',
@@ -497,6 +543,7 @@ var translationsES= {
   TEAMS: 'Equipos',
   TEAM_OBJECTIVE: 'Objetivo',
   TERMS_CONDITIONS: 'Términos y condiciones',
+  TIME_TO_FINISH_MISSION: 'El tiempo para finalizar la misión',
   TOTAL_POINTS_CLASS: 'Puntos totales',
   UNARCHIVE_CLASSES: 'Desarchivar clases',
   UNLOCKED_ACHIEVEMENTS: 'Logros desbloqueados',
@@ -509,7 +556,9 @@ var translationsES= {
   USE_REWARD: 'Usar recompensa',
   WRONG_CREDENTIALS: 'Email o contraseña son incorrectos',
   VERIFY_EMAIL: 'Verifique su correo para poder acceder a su cuenta',
+  YOU_DONT_HAVE_LEVEL: 'No dispones de nivel',
   YOU_HAVE_NOTIFICATIONS: 'Tienes notificaciones',
+  YOU_WANT_TO_EXIT: '¿Seguro que quiere salir?',
   YOU_WIN_REWARD: 'Has ganado la recompensa',
   YOUR_ACTUAL_LEVEL: 'Tu nivel actual',
   YOUR_PASSWORD: 'Tu contraseña',

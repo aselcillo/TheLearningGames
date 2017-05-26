@@ -42,7 +42,11 @@
           <ion-item class ="teacherAvatar">
             <img src={{student.avatar}} class="avatar">
           </ion-item>
-          <input class="button button-light button-block button-outline" type="file" id="inputAvatar" ng-click="updateStudentAvatar()">
+          <label ng-show="!isIOS" class="button button-calm inputfile">
+            {{ 'SELECT_IMAGE' | translate }}
+            <input class="button button-light button-block button-outline" type="file" id="inputAvatar" ng-click="updateStudentAvatar()">
+          </label>
+          <input class="button button-light button-block button-outline" ng-show="isIOS" type="file" id="inputAvatar" ng-click="updateStudentAvatar()">
           <label class="item item-input list-elements" id="signUp-input3">
             <span class="inputLabelProfile">
               <i class="icon ion-person"></i>&nbsp;&nbsp;{{ 'NAME' | translate }}
@@ -114,11 +118,11 @@
       </header>
       <div>
         <ion-list class="list-elements align-text-center">
-          <ion-item ng-click="profileForm()">{{ 'PROFILE'| translate }}</ion-item>
-          <ion-item ng-click="openPopoverLanguages($event)">{{ 'LANGUAGES'| translate }}</ion-item>
-          <ion-item ng-controller="settingsCtrl" ng-click="showHelpPopup()">{{ 'HELP' | translate}}</ion-item>
-          <ion-item ng-controller="settingsCtrl" ng-click="showTermsPopup()">{{ 'TERMS_CONDITIONS' | translate }}</ion-item>
-          <ion-item ng-controller="settingsCtrl" ng-click="showAboutPopup()">{{ 'ABOUT' | translate }}</ion-item>
+          <ion-item ng-click="profileForm()"><i class="icon ion-compose"></i>&nbsp;&nbsp;{{ 'PROFILE'| translate }}</ion-item>
+          <ion-item ng-click="openPopoverLanguages($event)"><i class="icon ion-earth"></i>&nbsp;&nbsp;{{ 'LANGUAGES'| translate }}</ion-item>
+          <ion-item ng-controller="settingsCtrl" ng-click="showHelpPopup()"><i class="icon ion-help-circled"></i>&nbsp;&nbsp;{{ 'HELP' | translate}}</ion-item>
+          <ion-item ng-controller="settingsCtrl" ng-click="showTermsPopup()"><i class="icon ion-document-text"></i>&nbsp;&nbsp;{{ 'TERMS_CONDITIONS' | translate }}</ion-item>
+          <ion-item ng-controller="settingsCtrl" ng-click="showAboutPopup()"><i class="icon ion-information-circled"></i>&nbsp;&nbsp;{{ 'ABOUT' | translate }}</ion-item>
         </ion-list>
       </div>
       <div class="button-bar action_buttons">
@@ -144,7 +148,8 @@
         <label class="item item-input list-elements" id="signUp-input3">
           <span class="inputLabelProfile">
             <i class="icon ion-thumbsup"></i>&nbsp;&nbsp;{{ 'LEVEL_IN_CLASS' | translate }}:
-            <span>{{studentLevel.level}}&nbsp;({{studentLevel.title}})</span>
+            <span ng-show="hasLevel">{{studentLevel.level}}&nbsp;({{studentLevel.title}})</span>
+            <span ng-show="!hasLevel">{{ 'YOU_DONT_HAVE_LEVEL' | translate }}</span>
           </span>
         </label>
         <label class="item item-input list-elements" id="signUp-input3">
@@ -154,7 +159,7 @@
           </span>
         </label>
       </div>
-      <button class="button button-calm  button-block" ng-click="showNotificationsModal()" ng-show="notifications.length > 0">{{ 'YOU_HAVE_NOTIFICATIONS' | translate }}</button>
+      <button class="button button-calm  button-block" ng-click="showNotificationsModal()" ng-show="notifications.length > 0"><i class="icon ion-alert"></i>&nbsp;&nbsp;{{ 'YOU_HAVE_NOTIFICATIONS' | translate }}</button>
       <div class="button-bar action_buttons"></div>
       <div ng-show="unlockedItemsExist">
         <h3 id="teacherHome-heading1" class="margin-top-null">{{ 'UNLOCKED_ITEMS' | translate }}</h3>
@@ -210,18 +215,9 @@
               <p>{{item.description}}</p>
             </label>
             <label class="item item-input list-elements">
-              <span class="input-label">{{ 'REQUIREMENTS' | translate }}</span>
-              <p>{{item.requirements}}</p>
-            </label>
-            <label class="item item-input list-elements">
               <span class="input-label">{{ 'MAX_SCORE' | translate }}</span>
               <p>{{item.maxScore}}</p>
             </label>
-            <label class="item item-input list-elements">
-              <span class="input-label">{{ 'SCORE' | translate }}</span>
-              <p>{{item.score}}</p>
-            </label>
-            <ion-toggle toggle-class="toggle-calm" ng-model="modelItem.useForLevel" ng-disabled="true" ng-checked="item.useForLevel">{{ 'USE_FOR_LEVEL' | translate }}</ion-toggle>
         </form>
       </div>
       <div ng-show="unlockedAchievementsExist">
@@ -308,9 +304,6 @@
           </ion-item>
         </ion-list>
       </div>
-      <button class="button button-positive button-float addButton" ng-click="showActionsheetRewards()">
-        <i class="icon ion-plus"></i>
-      </button>
     </div>
 
     <!-- Missions Page -->
@@ -335,4 +328,11 @@
     </div>
     
   </ion-content>
+  <ion-footer>
+
+    <button ng-show="rewardShopView" ng-disabled="isArchivedClassroom" class="button button-positive button-float addButton" ng-click="showActionsheetRewards()">
+      <i class="icon ion-plus"></i>
+    </button>
+
+  </ion-footer>
 </ion-view>

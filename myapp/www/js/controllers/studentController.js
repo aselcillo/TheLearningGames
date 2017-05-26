@@ -25,9 +25,9 @@
 
 angular.module('app.studentController', ['pascalprecht.translate'])
 
-.controller('studentHomeCtrl', ['$scope', '$stateParams', '$http', '$state', '$ionicModal', '$ionicActionSheet', '$ionicPopover', '$firebaseArray', 'sharedData', '$ionicLoading', '$translate', '$rootScope', '$ionicLoading', 'localStorageService',
+.controller('studentHomeCtrl', ['$scope', '$stateParams', '$http', '$state', '$ionicModal', '$ionicActionSheet', '$ionicPopover', '$firebaseArray', 'sharedData', '$ionicLoading', '$translate', '$rootScope', '$ionicLoading', 'localStorageService', '$ionicPopup',
 
-function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $ionicPopover, $firebaseArray, sharedData, $ionicLoading, $translate, $rootScope, $ionicLoading, localStorageService) {
+function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $ionicPopover, $firebaseArray, sharedData, $ionicLoading, $translate, $rootScope, $ionicLoading, localStorageService, $ionicPopup) {
 
   /**
     *************************************DECLARE FUNCTIONS FOR NG-SHOW********************************
@@ -105,7 +105,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     $ionicActionSheet.show({
       titleText: $scope.actionsRewardsActionSheet,
       buttons: [
-        { text: $scope.buyRewardsActionSheetOption },
+        { text: '<i class="icon ion-card"></i>' + $scope.buyRewardsActionSheetOption },
       ],
       cancelText: $scope.cancelText,
       cancel: function() {
@@ -141,18 +141,21 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
   $scope.templateStudentHomePopover = '<ion-popover-view>'+
     '<ion-list class="list-elements">'+
-      '<ion-item class="itemPopover" ng-hide="archivedClassroomsToShow" ng-click="showArchivedClassrooms(true)">{{ \'SEE_ARCHIVED_CLASSES\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-show="archivedClassroomsToShow" ng-click="showArchivedClassrooms(false)">{{ \'HIDE_ARCHIVED_CLASSES\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverStudentHome()">{{ \'SETTINGS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-hide="archivedClassroomsToShow" ng-click="closePopoverStudentHome(); showArchivedClassrooms(true)"><i class="icon ion-eye"></i>&nbsp;&nbsp;{{ \'SEE_ARCHIVED_CLASSES\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-show="archivedClassroomsToShow" ng-click="closePopoverStudentHome(); showArchivedClassrooms(false)"><i class="icon ion-eye-disabled"></i>&nbsp;&nbsp;{{ \'HIDE_ARCHIVED_CLASSES\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverStudentHome(); settingsForm()"><i class="icon ion-gear-a"></i>&nbsp;&nbsp;{{ \'SETTINGS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover log-out-button" ng-click="closePopoverStudentHome(); logOut()"><i class="icon ion-log-out"></i>&nbsp;&nbsp;{{ \'LOG_OUT\' | translate }}</ion-item>'+
+
     '</ion-list>'+
   '</ion-popover-view>';
 
   $scope.templateStudentDefaultPopover = '<ion-popover-view>'+
     '<ion-list class="list-elements">'+
-      '<ion-item class="itemPopover" ng-click="teamsForm(); closePopoverStudentDefault()">{{ \'SEE_TEAMS\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="rewardShopForm(); closePopoverStudentDefault()">{{ \'SEE_CLASS_SHOP\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="missionsForm(); closePopoverStudentDefault()">{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
-      '<ion-item class="itemPopover" ng-click="settingsForm(); closePopoverStudentDefault()">{{ \'SETTINGS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverStudentDefault(); teamsForm()"><i class="icon ion-person-stalker"></i>&nbsp;&nbsp;{{ \'SEE_TEAMS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverStudentDefault(); rewardShopForm()"><i class="icon ion-bag"></i>&nbsp;&nbsp;{{ \'REWARD_SHOP\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverStudentDefault(); missionsForm()"><i class="icon ion-map"></i>&nbsp;&nbsp;{{ \'SEE_MISSIONS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover" ng-click="closePopoverStudentDefault(); settingsForm()"><i class="icon ion-gear-a"></i>&nbsp;&nbsp;{{ \'SETTINGS\' | translate }}</ion-item>'+
+      '<ion-item class="itemPopover log-out-button" ng-click="closePopoverStudentDefault(); logOut()"><i class="icon ion-log-out"></i>&nbsp;&nbsp;{{ \'LOG_OUT\' | translate }}</ion-item>'+
     '</ion-list>'+
   '</ion-popover-view>';
 
@@ -319,12 +322,6 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       '</label>'+
       '<label class="item item-input list-elements">'+
         '<span class="inputLabelProfile">'+
-          '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;{{ \'PERMISSION\' | translate }}'+
-          '<p>{{reward.permission}}</p>'+
-        '</span>'+
-      '</label>'+
-      '<label class="item item-input list-elements">'+
-        '<span class="inputLabelProfile">'+
           '<i class="icon ion-minus-round"></i>&nbsp;&nbsp;{{ \'PRICE\' | translate }}'+
           '<p>{{reward.price}}</p>'+
         '</span>'+
@@ -335,7 +332,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
           '<p>{{(student.rewards[reward.id].amount != undefined) ? student.rewards[reward.id].amount : 0}}</p>'+
         '</span>'+
       '</label>'+
-      '<button class="button button-positive button-block" ng-show="possessedReward" ng-click="consumeReward(reward)">{{ \'USE_REWARD\' | translate }}</button>'+
+      '<button class="button button-positive button-block" ng-show="possessedReward" ng-disabled="isArchivedClassroom" ng-click="consumeReward(reward)">{{ \'USE_REWARD\' | translate }}</button>'+
       '<button ng-click="closeModalRewardDialog()" class="button button-positive button-block icon ion-arrow-return-left"></button>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -516,7 +513,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   
   /**
     Checks if there is a user signed up in the application.
-    It is used to prevent the users to enter this page without permission.
+    It is used to prevent the users to enter this page without.
   */
   if (firebase.auth().currentUser === null) {
     $state.go('login');
@@ -586,9 +583,14 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   });
 
   $scope.defaultAvatar = 'img/userDefaultAvatar.png';
+
+  $scope.isArchivedClassroom = false;
+  $scope.isIOS = ionic.Platform.isIOS() || ionic.Platform.isIPad();
   
   var itemModal;
-  var sessionUser
+  var sessionUser;
+
+  $scope.hasLevel = false;
   
   var rootRef = firebase.database().ref();
 
@@ -607,7 +609,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
                                           /* FUNCTIONS IN PROFILE */
 
   /**
-    Updates the student's avatar with an image uploaded from the local storage and saves it on the firebase database.
+    Updates the student's avatar with an image uploaded from the local storage and saves it on the firebase storage.
   */
   $scope.updateStudentAvatar = function() {
     var downloadURL;
@@ -617,7 +619,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       if (e.target.files.length > 0) {
         $ionicLoading.show();
         var file = e.target.files[0];
-        var fileExtension = file.name.split('.').pop();
+        var fileExtension = file.name.split('.').pop().toLowerCase();
         if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
           var storageRef = firebase.storage().ref('Profile_Pictures/' + sessionUser.uid + '/profilePicture');
           var task = storageRef.put(file);
@@ -643,7 +645,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
             }
           });
         } else {
-          alert($scope.fileInvalidAlert);
+          $ionicPopup.alert({
+            template: $scope.fileInvalidAlert,
+          });
         }
       }
     });
@@ -678,7 +682,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     }
 
     $scope.settingsForm();
-    alert($scope.dataChangedAlert);
+    $ionicPopup.alert({
+      template: $scope.dataChangedAlert,
+    });
   }
 
   /**
@@ -687,7 +693,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   $scope.updateStudentPassword = function(newPassword) {
     sessionUser.updatePassword(newPassword).then(function() {
       $scope.settingsForm();
-      alert($scope.passwordChangedAlert);
+      $ionicPopup.alert({
+        template: $scope.passwordChangedAlert,
+      });
     });
   }
 
@@ -699,7 +707,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       var studentEmailRef = firebase.database().ref('students/' + sessionUser.uid + '/email');
       studentEmailRef.set(email);
       $scope.settingsForm();
-      alert($scope.emailChangedAlert);
+      $ionicPopup.alert({
+        template: $scope.emailChangedAlert,
+      });
     });
   }
 
@@ -713,12 +723,25 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   */
   $scope.logOut = function() {
     if (firebase.auth().currentUser) {
-      var userData = {};
-      localStorageService.set('userCredentials', userData);
-      
-      firebase.auth().signOut();
-      $state.go('login');
-      $scope.studentHomeForm();
+      $ionicPopup.show({
+        title: $rootScope.systemWarning,
+        template: $rootScope.sureYouWannaExit,
+        buttons: [{
+            text: $rootScope.cancelText,
+          },
+          {
+            text: $rootScope.okayText,
+            onTap: function() {
+              var userData = {};
+              localStorageService.set('userCredentials', userData);
+              
+              firebase.auth().signOut();
+              $state.go('login');
+              $scope.studentHomeForm();
+            }
+          },
+        ]
+      })
     }
   }
 
@@ -773,6 +796,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     Adds that classroom's reference in the student's tree on the firebase database and all the information needed in any classroom.
   */
   $scope.addClass = function(hashcode) {
+    hashcode = hashcode.toUpperCase();
     var hashcodesArray = $firebaseArray(hashcodesRef);
     hashcodesArray.$loaded(function() {
       var classToAdd = hashcodesArray.$getRecord(hashcode);
@@ -794,7 +818,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
           var classToEditRef = firebase.database().ref('classrooms/' + classToAdd.id + '/students/' + $scope.student.$id);
           classToEditRef.set(true);
         } else {
-          alert($scope.classroomClosedAlert);
+          $ionicPopup.alert({
+            template: $scope.classroomClosedAlert,
+          });
         }
       }).then(function() {
         $scope.getClassrooms();
@@ -831,7 +857,6 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
   $scope.showArchivedClassrooms = function(value) {
     $scope.archivedClassroomsToShow = value;
-    $scope.closePopoverStudentHome();
   }
                     
   
@@ -899,10 +924,10 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
           if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
             $scope.$apply();
           }
-          $scope.getStudentLevel();
         });
       }
     });
+    $scope.getStudentLevel();
   }
 
   /**
@@ -939,7 +964,11 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       for (var element in classroomLevelsArray) {
         if ($scope.student.classrooms[$scope.classroom.id].totalPoints >= classroomLevelsArray[element].requiredPoints) {
           $scope.studentLevel = classroomLevelsArray[element];
+          $scope.hasLevel = true;
         }
+      }
+      if($scope.studentLevel.title == undefined) {
+        $scope.hasLevel = false;
       }
     });
   }
@@ -1262,7 +1291,9 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
       $scope.getRewards();
     } else {
-      alert($scope.notEnoughPointsAlert + ' ' + reward.name);
+      $ionicPopup.alert({
+        template: $scope.notEnoughPointsAlert + ' ' + reward.name,
+      });
     }
   }
 
@@ -1486,7 +1517,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     @reward: The rewards that the student buyed or consumed.
     @operationType: Buy or consume. Tells the method what message send
     @student: The student that buyed or consumed the reward.
-    Creates a notification for the teacher to informa that the student either buyed or consumed the reward.
+    Creates a notification for the teacher to inform that the student either buyed or consumed the reward.
   */
   $scope.createNotificationRewards = function(reward, operationType, student) {
     var teacherNotificationsRef = firebase.database().ref('teachers/' + $scope.classroom.teacher + '/notifications/' + $scope.classroom.id);
@@ -1509,7 +1540,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   }
 
   /**
-    Removes all the notificatiosn from the student's tree.
+    Removes all the notifications from the student's tree.
   */
   $scope.deleteNotifications = function() {
     var notificationToDeleteRef = firebase.database().ref('students/' + $scope.student.id + '/notifications/' + $scope.classroom.id);
