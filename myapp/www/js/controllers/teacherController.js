@@ -1964,7 +1964,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.showHashcodePopup = function() {
     var alertPopup = $ionicPopup.alert({
       title: $scope.classCodePopup,
-      template: $scope.classroom.hashcode,
+      template: '<p class="classroom-hashcode">' + $scope.classroom.hashcode + '</p>',
     });
 
     alertPopup.then(function(res) {
