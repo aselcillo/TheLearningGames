@@ -140,6 +140,7 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
             $ionicPopup.alert({
               template: $scope.accountTeacherNotExistAlert,
             });
+            firebase.auth().signOut();
             $ionicLoading.hide();
           }
         });
@@ -186,8 +187,8 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
     }
 
     if (firebase.auth().currentUser) {
-      $ionicLoading.hide();
       firebase.auth().signOut();
+      $ionicLoading.hide();
     }
 
     firebase.auth().signInWithEmailAndPassword(email, password).then(function(firebaseUser) {
@@ -214,6 +215,7 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
             $ionicPopup.alert({
               template: $scope.accountStudentNotExistAlert,
             });
+            firebase.auth().signOut();
             $ionicLoading.hide();
           }
         });
