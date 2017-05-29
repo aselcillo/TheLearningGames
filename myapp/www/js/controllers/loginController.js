@@ -132,6 +132,13 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
 
     if (email != undefined && email.includes('@')) {
       $ionicLoading.show();
+    } else {
+      if (email == undefined) {
+        email = 'a@a';
+      }
+      if (password == undefined) {
+        password = 'a';
+      }
     }
 
     if (firebase.auth().currentUser) {
@@ -192,6 +199,13 @@ function ($scope, $stateParams, $http, $state, sharedData, $firebaseArray, $ioni
 
     if (email != undefined && email.includes('@')) {
       $ionicLoading.show();
+    }  else {
+      if (email == undefined) {
+        email = 'a@a';
+      }
+      if (password == undefined) {
+        password = 'a';
+      }
     }
 
     if (firebase.auth().currentUser) {

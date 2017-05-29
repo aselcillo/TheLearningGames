@@ -2049,9 +2049,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       title: $scope.classCodePopup,
       template: '<p class="classroom-hashcode">' + $scope.classroom.hashcode + '</p>',
     });
-
-    alertPopup.then(function(res) {
-    });
   };
 
 
@@ -4681,9 +4678,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var randomTeam = Math.trunc(Math.random()*$scope.teams.length);
 
     $scope.popupAlertCreate($scope.randomTeamActionSheetOption, $scope.teams[randomTeam].name);
-
-    alertPopup.then(function(res) {
-    });
   }
 
   
