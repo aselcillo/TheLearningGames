@@ -722,7 +722,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           '</label>'+
           '<div class="button-bar action_buttons">'+
             '<button class="button button-calm  button-block" ng-click="closeModalNewClass()">{{ \'CANCEL\' | translate }}</button>'+
-            '<button class="button button-calm  button-block" ng-click="createClassroom(modelNewClass.name) ; closeModalNewClass()">{{ \'CREATE\' | translate }}</button>'+
+            '<button class="button button-calm  button-block" ng-disabled="!modelNewClass.name" ng-click="createClassroom(modelNewClass.name) ; closeModalNewClass()">{{ \'CREATE\' | translate }}</button>'+
           '</div>'+
         '</form>'+
       '</div>'+
@@ -1965,10 +1965,11 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.zeroPointsWillEstablishAlert = $translate.instant('ZERO_SCORE_WILL_ESTABLISH');
   });
 
-  $scope.achievementGalery = ['img/userDefaultAvatar.png', 'img/teamDefaultAvatar.png', 'img/achievementDefaultBadge.png']
   $scope.defaultAvatar = 'img/userDefaultAvatar.png';
   $scope.defaultTeamAvatar = 'img/teamDefaultAvatar.png';
-  $scope.defaultAchievementAvatar = 'img/achievementDefaultBadge.png';
+  $scope.achievementGalery = ['img/badges/01.png', 'img/badges/02.png', 'img/badges/03.png', 'img/badges/04.png', 'img/badges/05.png',
+    'img/badges/06.png', 'img/badges/07.png', 'img/badges/08.png', 'img/badges/09.png', 'img/badges/10.png', 'img/badges/11.png'];
+  $scope.defaultAchievementAvatar = $scope.achievementGalery[0];
 
   $scope.isArchivedClassroom = false;
   $scope.isIOS = ionic.Platform.isIOS() || ionic.Platform.isIPad();
