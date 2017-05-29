@@ -16,7 +16,7 @@
         </ion-item>
       </ion-list>
       <div class="button-bar action_buttons">
-        <button id="teacherHome-button12" class="button button-calm  button-block bold-font" ng-click="showModalAddClass()">{{ 'ADD_CLASS' | translate }}</button>
+        <button id="teacherHome-button12" class="button button-calm  button-block bold-font" ng-click="showPopupAddClass()">{{ 'ADD_CLASS' | translate }}</button>
       </div>
       <div ng-show="archivedClassroomsToShow">
         <h3 id="studentHome-heading1" class="margin-top-null">{{ 'CLASSES_ARCHIVED' | translate }}</h3>
@@ -205,6 +205,7 @@
         </label>
       </div>
       <div>
+        <button class="button button-calm  button-block" ng-click="showNotificationsModal()" ng-show="item.notifications != undefined"><i class="icon ion-alert"></i>&nbsp;&nbsp;{{ 'YOU_HAVE_NOTIFICATIONS' | translate }}</button>
         <form id="editItemForm">
             <label class="item item-input list-elements">
               <span class="input-label">{{ 'NAME' | translate }}</span>

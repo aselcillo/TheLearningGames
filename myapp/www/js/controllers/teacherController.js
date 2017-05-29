@@ -930,17 +930,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     '</ion-content>'+
   '</ion-modal-view>';
 
-  $scope.quantityRandomTeamsModal = '<ion-modal-view>'+
-    '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
-      '<h3>{{ \'SELECT_QUANTITY_RANDOM_TEAMS\' | translate }}</h3>'+
-	  '<input class="item item-input" id="quantityInput" type="number" ng-model="modelQuantity.quantity">'+
-	  '<div class="button-bar action_buttons">'+
-		'<button class="button button-calm  button-block" ng-click="closeModalQuantityRandomTeams()">{{ \'CANCEL\' | translate }}</button>'+
-		'<button class="button button-calm  button-block" ng-click="createRandomTeams(modelQuantity.quantity)">{{ \'CREATE_RANDOM_TEAMS\' | translate }}</button>'+
-	  '</div>'+
-    '</ion-content>'+
-  '</ion-modal-view>';
-
   $scope.teamDialogModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3>{{team.name}}</h3>'+
@@ -1547,20 +1536,6 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.closeModalStudentDialog = function() {
     $scope.studentDialogModal.hide();
   }
-  
-                                          /* QUANTITY RANDOM TEAMS MODAL */
-
-  $scope.quantityRandomTeamsModal = $ionicModal.fromTemplate($scope.quantityRandomTeamsModal, {
-    scope: $scope,
-    animation: 'slide-in-up'
-  });
-  $scope.showModalQuantityRandomTeams = function() {
-    $scope.modelQuantity = {};
-    $scope.quantityRandomTeamsModal.show();  
-  }
-  $scope.closeModalQuantityRandomTeams = function() {
-    $scope.quantityRandomTeamsModal.hide();
-  }
 
                                         /* TEAM DIALOG MODAL */  
 
@@ -1801,9 +1776,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     'INTRODUCE_ADDITIONAL_POINTS', 'ERROR_ACCESS_UNKNOW', 'ERROR_WEAK_PASSWORD', 'HAS_EXPIRED', 'HAS_FINISHED', 'HAS_FINISHED_MISSION', 'HAS_LOST_ACHIEVEMENT', 
     'HAS_LOST_MIN_POINTS_IN_ITEM', 'HAS_LOST_MIN_POINTS_IN_ITEM', 
     'HAS_RECIBED_MAX_POINTS_IN_ITEM', 'HAS_UNLOCKED_LEVEL_ACHIEVEMENT', 'HAVE_FINISHED_MISSION', 'HAVE_LOST_ACHIEVEMENT',  'HAVE_UNLOCKED_LEVEL_ACHIEVEMENT', 'IN_THE_ACHIEVEMENT', 
-    'INTRODUCE_FINISH_DATE', 'INTRODUCE_MISSION_NAME', 'ITEM', 'MAX_SCORE_ESTABLISEHD', 'MAX_SCORE_WILL_ESTABLISH', 'MISSION', 'MUST_SET_A_VALID_OR_MAYOR_DATE', 'MUST_SET_NAME_IN_MISSION',
+    'INTRODUCE_FINISH_DATE', 'INTRODUCE_MISSION_NAME', 'ITEM', 'MAX_SCORE_ESTABLISEHD', 'MAX_SCORE_WILL_ESTABLISH', 'MISSION', 'MUST_INTRODUCE_QUANTITY_TEAMS', 'MUST_SET_A_VALID_OR_MAYOR_DATE', 'MUST_SET_NAME_IN_MISSION',
     'NEXT', 'NOTIFICATION_OF_MISSION', 'NOTIFICATION_OF_STUDENT', 'NOTIFICATION_HAS_LOST' , 'NOTIFICATION_HAS_WIN', 'PASSWORD_CHANGED', 'OKAY', 'POINTS_ON_THE_ITEM',
-    'RANDOM_STUDENT', 'RANDOM_TEAM', 'REWARD', 'SEND_MESSAGE', 'STUDENT_DOESNT_HAVE_ENOUGH_POINTS', 'TAKE_ATTENDANCE', 'TEACHER_MESSAGE', 'TIME_TO_FINISH_MISSION', 
+    'RANDOM_STUDENT', 'RANDOM_TEAM', 'REWARD', 'SELECT_QUANTITY_RANDOM_TEAMS', 'SEND_MESSAGE', 'STUDENT_DOESNT_HAVE_ENOUGH_POINTS', 'TAKE_ATTENDANCE', 'TEACHER_MESSAGE', 'TIME_TO_FINISH_MISSION', 
     'UNARCHIVE_CLASSES', 'USE_DEFAULT_POINT', 'YOU_WIN_REWARD', 'ZERO_SCORE_ESTABLISHED', 'ZERO_SCORE_WILL_ESTABLISH']).then(function(translations) {
     $scope.actionAchievementsActionSheet = translations.ACTIONS_ACHIEVEMENTS;
     $scope.actionClassroomStudentsActionSheet = translations.ACTIONS_CLASSROOM_STUDENTS;
@@ -1847,6 +1822,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.introduceAdditionalPoints = translations.INTRODUCE_ADDITIONAL_POINTS;
     $scope.maxPointsHasBeenEstablishedAlert = translations.MAX_SCORE_ESTABLISEHD;
     $scope.maxPointsWillEstablishAlert = translations.MAX_SCORE_WILL_ESTABLISH;
+    $scope.mustIntroduceQuantityTeams = translations.MUST_INTRODUCE_QUANTITY_TEAMS;
     $scope.mustSetNameMission = translations.MUST_SET_NAME_IN_MISSION;
     $scope.mustSetValidDatePopup = translations.MUST_SET_A_VALID_OR_MAYOR_DATE;
     $scope.nextText = translations.NEXT;
@@ -1871,6 +1847,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.pointOnTheitemSet = translations.POINTS_ON_THE_ITEM;
     $scope.randomStudentActionSheetOption = translations.RANDOM_STUDENT;
     $scope.randomTeamActionSheetOption = translations.RANDOM_TEAM;
+    $scope.selectQuantityRandomTeamsText = translations.SELECT_QUANTITY_RANDOM_TEAMS;
     $scope.sendMessageActionSheetOption = translations.SEND_MESSAGE;
     $scope.studentDoesNotHaveEnougPointsAlert = translations.STUDENT_DOESNT_HAVE_ENOUGH_POINTS;
     $scope.takeAttendanceActionSheetOption = translations.TAKE_ATTENDANCE;
@@ -1929,6 +1906,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.introduceAdditionalPoints = $translate.instant('INTRODUCE_ADDITIONAL_POINTS');
     $scope.maxPointsHasBeenEstablishedAlert = $translate.instant('MAX_SCORE_ESTABLISEHD');
     $scope.maxPointsWillEstablishAlert = $translate.instant('MAX_SCORE_WILL_ESTABLISH');
+    $scope.mustIntroduceQuantityTeams = $translate.instant('MUST_INTRODUCE_QUANTITY_TEAMS');
     $scope.mustSetNameMission = $translate.instant('MUST_SET_NAME_IN_MISSION');
     $scope.mustSetValidDatePopup = $translate.instant('MUST_SET_A_VALID_OR_MAYOR_DATE');
     $scope.nextText = $translate.instant('NEXT');
@@ -1953,6 +1931,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.pointOnTheitemSet = $translate.instant('POINTS_ON_THE_ITEM');
     $scope.randomStudentActionSheetOption = $translate.instant('RANDOM_STUDENT');
     $scope.randomTeamActionSheetOption = $translate.instant('RANDOM_TEAM');
+    $scope.selectQuantityRandomTeamsText = $translate.instant('SELECT_QUANTITY_RANDOM_TEAMS');
     $scope.sendMessageActionSheetOption = $translate.instant('SEND_MESSAGE');
     $scope.studentDoesNotHaveEnougPointsAlert = $translate.instant('STUDENT_DOESNT_HAVE_ENOUGH_POINTS');
     $scope.takeAttendanceActionSheetOption = $translate.instant('TAKE_ATTENDANCE');
@@ -2063,7 +2042,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     if (firebase.auth().currentUser) {
       $ionicPopup.show({
         title: $scope.systemWarning,
-        template: $scope.sureYouWannaExit,
+        template: '<p style="text-align:center;">'+$scope.sureYouWannaExit+'</p>',
         buttons: [{
             text: $scope.cancelText,
           },
@@ -3553,7 +3532,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             'id' : item.id,
             'points' : item.score,
           });
-		      $scope.createNotificationItems($scope.studentsToEvaluate[pos].id, item, 'win');
+		      $scope.createNotificationItems($scope.studentsToEvaluate[pos].id, item, 'win', item.score);
           $scope.checkAchievements(item, $scope.studentsToEvaluate[pos], item.score);
           $scope.checkMissions(item, $scope.studentsToEvaluate[pos], item.score);
 
@@ -3564,7 +3543,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               'id' : item.id,
               'points' : item.maxScore,
             });
-            $scope.createNotificationItems($scope.studentsToEvaluate[pos].id, item, 'win');
+            $scope.createNotificationItems($scope.studentsToEvaluate[pos].id, item, 'win', item.score);
             $scope.checkAchievements(item, $scope.studentsToEvaluate[pos], item.maxScore);
             $scope.checkMissions(item, $scope.studentsToEvaluate[pos], item.score);
             $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.notificationOfStudent + ': ' + $scope.studentsToEvaluate[pos].name + ' ' + $scope.studentsToEvaluate[pos].surname + ' ' + $scope.hasRecibedMaxPointsItemAlert + ': ' + item.name + ', ' + $scope.maxPointsHasBeenEstablishedAlert);
@@ -3574,9 +3553,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               'points' : Number(studentPoints) + Number(item.score),
             });
       			if (Math.sign(item.score) == -1) {
-      			  $scope.createNotificationItems($scope.studentsToEvaluate[pos].id, item, 'lose');
+      			  $scope.createNotificationItems($scope.studentsToEvaluate[pos].id, item, 'lose', item.score);
       			} else {
-      			  $scope.createNotificationItems($scope.studentsToEvaluate[pos].id, item, 'win');
+      			  $scope.createNotificationItems($scope.studentsToEvaluate[pos].id, item, 'win', item.score);
       			}
             $scope.checkAchievements(item, $scope.studentsToEvaluate[pos], (Number(studentPoints) + Number(item.score)));
             $scope.checkMissions(item, $scope.studentsToEvaluate[pos], item.score);
@@ -3585,7 +3564,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                 'id' : item.id,
                 'points' : 0,
               });
-              $scope.createNotificationItems($scope.studentsToEvaluate[pos].id, item, 'lose');
+              $scope.createNotificationItems($scope.studentsToEvaluate[pos].id, item, 'lose', item.score);
               $scope.checkAchievements(item, $scope.studentsToEvaluate[pos], 0);
               $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.notificationOfStudent + ': ' + $scope.studentsToEvaluate[pos].name + ' ' + $scope.studentsToEvaluate[pos].surname + ' ' + $scope.hasLostMinPointItemAlert + ': ' + item.name + ', ' + $scope.zeroPointEstablishedAlert);
             }
@@ -3597,7 +3576,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           'id' : item.id,
           'points' : item.score,
         });
-        $scope.createNotificationItems($scope.studentsToEvaluate[pos].id, item, 'win');
+        $scope.createNotificationItems($scope.studentsToEvaluate[pos].id, item, 'win', item.score);
         $scope.checkAchievements(item, $scope.studentsToEvaluate[pos], item.score);
         $scope.checkMissions(item, $scope.studentsToEvaluate[pos], item.score);
       }
@@ -3633,7 +3612,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                   'id' : item.id,
                   'points' : item.score,
                 });
-                $scope.createNotificationItems($scope.students[studentPos].id, item, 'win');
+                $scope.createNotificationItems($scope.students[studentPos].id, item, 'win', item.score);
                 $scope.checkAchievements(item, $scope.students[studentPos], item.score);
                 $scope.checkMissions(item, $scope.students[studentPos], item.score);
               } else {
@@ -3643,7 +3622,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                     'id' : item.id,
                     'points' : item.maxScore,
                   });
-                  $scope.createNotificationItems($scope.students[studentPos].id, item, 'win');
+                  $scope.createNotificationItems($scope.students[studentPos].id, item, 'win', item.score);
                   $scope.checkAchievements(item, $scope.students[studentPos], item.maxScore);
                   $scope.checkMissions(item, $scope.students[studentPos], item.score);
                   $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.notificationOfStudent + ': ' + $scope.students[studentPos].name + ' ' + $scope.students[studentPos].surname  + ' ' + $scope.hasRecibedMaxPointsItemAlert + ': ' + item.name + ', ' + $scope.maxPointsHasBeenEstablishedAlert);
@@ -3653,9 +3632,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                     'points' : Number(studentPoints) + Number(item.score),
                   });
         				  if (Math.sign(item.score) == -1) { 
-                    $scope.createNotificationItems($scope.students[studentPos].id, item, 'lose');
+                    $scope.createNotificationItems($scope.students[studentPos].id, item, 'lose', item.score);
         				  } else {
-                    $scope.createNotificationItems($scope.students[studentPos].id, item, 'win');
+                    $scope.createNotificationItems($scope.students[studentPos].id, item, 'win', item.score);
         				  }
                   $scope.checkAchievements(item, $scope.students[studentPos], (Number(studentPoints) + Number(item.score)));
                   $scope.checkMissions(item, $scope.students[studentPos], item.score);
@@ -3664,7 +3643,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                       'id' : item.id,
                       'points' : 0,
                     });
-                    $scope.createNotificationItems($scope.students[studentPos].id, item, 'lose');
+                    $scope.createNotificationItems($scope.students[studentPos].id, item, 'lose', item.score);
                     $scope.checkAchievements(item, $scope.students[studentPos], 0);
                     $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.notificationOfStudent + ': ' + $scope.students[studentPos].name + ' ' + $scope.students[studentPos].surname + ' ' + $scope.hasLostMinPointItemAlert + ': ' + item.name + ', ' + $scope.zeroPointEstablishedAlert);
                   }
@@ -3676,7 +3655,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                 'id' : item.id,
                 'points' : item.score,
               });
-              $scope.createNotificationItems($scope.students[studentPos].id, item, 'win');
+              $scope.createNotificationItems($scope.students[studentPos].id, item, 'win', item.score);
               $scope.checkAchievements(item, $scope.students[studentPos], item.score);
               $scope.checkMissions(item, $scope.students[studentPos], item.score);
             }
@@ -3743,7 +3722,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         $scope.points = item.score;
         $scope.popupChooseScore = $ionicPopup.show({
           title: $scope.editScoreText,
-          template: '<input id="inputScore" type="number" ng-model="points">',
+          template: '<input id="inputScore" value="'+ item.score +'" type="number" ng-model="points">',
           scope: $scope,
           buttons: [
             {
@@ -3761,6 +3740,13 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             },
             { text: $scope.useDefaultPoints,
               type: 'button-positive',
+              onTap: function(e) {
+                for(var element in $scope.items) {
+                  if(item.id == $scope.items[element].id) {
+                    item.score = $scope.items[element].score;
+                  }
+                }
+              }
             },
             {
               text: $scope.changeScore,
@@ -3802,12 +3788,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.studentDoesNotHaveEnougPointsAlert + ', ' + $scope.zeroPointsWillEstablishAlert);
       studentItemPointsToRemoveRef.set(0);
       $scope.student.items[item.id].points = 0;
-      $scope.createNotificationItems($scope.student.id, item, 'lose');
+      $scope.createNotificationItems($scope.student.id, item, 'lose', 1);
       $scope.checkAchievements(item, $scope.student, 0);
     } else {
       studentItemPointsToRemoveRef.set((Number($scope.student.items[item.id].points) - 1));
       $scope.student.items[item.id].points = (Number($scope.student.items[item.id].points) - 1);
-      $scope.createNotificationItems($scope.student.id, item, 'lose');
+      $scope.createNotificationItems($scope.student.id, item, 'lose', 1);
       $scope.checkAchievements(item, $scope.student, Number($scope.student.items[item.id].points));
     }
 
@@ -3835,7 +3821,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.studentDoesNotHaveEnougPointsAlert + ', ' + $scope.maxPointsWillEstablishAlert);
       studentItemPointsToAddRef.set(item.maxScore);
       $scope.student.items[item.id].points = item.maxScore;
-      $scope.createNotificationItems($scope.student.id, item, 'win');
+      $scope.createNotificationItems($scope.student.id, item, 'win', 1);
       $scope.checkAchievements(item, $scope.student, item.maxScore);
       for (var element in $scope.items) {
         if ($scope.items[element].id == item.id) {
@@ -3845,7 +3831,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     } else {
       studentItemPointsToAddRef.set((Number($scope.student.items[item.id].points) + 1));
       $scope.student.items[item.id].points = (Number($scope.student.items[item.id].points) + 1);
-      $scope.createNotificationItems($scope.student.id, item, 'win');
+      $scope.createNotificationItems($scope.student.id, item, 'win', 1);
       $scope.checkAchievements(item, $scope.student, Number($scope.student.items[item.id].points));
       for (var element in $scope.items) {
         if ($scope.items[element].id == item.id) {
@@ -4422,6 +4408,30 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         $scope.getStudentsForTeamSelection();
         $scope.getTeams();
       });  
+    });
+  }
+
+  /**
+    Opens a popup with an input to introduce a number of teams to create.
+  */
+  $scope.showPopupCreateRandomTeams = function() {
+    $ionicPopup.show({
+      title: $scope.selectQuantityRandomTeamsText,
+      template: '<input type="number" id="numRandomteamsInput" ng-model="quantity">',
+      buttons: [
+        {text: $scope.cancelText},
+        {text: $scope.okayText,
+          onTap: function(e) {
+            var numberTeams = document.getElementById("numRandomteamsInput").value;
+            if(numberTeams != undefined && numberTeams != "") {
+              $scope.createRandomTeams(numberTeams);
+            } else {
+              $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.mustIntroduceQuantityTeams);
+              e.preventDefault();
+            }
+          }
+        }
+      ]
     });
   }
 
@@ -5382,7 +5392,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         {text: $scope.cancelText},
         {text: $scope.nextText,
         onTap: function(e) {
-          if($scope.newMission.name !=undefined) {
+          if($scope.newMission.name !=undefined && $scope.newMission.name != "") {
             var missionAdditionalPointsPopup = $ionicPopup.show({
               title: $scope.introduceAdditionalPoints,
               template: '<input type="number" ng-model="newMission.additionalPoints">',
@@ -5406,6 +5416,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                               $scope.showSelectItemsModal();
                             } else {
                               $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.mustSetValidDatePopup);
+                              e.preventDefault();
                             }
                           }
                         },
@@ -5417,6 +5428,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             });
           } else {
              $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.mustSetNameMission);
+             e.preventDefault();
           }
         }
         },
@@ -5565,23 +5577,31 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     @operationType: Win or lose. Tells the method what message send.
     Creates a notification for the students to inform that won or lost points in an item.
   */
-  $scope.createNotificationItems = function(userId, item, operationType) {
+  $scope.createNotificationItems = function(userId, item, operationType, points) {
     var studentNotificationsRef = firebase.database().ref('students/' + userId + '/notifications/' + $scope.classroom.id);
+    var studentItemNotifications = firebase.database().ref('students/' + userId + '/items/' + item.id + '/notifications');
     var studentNoticationsArray = $firebaseArray(studentNotificationsRef);
+    var studentItemNotificationsArray = $firebaseArray(studentItemNotifications);
     studentNoticationsArray.$loaded(function() {
-      if (operationType == 'win') {
-        studentNoticationsArray.$add({
-          'type' : $scope.notificationTypeItem,
-          'message' : $scope.notificationWin + ' 1 ' + $scope.pointOnTheitemSet + ': ' + item.name,
-          'date' : Date.now(),
-        });
-      } else if (operationType == 'lose') {
-        studentNoticationsArray.$add({
-          'type' : $scope.notificationTypeItem,
-          'message' : $scope.notificationLose + ' 1 ' + $scope.pointOnTheitemSet + ': ' + item.name,
-          'date' : Date.now(),
-        });
-      }
+      studentItemNotificationsArray.$loaded(function() {
+        if (operationType == 'win') {
+          var notification = {
+            'type' : $scope.notificationTypeItem,
+            'message' : $scope.notificationWin + ' ' + points + ' ' + $scope.pointOnTheitemSet + ': ' + item.name,
+            'date' : Date.now(),
+          }
+          studentNoticationsArray.$add(notification);
+          studentItemNotificationsArray.$add(notification);
+        } else if (operationType == 'lose') {
+          var notification = {
+            'type' : $scope.notificationTypeItem,
+            'message' : $scope.notificationLose + ' ' + points + ' ' + $scope.pointOnTheitemSet + ': ' + item.name,
+            'date' : Date.now(),
+          }
+          studentNoticationsArray.$add(notification);
+          studentItemNotificationsArray.$add(notification);
+        }
+      });
     });
   }
 
@@ -5659,7 +5679,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       teacherNotificationsArray.$loaded(function() {
         teacherNotificationsArray.$add({
           'type' : $scope.notificationTypeMission,
-          'message' : $scope.notificationOfStudent + ' ' + studentToEvaluate.name + ' ' + studentToEvaluate.surname + ' ' + $scope.notificationFinishedMissionTeacherSide + ': ' + mission.name,
+          'message' : $scope.notificationOfStudent + ' ' + studentToEvaluate.name + ' ' + studentToEvaluate.surname + ' ' + $scope.notificationsFinishedMissionTeacherSide + ': ' + mission.name,
           'date' : Date.now(),
         });
         if (finished) {

@@ -70,6 +70,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   $scope.rulesItemsForm = function() {
     $scope.allFalse();
     $scope.rulesItemsView = true;
+    $scope.inItem = false;
   }
 
   $scope.itemsForm = function() {
@@ -226,21 +227,6 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     '</ion-content>'+
   '</ion-modal-view>';
 
-  $scope.addClassModal = '<ion-modal-view>'+
-    '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
-      '<h3 id="attendance-heading3" class="attendance-hdg3">{{ \'INSERT_CLASS_CODE\' | translate }}</h3>'+
-      '<form id="addClassHashCodeForm" class="list">'+
-        '<label class="item item-input">'+
-          '<input type="text" ng-model="modelAddClass.hashCode" placeholder="{{ \'CLASS_CODE\' | translate }}">'+
-        '</label>'+
-      '</form>'+
-      '<div class="button-bar action_buttons">'+
-        '<button class="button button-calm  button-block" ng-click="closeModalAddClass()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button class="button button-calm  button-block" ng-disabled="!modelAddClass.hashCode" ng-click="addClass(modelAddClass.hashCode)">{{ \'ADD_CLASS\' | translate }}</button>'+
-      '</div>'+
-    '</ion-content>'+
-  '</ion-modal-view>';
-
   $scope.achievementDialogModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3>{{achievement.name}}</h3>'+
@@ -380,14 +366,19 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   $scope.notificationsModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3 id="attendance-heading3" class="attendance-hdg3">{{ \'NOTIFICATIONS\' | translate }}</h3>'+
-      '<ion-list id="attendance-list7">'+
+      '<ion-list id="attendance-list7" ng-show="!inItem">'+
         '<ion-item id="attendance-checkbox2" ng-repeat="notification in notifications">{{notification.message}}'+
           '<p>{{notification.type}}</p>'+
         '</ion-item>'+
       '</ion-list>'+
+      '<ion-list id="attendance-list7" ng-show="inItem">'+
+        '<ion-item id="attendance-checkbox3" ng-repeat="notification in item.notifications">{{notification.message}}'+
+          '<p>{{notification.type}}</p>'+
+        '</ion-item>'+
+      '</ion-list>'+
       '<div class="button-bar action_buttons">'+
-        '<button class="button button-calm  button-block" ng-click="closeNotificationsModal()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button class="button button-calm  button-block" ng-click="deleteNotifications()">{{ \'CLEAN_NOTIFICATIONS\' | translate }}</button>'+
+        '<button class="button button-calm button-block" ng-click="closeNotificationsModal()">{{ \'CANCEL\' | translate }}</button>'+
+        '<button class="button button-calm button-block" ng-click="deleteNotifications()">{{ \'CLEAN_NOTIFICATIONS\' | translate }}</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -410,20 +401,6 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   $scope.closeSelectRewardsModal = function() {
     $scope.selectRewardsModal.hide();
     $scope.enableSelectButton = false;
-  }
-
-                                        /* ADD CLASS MODAL */
-
-  $scope.addClassModal = $ionicModal.fromTemplate($scope.addClassModal, {
-    scope: $scope,
-    animation: 'slide-in-up'
-  });
-  $scope.showModalAddClass = function() {
-    $scope.modelAddClass = {};
-    $scope.addClassModal.show();  
-  }
-  $scope.closeModalAddClass = function() {
-    $scope.addClassModal.hide();
   }
 
                                         /* ITEM DIALOG MODAL */
@@ -555,7 +532,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   /**
     Needed for the translations to work in the controller's words.
   */
-  $translate(['ACTIONS_REWARDS', 'BUY_REWARDS', 'CANCEL', 'CLASS_CLOSED', 'DATA_CHANGED', 'EMAIL_CHANGED', 'NOT_ENOUGH_POINTS', 
+  $translate(['ACTIONS_REWARDS', 'BUY_REWARDS', 'CANCEL', 'CLASS_CLOSED', 'DATA_CHANGED', 'EMAIL_CHANGED', 'INSERT_CLASS_CODE', 'NOT_VALID_HASHCODE', 'MUST_INTRODUCE_HASHCODE', 'NOT_ENOUGH_POINTS', 
     'NOTIFICATION_OF_STUDENT', 'NOTIFICATION_REWARD_OBTAINED', 'NOTIFICATION_REWARD_SPENT', 'PASSWORD_CHANGED', 'REWARD']).then(function(translations) {
     $scope.actionsRewardsActionSheet = translations.ACTIONS_REWARDS;
     $scope.buyRewardsActionSheetOption = translations.BUY_REWARDS;
@@ -563,7 +540,10 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     $scope.classroomClosedAlert = translations.CLASS_CLOSED;
     $scope.dataChangedAlert = translations.DATA_CHANGED;
     $scope.emailChangedAlert = translations.EMAIL_CHANGED;
+    $scope.introduceHashcodeText = translations.INSERT_CLASS_CODE;
+    $scope.mustintroduceHashcodeText = translations.MUST_INTRODUCE_HASHCODE;
     $scope.notEnoughPointsAlert = translations.NOT_ENOUGH_POINTS;
+    $scope.notValidHashcode = translations.NOT_VALID_HASHCODE;
     $scope.notificationOfStudent = translations.NOTIFICATION_OF_STUDENT;
     $scope.notificationRewardObtained = translations.NOTIFICATION_REWARD_OBTAINED;
     $scope.notificationRewardSpent = translations.NOTIFICATION_REWARD_SPENT;
@@ -581,7 +561,10 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     $scope.classroomClosedAlert = $translate.instant('CLASS_CLOSED');
     $scope.dataChangedAlert = $translate.instant('DATA_CHANGED');
     $scope.emailChangedAlert = $translate.instant('EMAIL_CHANGED');
+    $scope.introduceHashcodeText = $translate.instant('INSERT_CLASS_CODE');
+    $scope.mustintroduceHashcodeText = $translate.instant('MUST_INTRODUCE_HASHCODE');
     $scope.notEnoughPointsAlert = $translate.instant('NOT_ENOUGH_POINTS');
+    $scope.notValidHashcode = $translate.instant('NOT_VALID_HASHCODE');
     $scope.notificationOfStudent = $translate.instant('NOTIFICATION_OF_STUDENT');
     $scope.notificationRewardObtained = $translate.instant('NOTIFICATION_REWARD_OBTAINED');
     $scope.notificationRewardSpent = $translate.instant('NOTIFICATION_REWARD_SPENT');
@@ -598,6 +581,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   var sessionUser;
 
   $scope.hasLevel = false;
+  $scope.inItem = false;
   
   var rootRef = firebase.database().ref();
 
@@ -745,7 +729,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     if (firebase.auth().currentUser) {
       $ionicPopup.show({
         title: $scope.systemWarning,
-        template: $scope.sureYouWannaExit,
+        template: '<p style="text-align:center;">'+$scope.sureYouWannaExit+'</p>',
         buttons: [{
             text: $scope.cancelText,
           },
@@ -811,6 +795,30 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   }
 
   /**
+    Opens a popup with an input to introduce a classroom's hashcode.
+  */
+  $scope.showPopupAddClass = function() {
+    $ionicPopup.show({
+      title: $scope.introduceHashcodeText,
+      template: '<input id="hashcodeNewClass" ng-model="hashcode">',
+      buttons: [
+        {text: $scope.cancelText},
+        {text: $scope.okayText,
+          onTap: function(e) {
+            var hashcode = document.getElementById("hashcodeNewClass").value;
+            if(hashcode != undefined && hashcode != "") {
+              $scope.addClass(hashcode);
+            } else {
+              $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.mustintroduceHashcodeText);
+              e.preventDefault();
+            }
+          }
+        }
+      ]
+    });
+  }
+
+  /**
     @hashcode: Hashcode of the class where the student is going to be part of.
     Adds the student's reference in the classroom's tree on the firebase database.
     Adds that classroom's reference in the student's tree on the firebase database and all the information needed in any classroom.
@@ -820,29 +828,32 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     var hashcodesArray = $firebaseArray(hashcodesRef);
     hashcodesArray.$loaded(function() {
       var classToAdd = hashcodesArray.$getRecord(hashcode);
-      
-      var classesRef = firebase.database().ref('classrooms/');
-      var classesArray = $firebaseArray(classesRef);
-      classesArray.$loaded(function() {
-        var classroom = classesArray.$getRecord(classToAdd.id);
-        if (classroom.open) {
-          var studentToEditRef = firebase.database().ref('students/' + $scope.student.$id + '/classrooms/' + classToAdd.id);
-          studentToEditRef.set({
-            'id' : classToAdd.id,
-            'totalPoints' : 0,
-            'usedPoints' : 0,
-            'inClass' : true,
-            'picture': $scope.defaultAvatar,
-          });
-          
-          var classToEditRef = firebase.database().ref('classrooms/' + classToAdd.id + '/students/' + $scope.student.$id);
-          classToEditRef.set(true);
-        } else {
-          $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.classroomClosedAlert);
-        }
-      }).then(function() {
-        $scope.getClassrooms();
-      })
+      if(classToAdd != null) {
+        var classesRef = firebase.database().ref('classrooms/');
+        var classesArray = $firebaseArray(classesRef);
+        classesArray.$loaded(function() {
+          var classroom = classesArray.$getRecord(classToAdd.id);
+          if (classroom.open) {
+            var studentToEditRef = firebase.database().ref('students/' + $scope.student.$id + '/classrooms/' + classToAdd.id);
+            studentToEditRef.set({
+              'id' : classToAdd.id,
+              'totalPoints' : 0,
+              'usedPoints' : 0,
+              'inClass' : true,
+              'picture': $scope.defaultAvatar,
+            });
+            
+            var classToEditRef = firebase.database().ref('classrooms/' + classToAdd.id + '/students/' + $scope.student.$id);
+            classToEditRef.set(true);
+          } else {
+            $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.classroomClosedAlert);
+          }
+        }).then(function() {
+          $scope.getClassrooms();
+        })
+      } else {
+        $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.notValidHashcode);
+      }
     })
     $scope.closeModalAddClass();
   }
@@ -892,7 +903,6 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     var classroomItemsRef = firebase.database().ref('classrooms/' + $scope.classroom.id + '/items');
     var itemKeys = $firebaseArray(classroomItemsRef);
     itemKeys.$loaded(function() {
-      $scope.items = [];
       $scope.itemsLocked = [];
       $scope.itemsUnlocked = [];
       for (i = 0 ; i < itemKeys.length ; i++) {
@@ -930,12 +940,14 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
               }
               if (!change) {
                 item.studentPoints = $scope.student.items[item.id].points;
+                item.notifications = $scope.student.items[item.id].notifications;
                 $scope.itemsUnlocked.push(item);
               } else {
                 $scope.itemsUnlocked[index] = item;
               }
               $scope.itemsUnlocked.sort(sortByName);
             }
+            $scope.getClassroomItems();
           }
           $scope.unlockedItemsExist = $scope.itemsUnlocked.length > 0;
           $scope.lockedItemsExist = $scope.itemsLocked.length > 0;
@@ -963,6 +975,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   */
   $scope.setItem = function(item) {
     $scope.item = item;
+    $scope.inItem = true;
     $scope.unlockedAchievementsExist = false;
     $scope.lockedAchievementsExist = false;
     $scope.getAchievements();
@@ -1309,7 +1322,17 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
 
       $scope.getRewards();
     } else {
-      $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.notEnoughPointsAlert + ' ' + reward.name);
+      $ionicPopup.show({
+      title: '<i class="icon ion-alert-circled"></i>',
+      template: '<p style="text-align:center;">' + $scope.notEnoughPointsAlert + ' ' + reward.name + '</p>',
+      buttons: [
+        {text: $scope.okayText,
+          onTap: function(e) {
+            $scope.closeSelectRewardsModal();
+          }
+        },
+      ]
+    });
     }
   }
 
@@ -1338,12 +1361,12 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     Gets all the selected rewards in the modal and then calls the buyReward method to buy them.
   */
   $scope.selectRewards = function() {
-    $scope.closeSelectRewardsModal();
-      for (var element in $scope.rewardsForSelection) {
-        if ($scope.rewardsForSelection[element].selected === true) {
-          $scope.buyReward($scope.rewardsForSelection[element]);
-        }
+    for (var element in $scope.rewardsForSelection) {
+      if ($scope.rewardsForSelection[element].selected === true) {
+        $scope.buyReward($scope.rewardsForSelection[element]);
       }
+    }
+    
     $scope.rewardsForSelection = $scope.rewards;
   }
 
@@ -1568,10 +1591,16 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     Removes all the notifications from the student's tree.
   */
   $scope.deleteNotifications = function() {
-    var notificationToDeleteRef = firebase.database().ref('students/' + $scope.student.id + '/notifications/' + $scope.classroom.id);
-    notificationToDeleteRef.remove();
+    if($scope.inItem) {
+      var notificationItemToDelete = firebase.database().ref('students/' + $scope.student.id + '/items/' + $scope.item.id + '/notifications');
+      notificationItemToDelete.remove();
+      $scope.item.notifications = undefined;
+    } else {
+      var notificationToDeleteRef = firebase.database().ref('students/' + $scope.student.id + '/notifications/' + $scope.classroom.id);
+      notificationToDeleteRef.remove();
+      $scope.getNotifications();
+    }
     $scope.closeNotificationsModal();
-    $scope.getNotifications();
   }
 
   /*
