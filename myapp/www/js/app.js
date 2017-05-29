@@ -26,7 +26,7 @@ angular.module('app', ['ionic', 'app.loginController', 'app.settingsController',
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-      cordova.plugins.Keyboard.disableScroll(true);
+      ionic.plugins.Keyboard.disableScroll(true);
     }
   });
 
