@@ -222,7 +222,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       '</ion-list>'+
       '<div class="button-bar action_buttons">'+
         '<button class="button button-calm  button-block" ng-click="closeSelectRewardsModal()">{{ \'CANCEL\' | translate }}</button>'+
-        '<button id="attendance-button123" ng-click="selectRewards()" id="attendance-btn123" class="button button-calm  button-block">{{ \'SELECT\' | translate }}</button>'+
+        '<button id="attendance-button123" ng-disabled="!enableSelectButton" ng-click="selectRewards()" id="attendance-btn123" class="button button-calm  button-block">{{ \'SELECT\' | translate }}</button>'+
       '</div>'+
     '</ion-content>'+
   '</ion-modal-view>';
@@ -326,7 +326,6 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   $scope.missionDialogModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3>{{mission.name}}</h3>'+
-      '<h4 style="text-align: center;">{{ \'FINISH_DATE\' | translate }}</h4><input class="dateInput" type="text" value="{{date | date:\'dd-MM-yyyy\'}}" readonly />'+
         '<form class="list">'+
           '<ion-list>'+
             '<label class="item item-input list-elements">'+
@@ -334,8 +333,8 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
               '<p>{{mission.name}}</p>'+
             '</label>'+
             '<label class="item item-input list-elements">'+
-              '<span class="input-label">{{ \'ADDITIONAL_POINTS_MISSION\' | translate }}:</span>'+
-              '<p>{{mission.additionalPoints}}</p>'+
+              '<span class="input-label">{{ \'FINISH_DATE\' | translate }}:</span>'+
+              '<p>{{mission.date | date:\'dd-MM-yyyy\'}}</p>'+
             '</label>'+
           '</ion-list>'+
         '</form>'+
@@ -349,6 +348,10 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       '<div class="button-bar action_buttons"></div>'+
       '<h3 id="teams-heading5" class="teams-hdg5">{{ \'REWARDS\' | translate }}</h3>'+
       '<ion-list id="items-list9">'+
+        '<label class="item item-input list-elements">'+
+          '<span class="input-label">{{ \'ADDITIONAL_POINTS_MISSION\' | translate }}:</span>'+
+          '<p>{{mission.additionalPoints}}</p>'+
+        '</label>'+
         '<ion-item id="items-list-item15" class="list-student" ng-repeat="reward in missionRewards">{{reward.name}}</ion-item>'+
       '</ion-list>'+
       '<div class="button-bar action_buttons"></div>'+
@@ -392,10 +395,12 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     animation: 'slide-in-up'
   })
   $scope.showSelectRewardsModal = function() {
+    $scope.enableSelectButton = false;
     $scope.selectRewardsModal.show();
   }
   $scope.closeSelectRewardsModal = function() {
     $scope.selectRewardsModal.hide();
+    $scope.enableSelectButton = false;
   }
 
                                         /* ITEM DIALOG MODAL */
@@ -584,6 +589,8 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   var studentsRef = firebase.database().ref('students');
   var hashcodesRef = firebase.database().ref('hashcodes');
   var classroomsRef = firebase.database().ref('classrooms');
+
+  $scope.enableSelectButton = false;
 
   /*
     *************************************EVERY FUNCTIONALITY FUNCTION GOES HERE***********************
@@ -1372,6 +1379,13 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       reward.selected = true;
     } else {
       reward.selected = false;
+    }
+    $scope.enableSelectButton = false;
+    for (var element in $scope.rewardsForSelection) {
+      if ($scope.rewardsForSelection[element].selected) {
+        $scope.enableSelectButton = true;
+        break;
+      }
     }
   }
 
