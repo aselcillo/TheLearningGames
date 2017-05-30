@@ -851,8 +851,8 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               '<input type="text" placeholder="{{ \'SURNAME\' | translate }}" ng-model="modelNewStudent.surname">'+
             '</label>'+
           '</form>'+
-          '<h3>{{ \'EMAI_AUTOGENERATE\' | translate }}</h3>'+
-          '<h3>{{ \'PASSWORD\' | translate }}: student</h3>'+
+          '<h3 style="text-transform : none;">{{ \'EMAI_AUTOGENERATE\' | translate }}</h3>'+
+          '<h3 style="text-transform : none;">{{ \'PASSWORD\' | translate }}: student</h3>'+
         '</ion-list>'+
       '</div>'+
       '<div>'+
@@ -1247,8 +1247,12 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   $scope.notificationsModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3 id="attendance-heading3" class="attendance-hdg3">{{ \'NOTIFICATIONS\' | translate }}</h3>'+
+      '<div class="button-bar action_buttons" ng-show="notifications.length > 25">'+
+        '<button class="button button-calm  button-block" ng-click="closeNotificationsModal()">{{ \'CANCEL\' | translate }}</button>'+
+        '<button class="button button-calm  button-block" ng-click="deleteNotifications()">{{ \'CLEAN_NOTIFICATIONS\' | translate }}</button>'+
+      '</div>'+
       '<ion-list id="attendance-list7">'+
-        '<ion-item id="attendance-checkbox2" ng-repeat="notification in notifications">{{notification.message}}'+
+        '<ion-item id="attendance-checkbox2" ng-repeat="notification in notifications" ng-class="getNotificationClass(notification.typeCode)">{{notification.message}}'+
           '<p>{{notification.type}}</p>'+
         '</ion-item>'+
       '</ion-list>'+
@@ -2920,7 +2924,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var b = classroomId.substr(classroomId.length -2).toLowerCase();
     var dateTimeHash = Date.now().toString();
     var c = dateTimeHash.substr(dateTimeHash.length -3).toLowerCase();
-    var email = (name.replace(/\s/g, '') + surname.replace(/\s/g, '') + '.' + a + b + c + '@student.com').toLowerCase().trim();
+    var email = (name.replace(/[&\/\\#,+()$~%.'":*?<>{}çñ\sáéíóúàèìòùäëïöü]/g,'') + surname.replace(/[&\/\\#,+()$~%.'":*?<>{}çñ\sáéíóúàèìòùäëïöü]/g,'') + '.' + a + b + c + '@student.com').toLowerCase().trim();
     var password = "student";
 
     if (secondaryConnection == null) {
@@ -5567,6 +5571,27 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                                         /* FUNCTIONS NOTIFICATIONS */
 
   /**
+  */
+  $scope.getNotificationClass = function(number) {
+    var className = '';
+    switch (parseInt(number)) {
+      case 0:
+        className = 'notifi-item';
+        break;
+      case 1:
+        className = 'notifi-achievement';
+        break;
+      case 2:
+        className = 'notifi-mission';
+        break;
+      case 3:
+        className = 'notifi-reward';
+        break;
+    }
+    return className;
+  };
+
+  /**
     Get all the notifications from the teacher.
     Asks firebase for the correspond notifications' references.
     Defines an event for each notification's reference of the classroom which is triggered every time that database reference is modified.
@@ -5617,11 +5642,13 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             'type' : $scope.notificationTypeItem,
             'message' : $scope.notificationWin + ' ' + points + ' ' + $scope.pointOnTheitemSet + ': ' + item.name,
             'date' : Date.now(),
+            'typeCode': 0,
           }
           var notificationEspecific = {
             'type' : $scope.notificationTypeItem,
             'message' : $scope.notificationWin + ' ' + points + ' ' + $scope.pointsText,
             'date' : Date.now(),
+            'typeCode': 0,
           }
           studentNoticationsArray.$add(notificationGeneral);
           studentItemNotificationsArray.$add(notificationEspecific);
@@ -5630,11 +5657,13 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             'type' : $scope.notificationTypeItem,
             'message' : $scope.notificationLose + ' ' + Math.abs(points) + ' ' + $scope.pointOnTheitemSet + ': ' + item.name,
             'date' : Date.now(),
+            'typeCode': 0,
           }
           var notificationEspecific = {
             'type' : $scope.notificationTypeItem,
             'message' : $scope.notificationWin + ' ' + Math.abs(points) + ' ' + $scope.pointsText,
             'date' : Date.now(),
+            'typeCode': 0,
           }
           studentNoticationsArray.$add(notificationGeneral);
           studentItemNotificationsArray.$add(notificationEspecific);
@@ -5665,6 +5694,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               'type' : $scope.achievementText,
               'message' : $scope.notificationUnlockedLevelAchievementStudentSide + ' ' + levelAchievementReached + ' ' + $scope.inTheAchievementText + ': ' + achievement.name,
               'date' : Date.now(),
+              'typeCode': 1,
             }
             studentNoticationsArray.$add(notification);
             studentItemNotificationsArray.$add(notification);
@@ -5673,6 +5703,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               'type' : $scope.achievementText,
               'message' : $scope.notificationLostAchievementStudentSide + ': ' + achievement.name,
               'date' : Date.now(),
+              'typeCode': 1,
             }
             studentNoticationsArray.$add(notification);
             studentItemNotificationsArray.$add(notification);
@@ -5688,12 +5719,14 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             'type' : $scope.achievementText,
             'message' : $scope.notificationOfStudent + ' ' + studentToEvaluate.name + ' ' + studentToEvaluate.surname + ' ' + $scope.notificationUnlockedLevelAchievementTeacherSide + ' ' + levelAchievementReached + ' ' + $scope.inTheAchievementText + ': ' + achievement.name,
             'date' : Date.now(),
+            'typeCode': 1,
           });
         } else if (operationType == 'lose') {
           teacherNotificationsArray.$add({
             'type' : $scope.achievementText,
             'message' : $scope.notificationOfStudent + ' ' + studentToEvaluate.name + ' ' + studentToEvaluate.surname + ' ' + $scope.notificationLostAchievementTeacherSide + ' ' + achievement.name,
             'date' : Date.now(),
+            'typeCode': 1,
           });
         }
       });
@@ -5717,6 +5750,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           'type' : $scope.notificationTypeMission,
           'message' : $scope.notificationFinishedMissionStudentSide + ': ' + mission.name,
           'date' : Date.now(),
+          'typeCode': 2,
         });
       });
     } else if (userType == 'teacher') {
@@ -5727,12 +5761,14 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           'type' : $scope.notificationTypeMission,
           'message' : $scope.notificationOfStudent + ' ' + studentToEvaluate.name + ' ' + studentToEvaluate.surname + ' ' + $scope.notificationsFinishedMissionTeacherSide + ': ' + mission.name,
           'date' : Date.now(),
+          'typeCode': 2,
         });
         if (finished) {
           teacherNotificationsArray.$add({
           'type' : $scope.notificationTypeMission,
           'message' : $scope.notificationOfMission + ': ' + mission.name + ' ' + $scope.notificationMissionEnded,
           'date' : Date.now(),
+          'typeCode': 2,
         });
         }
       });
@@ -5753,6 +5789,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         'type' : $scope.notificationTypeReward,
         'message' : $scope.youHaveWinTheReward + ' ' + reward.name + ' ' + $scope.becouseCompleteMission + ' ' + mission.name,
         'date' : Date.now(),
+        'typeCode': 3,
       });
     });
   }
@@ -5770,6 +5807,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         'type' : $scope.notificationTypeMission,
         'message' : $scope.notificationTimeToFinishMissionText + ' ' + mission.name + ' ' + $scope.notificationMissionExpired,
         'date' : Date.now(),
+        'typeCode': 2,
       });
     });
   }
