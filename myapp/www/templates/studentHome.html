@@ -159,7 +159,7 @@
           </span>
         </label>
       </div>
-      <button class="button button-calm  button-block" ng-click="showNotificationsModal()" ng-show="notifications.length > 0"><i class="icon ion-alert"></i>&nbsp;&nbsp;{{ 'YOU_HAVE_NOTIFICATIONS' | translate }}</button>
+      <button class="button button-calm button-block notification-button" ng-click="showNotificationsModal()" ng-show="notifications.length > 0"><i class="icon ion-alert"></i>&nbsp;&nbsp;{{ 'YOU_HAVE_NOTIFICATIONS' | translate }}</button>
       <div class="button-bar action_buttons"></div>
       <div ng-show="unlockedItemsExist">
         <h3 id="teacherHome-heading1" class="margin-top-null">{{ 'UNLOCKED_ITEMS' | translate }}</h3>
@@ -205,7 +205,7 @@
         </label>
       </div>
       <div>
-        <button class="button button-calm  button-block" ng-click="showNotificationsModal()" ng-show="item.notifications != undefined"><i class="icon ion-alert"></i>&nbsp;&nbsp;{{ 'YOU_HAVE_NOTIFICATIONS' | translate }}</button>
+        <button class="button button-calm button-block notification-button" ng-click="showNotificationsModal()" ng-show="item.notifications != undefined"><i class="icon ion-alert"></i>&nbsp;&nbsp;{{ 'YOU_HAVE_NOTIFICATIONS' | translate }}</button>
         <form id="editItemForm">
             <label class="item item-input list-elements">
               <span class="input-label">{{ 'NAME' | translate }}</span>
