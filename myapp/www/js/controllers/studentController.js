@@ -1531,6 +1531,8 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
                                         /* FUNCTIONS NOTIFICATIONS */
 
   /**
+    @number: The code of the notification.
+    Gets the class that is going to be used in the item that is going to show the notification
   */
   $scope.getNotificationClass = function(number) {
     var className = '';
