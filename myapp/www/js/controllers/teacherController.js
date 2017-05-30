@@ -1777,11 +1777,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     'BACKUP', 'BECAUSE_COMPLETE_MISSION', 'CANCEL', 'CANT_ASK_MORE_SCORE_THAN_MAX', 'CANT_CREATE_MORE_TEAMS_THAN_STUDENT', 'CHANGE_SCORE', 'CLASS_CODE', 'DATA_CHANGED',
     'DELETE_ACHIEVEMENTS', 'DELETE_CLASSROOMS', 'DELETE_ITEMS', 'DELETE_MISSIONS', 'DELETE_REWARDS', 'DELETE_STUDENTS', 'DELETE_TEAMS', 'EDIT_SCORE', 'EMAIL_ALREADY_USED', 
     'EMAIL_CHANGED', 'EMAIL_INVALID', 'EVALUATE_STUDENTS', 'EVALUATE_TEAMS', 'EXPORT', 'FILE_INVALID', 'IMPORT', 'INTRODUCE_MISSION_NAME', 
-    'INTRODUCE_ADDITIONAL_POINTS', 'ERROR_ACCESS_UNKNOW', 'ERROR_WEAK_PASSWORD', 'HAS_EXPIRED', 'HAS_FINISHED', 'HAS_FINISHED_MISSION', 'HAS_LOST_ACHIEVEMENT', 
-    'HAS_LOST_MIN_POINTS_IN_ITEM', 'HAS_LOST_MIN_POINTS_IN_ITEM', 
+    'INTRODUCE_ADDITIONAL_POINTS', 'ERROR_ACCESS_UNKNOW', 'ERROR_WEAK_PASSWORD', 'HAS_EXPIRED', 'HAS_FINISHED', 'HAS_FINISHED_MISSION', 'HAS_LOST_ACHIEVEMENT', 'HAS_LOST_MIN_POINTS_IN_ITEM',
     'HAS_RECIBED_MAX_POINTS_IN_ITEM', 'HAS_UNLOCKED_LEVEL_ACHIEVEMENT', 'HAVE_FINISHED_MISSION', 'HAVE_LOST_ACHIEVEMENT',  'HAVE_UNLOCKED_LEVEL_ACHIEVEMENT', 'IN_THE_ACHIEVEMENT', 
     'INTRODUCE_FINISH_DATE', 'INTRODUCE_MISSION_NAME', 'ITEM', 'MAX_SCORE_ESTABLISEHD', 'MAX_SCORE_WILL_ESTABLISH', 'MISSION', 'MUST_INTRODUCE_QUANTITY_TEAMS', 'MUST_SET_A_VALID_OR_MAYOR_DATE', 'MUST_SET_NAME_IN_MISSION',
-    'NEXT', 'NOTIFICATION_OF_MISSION', 'NOTIFICATION_OF_STUDENT', 'NOTIFICATION_HAS_LOST' , 'NOTIFICATION_HAS_WIN', 'PASSWORD_CHANGED', 'OKAY', 'POINTS_ON_THE_ITEM',
+    'NEXT', 'NOTIFICATION_OF_MISSION', 'NOTIFICATION_OF_STUDENT', 'NOTIFICATION_HAS_LOST' , 'NOTIFICATION_HAS_WIN', 'PASSWORD_CHANGED', 'OKAY', 'POINTS', 'POINTS_ON_THE_ITEM',
     'RANDOM_STUDENT', 'RANDOM_TEAM', 'REWARD', 'SELECT_QUANTITY_RANDOM_TEAMS', 'SEND_MESSAGE', 'STUDENT_DOESNT_HAVE_ENOUGH_POINTS', 'TAKE_ATTENDANCE', 'TEACHER_MESSAGE', 'TIME_TO_FINISH_MISSION', 
     'UNARCHIVE_CLASSES', 'USE_DEFAULT_POINT', 'YOU_WIN_REWARD', 'ZERO_SCORE_ESTABLISHED', 'ZERO_SCORE_WILL_ESTABLISH']).then(function(translations) {
     $scope.actionAchievementsActionSheet = translations.ACTIONS_ACHIEVEMENTS;
@@ -1848,6 +1847,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.notificationWin = translations.NOTIFICATION_HAS_WIN;
     $scope.okayText = translations.OKAY;
     $scope.passwordChangedAlert = translations.PASSWORD_CHANGED;
+    $scope.pointsText = translations.POINTS;
     $scope.pointOnTheitemSet = translations.POINTS_ON_THE_ITEM;
     $scope.randomStudentActionSheetOption = translations.RANDOM_STUDENT;
     $scope.randomTeamActionSheetOption = translations.RANDOM_TEAM;
@@ -1932,6 +1932,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.notificationWin = $translate.instant('NOTIFICATION_HAS_WIN');
     $scope.okayText = $translate.instant('OKAY');
     $scope.passwordChangedAlert = $translate.instant('PASSWORD_CHANGED');
+    $scope.pointsText = $translate.instant('POINTS');
     $scope.pointOnTheitemSet = $translate.instant('POINTS_ON_THE_ITEM');
     $scope.randomStudentActionSheetOption = $translate.instant('RANDOM_STUDENT');
     $scope.randomTeamActionSheetOption = $translate.instant('RANDOM_TEAM');
@@ -3789,7 +3790,17 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var studentItemPointsToRemoveRef = firebase.database().ref('students/' + $scope.student.id + '/items/' + item.id + '/points');
     var studentClassPointsToRemoveRef = firebase.database().ref('students/' + $scope.student.id + '/classrooms/' + $scope.classroom.id + '/totalPoints');
     if ((Number($scope.student.items[item.id].points) - 1) < 0) {
-      $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.studentDoesNotHaveEnougPointsAlert + ', ' + $scope.zeroPointsWillEstablishAlert);
+      $ionicPopup.show({
+        title: '<i class="icon ion-information-circled"></i>',
+        template: '<p style="text-align:center;">' + $scope.studentDoesNotHaveEnougPointsAlert + ', ' + $scope.zeroPointsWillEstablishAlert + '</p>',
+        buttons: [
+          {text: $scope.okayText,
+            onTap: function(e) {
+              $scope.closeModalStudentDialog();
+            }
+          }
+        ]
+      });
       studentItemPointsToRemoveRef.set(0);
       $scope.student.items[item.id].points = 0;
       $scope.createNotificationItems($scope.student.id, item, 'lose', 1);
@@ -3822,7 +3833,17 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var studentItemPointsToAddRef = firebase.database().ref('students/' + $scope.student.id + '/items/' + item.id + '/points');
     var studentClassPointsToAddRef = firebase.database().ref('students/' + $scope.student.id + '/classrooms/' + $scope.classroom.id + '/totalPoints');
     if ((Number($scope.student.items[item.id].points) + 1) > item.maxScore) {
-      $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.studentDoesNotHaveEnougPointsAlert + ', ' + $scope.maxPointsWillEstablishAlert);
+      $ionicPopup.show({
+        title: '<i class="icon ion-information-circled"></i>',
+        template: '<p style="text-align:center;">' + $scope.studentDoesNotHaveEnougPointsAlert + ', ' + $scope.maxPointsWillEstablishAlert + '</p>',
+        buttons: [
+          {text: $scope.okayText,
+            onTap: function(e) {
+              $scope.closeModalStudentDialog();
+            }
+          }
+        ]
+      });
       studentItemPointsToAddRef.set(item.maxScore);
       $scope.student.items[item.id].points = item.maxScore;
       $scope.createNotificationItems($scope.student.id, item, 'win', 1);
@@ -4187,8 +4208,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                 var achievementToCheck = snapshot.val();
                 if (student.items != undefined && student.items[item.id].achievements != undefined && student.items[item.id].achievements[achievementToCheck.id] != undefined) {
                   var studentLevel = student.items[item.id].achievements[achievementToCheck.id].level;
+                } else {
+                  var studentLevel = 0;
                 }
-                if (points > achievementToCheck.requirements) {
+                if (points >= achievementToCheck.requirements) {
                   var levelAchievement = points / achievementToCheck.requirements;
                   levelAchievement = Math.trunc(levelAchievement);
                   if (levelAchievement > achievementToCheck.maxLevel) {
@@ -4200,20 +4223,25 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                     'level' : levelAchievement,
                   });
                   if (studentLevel != levelAchievement) {
-                    $scope.createNotificationAchievements(student.id, 'student', achievementToCheck, 'win', levelAchievement, null);
-                    $scope.createNotificationAchievements($scope.teacher.$id, 'teacher', achievementToCheck, 'win', levelAchievement, student);
+                    $scope.createNotificationAchievements(student.id, 'student', achievementToCheck, 'win', levelAchievement, null, item);
+                    $scope.createNotificationAchievements($scope.teacher.$id, 'teacher', achievementToCheck, 'win', levelAchievement, student, null);
                   }
-                  /*THINGS TO DO NULL REFERENCE AND UNDEFINED HERE
-                  student.items[item.id].achievements[achievementToCheck.id].id = achievementToCheck.id;
-                  student.items[item.id].achievements[achievementToCheck.id].level = levelAchievement;*/
+                  var achievementId = achievementToCheck.id;
+
+                  student.items[item.id].achievements = {
+                    [achievementId] : {
+                      'id' : achievementToCheck.id,
+                      'level' : levelAchievement,
+                    }
+                  }
                 } else {
                   if (student.items != undefined && student.items[item.id].achievements != undefined && student.items[item.id].achievements[achievementToCheck.id] != undefined) {
-                    $scope.createNotificationAchievements(student.id, 'student', achievementToCheck, 'lose', levelAchievement, null);
-                    $scope.createNotificationAchievements($scope.teacher.$id, 'teacher', achievementToCheck, 'lose', levelAchievement, student);
+                    $scope.createNotificationAchievements(student.id, 'student', achievementToCheck, 'lose', null, null, item);
+                    $scope.createNotificationAchievements($scope.teacher.$id, 'teacher', achievementToCheck, 'lose', null, student, null);
+                    var studentItemAchievementRef = firebase.database().ref('students/' + student.id + '/items/' + item.id + '/achievements/' + achievementToCheck.id);
+                    studentItemAchievementRef.remove();
+                    delete $scope.student.items[item.id].achievements[achievementToCheck.id];
                   }
-                  var studentItemAchievementRef = firebase.database().ref('students/' + student.id + '/items/' + item.id + '/achievements/' + achievementToCheck.id);
-                  studentItemAchievementRef.remove();
-                  /*delete $scope.student.items[item.id].achievements[achievementToCheck.id];*/
                 }
               }
             });
@@ -5610,23 +5638,35 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     studentNoticationsArray.$loaded(function() {
       studentItemNotificationsArray.$loaded(function() {
         if (operationType == 'win') {
-          var notification = {
+          var notificationGeneral = {
             'type' : $scope.notificationTypeItem,
             'message' : $scope.notificationWin + ' ' + points + ' ' + $scope.pointOnTheitemSet + ': ' + item.name,
             'date' : Date.now(),
             'typeCode': 0,
           }
-          studentNoticationsArray.$add(notification);
-          studentItemNotificationsArray.$add(notification);
-        } else if (operationType == 'lose') {
-          var notification = {
+          var notificationEspecific = {
             'type' : $scope.notificationTypeItem,
-            'message' : $scope.notificationLose + ' ' + points + ' ' + $scope.pointOnTheitemSet + ': ' + item.name,
+            'message' : $scope.notificationWin + ' ' + points + ' ' + $scope.pointsText,
             'date' : Date.now(),
             'typeCode': 0,
           }
-          studentNoticationsArray.$add(notification);
-          studentItemNotificationsArray.$add(notification);
+          studentNoticationsArray.$add(notificationGeneral);
+          studentItemNotificationsArray.$add(notificationEspecific);
+        } else if (operationType == 'lose') {
+          var notificationGeneral = {
+            'type' : $scope.notificationTypeItem,
+            'message' : $scope.notificationLose + ' ' + Math.abs(points) + ' ' + $scope.pointOnTheitemSet + ': ' + item.name,
+            'date' : Date.now(),
+            'typeCode': 0,
+          }
+          var notificationEspecific = {
+            'type' : $scope.notificationTypeItem,
+            'message' : $scope.notificationWin + ' ' + Math.abs(points) + ' ' + $scope.pointsText,
+            'date' : Date.now(),
+            'typeCode': 0,
+          }
+          studentNoticationsArray.$add(notificationGeneral);
+          studentItemNotificationsArray.$add(notificationEspecific);
         }
       });
     });
@@ -5637,30 +5677,38 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     @userType: student or teacher. Tells the method if the notification is for the student or for the teacher.
     @achievement: The achievement wich triggers the notification.
     @operationType: Win or lose. Tells the method what message send.
-    @levelAchievementreached: The level that the student evaluated reached in the @achivement.
+    @levelAchievementreached: The level that the student evaluated reached in the @achievement.
     @studentToEvaluate: The student that it being evaluated.
     Creates a notification either for the students to inform that won or lost an achievement or for the teacher to inform that a student won or lost an achievement.
   */
-  $scope.createNotificationAchievements = function(userId, userType, achievement, operationType, levelAchievementReached, studentToEvaluate) {
+  $scope.createNotificationAchievements = function(userId, userType, achievement, operationType, levelAchievementReached, studentToEvaluate, item) {
     if (userType == 'student') {
       var studentNotificationsRef = firebase.database().ref('students/' + userId + '/notifications/' + $scope.classroom.id);
+      var studentItemNotificationsRef = firebase.database().ref('students/' + userId + '/items/' + item.id + '/notifications');
       var studentNoticationsArray = $firebaseArray(studentNotificationsRef);
+      var studentItemNotificationsArray = $firebaseArray(studentItemNotificationsRef);
       studentNoticationsArray.$loaded(function() {
-        if (operationType == 'win') {
-          studentNoticationsArray.$add({
-            'type' : $scope.achievementText,
-            'message' : $scope.notificationUnlockedLevelAchievementStudentSide + ' ' + levelAchievementReached + ' ' + $scope.inTheAchievementText + ': ' + achievement.name,
-            'date' : Date.now(),
-            'typeCode': 1,
-          });
-        } else if (operationType == 'lose') {
-          studentNoticationsArray.$add({
-            'type' : $scope.achievementText,
-            'message' : $scope.notificationLostAchievementStudentSide + ': ' + achievement.name,
-            'date' : Date.now(),
-            'typeCode': 1,
-          });
-        }
+        studentItemNotificationsArray.$loaded(function() {
+          if (operationType == 'win') {
+            var notification = {
+              'type' : $scope.achievementText,
+              'message' : $scope.notificationUnlockedLevelAchievementStudentSide + ' ' + levelAchievementReached + ' ' + $scope.inTheAchievementText + ': ' + achievement.name,
+              'date' : Date.now(),
+              'typeCode': 1,
+            }
+            studentNoticationsArray.$add(notification);
+            studentItemNotificationsArray.$add(notification);
+          } else if (operationType == 'lose') {
+            var notification = {
+              'type' : $scope.achievementText,
+              'message' : $scope.notificationLostAchievementStudentSide + ': ' + achievement.name,
+              'date' : Date.now(),
+              'typeCode': 1,
+            }
+            studentNoticationsArray.$add(notification);
+            studentItemNotificationsArray.$add(notification);
+          }
+        });
       });
     } else if (userType == 'teacher') {
       var teacherNotificationsRef = firebase.database().ref('teachers/' + userId + '/notifications/' + $scope.classroom.id);
