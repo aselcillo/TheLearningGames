@@ -150,7 +150,7 @@
         <button id="class-button26" ng-click="classForm()"  class="button button-light  button-outline"><i class="icon ion-person"></i>&nbsp;&nbsp;{{'STUDENTS'| translate}}</button>
         <button id="class-button29" ng-click="teamsForm()"  class="button button-light  button-outline"><i class="icon ion-person-stalker"></i>&nbsp;&nbsp;{{ 'TEAMS' | translate }}</button>
       </div>
-      <button class="button button-calm  button-block" ng-click="showNotificationsModal()" ng-show="notifications.length > 0"><i class="icon ion-alert"></i>&nbsp;&nbsp;{{'YOU_HAVE_NOTIFICATIONS'| translate}}</button>
+      <button class="button button-calm button-block notification-button" ng-click="showNotificationsModal()" ng-show="notifications.length > 0"><i class="icon ion-alert"></i>&nbsp;&nbsp;{{'YOU_HAVE_NOTIFICATIONS'| translate}}</button>
       <ion-list id="class-list5" class="list-elements">
         <ion-item class="list-student item item-avatar" id="class-list-item7" ng-repeat="student in students" ng-show="student.classrooms[classroom.id].inClass" ng-click="setStudent(student)">
           <img src="{{!classroom.studentsView ? student.avatar : student.picture}}">

@@ -248,3 +248,32 @@ padding-left:40px;
 .platform-ios input[type="date"] {
 	width: 100%;
 }
+
+.notification-button {
+	width: 98% !important;
+}
+
+.notifi-reward {
+	background: #ffff99;
+	text-align: justify;
+	padding: 8px;
+	font-size: 14px;
+}
+.notifi-mission {
+	background: #ffcccc;
+	text-align: justify;
+	padding: 8px;
+	font-size: 14px;
+}
+.notifi-achievement {
+	background: #99ccff;
+	text-align: justify;
+	padding: 8px;
+	font-size: 14px;
+}
+.notifi-item {
+	background: #99ff99;
+	text-align: justify;
+	padding: 8px;
+	font-size: 14px;
+}
