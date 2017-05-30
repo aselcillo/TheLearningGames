@@ -366,13 +366,17 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
   $scope.notificationsModal = '<ion-modal-view>'+
     '<ion-content padding="false" class="manual-ios-statusbar-padding">'+
       '<h3 id="attendance-heading3" class="attendance-hdg3">{{ \'NOTIFICATIONS\' | translate }}</h3>'+
+      '<div class="button-bar action_buttons" ng-show="notifications.length > 25">'+
+        '<button class="button button-calm button-block" ng-click="closeNotificationsModal()">{{ \'CANCEL\' | translate }}</button>'+
+        '<button class="button button-calm button-block" ng-click="deleteNotifications()">{{ \'CLEAN_NOTIFICATIONS\' | translate }}</button>'+
+      '</div>'+
       '<ion-list id="attendance-list7" ng-show="!inItem">'+
-        '<ion-item id="attendance-checkbox2" ng-repeat="notification in notifications">{{notification.message}}'+
+        '<ion-item id="attendance-checkbox2" ng-repeat="notification in notifications" ng-class="getNotificationClass(notification.typeCode)">{{notification.message}}'+
           '<p>{{notification.type}}</p>'+
         '</ion-item>'+
       '</ion-list>'+
       '<ion-list id="attendance-list7" ng-show="inItem">'+
-        '<ion-item id="attendance-checkbox3" ng-repeat="notification in item.notifications">{{notification.message}}'+
+        '<ion-item id="attendance-checkbox3" ng-repeat="notification in item.notifications" ng-class="getNotificationClass(notification.typeCode)">{{notification.message}}'+
           '<p>{{notification.type}}</p>'+
         '</ion-item>'+
       '</ion-list>'+
@@ -1366,7 +1370,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
         $scope.buyReward($scope.rewardsForSelection[element]);
       }
     }
-    
+    $scope.closeSelectRewardsModal();
     $scope.rewardsForSelection = $scope.rewards;
   }
 
@@ -1527,6 +1531,27 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
                                         /* FUNCTIONS NOTIFICATIONS */
 
   /**
+  */
+  $scope.getNotificationClass = function(number) {
+    var className = '';
+    switch (parseInt(number)) {
+      case 0:
+        className = 'notifi-item';
+        break;
+      case 1:
+        className = 'notifi-achievement';
+        break;
+      case 2:
+        className = 'notifi-mission';
+        break;
+      case 3:
+        className = 'notifi-reward';
+        break;
+    }
+    return className;
+  };
+
+  /**
     Get all the notifications from the student in the classroom.
     Asks firebase for the correspond notifications' references
     Defines an event for each notification's reference which is triggered every time that database reference is modified.
@@ -1576,12 +1601,14 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
           'type' : $scope.rewardNotificationType,
           'message' : $scope.notificationOfStudent + ' ' + CryptoJS.AES.decrypt(student.name, student.id).toString(CryptoJS.enc.Utf8) + ' ' + CryptoJS.AES.decrypt(student.surname, student.id).toString(CryptoJS.enc.Utf8) + ' ' + $scope.notificationRewardObtained + ' \"' + reward.name + '\"',
           'date' : Date.now(),
+          'typeCode': 3,
         });
       } else if (operationType == 'consume') {
         teacherNotificationsArray.$add({
           'type' : $scope.rewardNotificationType,
           'message' : $scope.notificationOfStudent + ' ' + CryptoJS.AES.decrypt(student.name, student.id).toString(CryptoJS.enc.Utf8) + ' ' + CryptoJS.AES.decrypt(student.surname, student.id).toString(CryptoJS.enc.Utf8) + ' ' + $scope.notificationRewardSpent + ' \"' + reward.name + '\" x1',
           'date' : Date.now(),
+          'typeCode': 3,
         });
       }
     });
