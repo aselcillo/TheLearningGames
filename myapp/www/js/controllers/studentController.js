@@ -661,6 +661,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
             }
           });
         } else {
+          $ionicLoading.hide();
           $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
         }
       }
@@ -769,14 +770,14 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     var classroomKeys = $firebaseArray(studentClassroomsRef);
     classroomKeys.$loaded(function() {
       $scope.classrooms = [];
-      for (i = 0 ; i < classroomKeys.length ; i++) {
+      for (var i = 0 ; i < classroomKeys.length ; i++) {
         var classKey = classroomKeys.$keyAt(i);
         var loopClassroom = firebase.database().ref('classrooms/' + classKey);
         loopClassroom.on('value', function(snapshot) {
           if (snapshot.val() != null) {
             var change = false;
             var index = -1;
-            for (j = 0 ; j < $scope.classrooms.length ; j++) {
+            for (var j = 0 ; j < $scope.classrooms.length ; j++) {
               if ($scope.classrooms[j].id == snapshot.val().id) {
                 change = true;
                 index = j;
@@ -859,7 +860,6 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
         $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.notValidHashcode);
       }
     })
-    $scope.closeModalAddClass();
   }
 
   /**
@@ -909,7 +909,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     itemKeys.$loaded(function() {
       $scope.itemsLocked = [];
       $scope.itemsUnlocked = [];
-      for (i = 0 ; i < itemKeys.length ; i++) {
+      for (var i = 0 ; i < itemKeys.length ; i++) {
         var itemKey = itemKeys.$keyAt(i);
         var loopItemsRef = firebase.database().ref('items/' + itemKey);
         loopItemsRef.on('value', function(snapshot) {
@@ -918,7 +918,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
             var change = false;
             var index = -1;
             if ($scope.student.items == undefined || !(item.id in $scope.student.items)) {
-              for (j = 0 ; j < $scope.itemsLocked.length ; j++) {
+              for (var j = 0 ; j < $scope.itemsLocked.length ; j++) {
                 if (item.id == $scope.itemsLocked[j].id) {
                   change = true;
                   index = j;
@@ -934,7 +934,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
               }
               $scope.itemsLocked.sort(sortByName);
             } else {
-              for (j = 0 ; j < $scope.itemsUnlocked.length ; j++) {
+              for (var j = 0 ; j < $scope.itemsUnlocked.length ; j++) {
                 if (item.id == $scope.itemsUnlocked[j].id) {
                   change = true;
                   index = j;
@@ -1027,7 +1027,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       $scope.achievements = [];
       $scope.achievementsLocked = [];
       $scope.achievementsUnlocked = [];
-      for (i = 0 ; i < achievementKeys.length ; i++) {
+      for (var i = 0 ; i < achievementKeys.length ; i++) {
         var achievementKey = achievementKeys.$keyAt(i);
         var loopAchievement = firebase.database().ref('achievements/' + achievementKey);
         loopAchievement.on('value', function(snapshot) {
@@ -1043,7 +1043,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
               }
             }
             if (toLock) {
-              for (j = 0 ; j < $scope.achievementsLocked.length ; j++) {
+              for (var j = 0 ; j < $scope.achievementsLocked.length ; j++) {
                 if (achievement.id == $scope.achievementsLocked[j].id) {
                   change = true;
                   index = j;
@@ -1058,7 +1058,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
               $scope.achievementsLocked.sort(sortByName);
             } else {
               if ($scope.student.items[$scope.item.id].achievements == undefined || !(achievement.id in $scope.student.items[$scope.item.id].achievements)) {
-                for (j = 0 ; j < $scope.achievementsLocked.length ; j++) {
+                for (var j = 0 ; j < $scope.achievementsLocked.length ; j++) {
                   if (achievement.id == $scope.achievementsLocked[j].id) {
                     change = true;
                     index = j;
@@ -1071,7 +1071,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
                 }
                 $scope.achievementsLocked.sort(sortByName);
               } else {
-                for (j = 0 ; j < $scope.achievementsUnlocked.length ; j++) {
+                for (var j = 0 ; j < $scope.achievementsUnlocked.length ; j++) {
                   if ($scope.item.id == $scope.achievementsUnlocked[j].id) {
                     change = true;
                     index = j;
@@ -1124,7 +1124,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     var teamKeys = $firebaseArray(studentTeamsRef);
     teamKeys.$loaded(function() {
       $scope.teams = [];
-      for (i = 0 ; i < teamKeys.length ; i++) {
+      for (var i = 0 ; i < teamKeys.length ; i++) {
         var teamKey = teamKeys.$keyAt(i);
         for (var teamId in $scope.classroom.teams) {
           if (teamKey === teamId) {
@@ -1134,7 +1134,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
                 var change = false;
                 var index = -1;
                 var team = snapshot.val();
-                for (j = 0 ; j < $scope.teams.length ; j++) {
+                for (var j = 0 ; j < $scope.teams.length ; j++) {
                   if (team.id == $scope.teams[j].id) {
                     change = true;
                     index = j;
@@ -1167,7 +1167,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     var teamMembersKeys = $firebaseArray(teamMembersRef);
     teamMembersKeys.$loaded(function() {
       $scope.teamMembers = [];
-      for (i = 0 ; i < teamMembersKeys.length ; i++) {
+      for (var i = 0 ; i < teamMembersKeys.length ; i++) {
         var teamMemberKey = teamMembersKeys.$keyAt(i);
         var loopTeamMember = firebase.database().ref('students/' + teamMemberKey);
         loopTeamMember.on('value', function(snapshot) {
@@ -1177,7 +1177,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
             var teamMember = snapshot.val();
             teamMember.name = CryptoJS.AES.decrypt(teamMember.name, teamMember.id).toString(CryptoJS.enc.Utf8);
             teamMember.surname =CryptoJS.AES.decrypt(teamMember.surname, teamMember.id).toString(CryptoJS.enc.Utf8);
-            for (j = 0 ; j < $scope.teamMembers.length ; j++) {
+            for (var j = 0 ; j < $scope.teamMembers.length ; j++) {
               if (teamMember.id == $scope.teamMembers[j].id) {
                 change = true;
                 index = j;
@@ -1210,7 +1210,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     rewardKeys.$loaded(function() {
       $scope.rewardsLocked = [];
       $scope.rewardsUnlocked = [];
-      for (i = 0 ; i < rewardKeys.length ; i++) {
+      for (var i = 0 ; i < rewardKeys.length ; i++) {
         var rewardKey = rewardKeys.$keyAt(i); 
         var loopReward = firebase.database().ref('rewards/' + rewardKey);
         loopReward.on('value', function(snapshot) {
@@ -1219,7 +1219,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
             var index = -1;
             var reward = snapshot.val();
             if ($scope.student.rewards == undefined || !(reward.id in $scope.student.rewards)) {
-              for (j = 0 ; j < $scope.rewardsLocked.length ; j++) {
+              for (var j = 0 ; j < $scope.rewardsLocked.length ; j++) {
                 if (reward.id == $scope.rewardsLocked[j].id) {
                   change = true;
                   index = j;
@@ -1233,7 +1233,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
               }
               $scope.rewardsLocked.sort(sortByName);
             } else {
-              for (j = 0 ; j < $scope.rewardsUnlocked.length ; j++) {
+              for (var j = 0 ; j < $scope.rewardsUnlocked.length ; j++) {
                 if (reward.id == $scope.rewardsUnlocked[j].id) {
                   change = true;
                   index = j;
@@ -1406,7 +1406,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     var missionKeys = $firebaseArray(classroomMissionsRef);
     missionKeys.$loaded(function() {
       $scope.missions = [];
-      for (i = 0 ; i < missionKeys.length ; i++) {
+      for (var i = 0 ; i < missionKeys.length ; i++) {
         var missionKey = missionKeys.$keyAt(i);
         var loopMission = firebase.database().ref('missions/' + missionKey);
         loopMission.on('value', function(snapshot) {
@@ -1416,7 +1416,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
             var mission = snapshot.val();
             if ($scope.student.missions != undefined) {
               if (mission.id in $scope.student.missions) {
-                for (j = 0 ; j < $scope.missions.length ; j++) {
+                for (var j = 0 ; j < $scope.missions.length ; j++) {
                   if (mission.id == $scope.missions[j].id) {
                     change = true;
                     index = j;
@@ -1448,7 +1448,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     var studentsKeys = $firebaseArray(classroomStudentsRef);
     studentsKeys.$loaded(function() {
       $scope.students = [];
-      for (i = 0 ; i < studentsKeys.length ; i++) {
+      for (var i = 0 ; i < studentsKeys.length ; i++) {
         var studentKey = studentsKeys.$keyAt(i);
         var loopStudent = firebase.database().ref('students/' + studentKey);
         loopStudent.on('value', function(snapshot) {
@@ -1458,7 +1458,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
             var student = snapshot.val();
             student.name = CryptoJS.AES.decrypt(student.name, student.id).toString(CryptoJS.enc.Utf8);
             student.surname = CryptoJS.AES.decrypt(student.surname, student.id).toString(CryptoJS.enc.Utf8);
-            for (j = 0 ; j < $scope.students.length ; j++) {
+            for (var j = 0 ; j < $scope.students.length ; j++) {
               if ($scope.students[j].id == student.id) {
                 change = true;
                 index = j;
@@ -1623,7 +1623,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
     if($scope.inItem) {
       var notificationItemToDelete = firebase.database().ref('students/' + $scope.student.id + '/items/' + $scope.item.id + '/notifications');
       notificationItemToDelete.remove();
-      $scope.item.notifications = undefined;
+      delete $scope.item.notifications;
     } else {
       var notificationToDeleteRef = firebase.database().ref('students/' + $scope.student.id + '/notifications/' + $scope.classroom.id);
       notificationToDeleteRef.remove();
