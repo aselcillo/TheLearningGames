@@ -624,6 +624,7 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
                                           /* FUNCTIONS IN PROFILE */
 
   /**
+    @input: Input type file used to get the picture
     Updates the student's avatar with an image uploaded from the local storage and saves it on the firebase storage.
   */
   $scope.updateStudentAvatar = function(input) {
