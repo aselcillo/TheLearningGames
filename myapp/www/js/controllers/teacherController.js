@@ -1538,6 +1538,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     $scope.studentDialogModal.show();  
   }
   $scope.closeModalStudentDialog = function() {
+    document.getElementById('inputStudentPicture').value = '';
     $scope.studentDialogModal.hide();
   }
 
@@ -2005,14 +2006,21 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   /**
     @title: The tile of the popup, either an icon or a text.
     @content: The message of the popup.
-    Used to create alert popups
+    @modal: The modal that needs to be close.
+    Used to create alert popups. It can contain a modal as an argument for prevent the app get stuck by hiding the modal.
   */
-  $scope.popupAlertCreate = function(title, content) {
+  $scope.popupAlertCreate = function(title, content, modal) {
     $ionicPopup.show({
       title: title,
       template: '<p style="text-align:center;">'+content+'</p>',
       buttons: [
-        {text: $scope.okayText,}
+        {text: $scope.okayText,
+          onTap: function(e) {
+            if(modal != undefined) {
+              modal.hide();
+            }
+          }
+        }
       ]
     });
   }
@@ -2079,14 +2087,14 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var classroomKeys = $firebaseArray(teacherClassroomsRef);
     classroomKeys.$loaded(function() {
       $scope.classrooms = [];
-      for (i = 0 ; i < classroomKeys.length ; i++) {
+      for (var i = 0 ; i < classroomKeys.length ; i++) {
         var classKey = classroomKeys.$keyAt(i);
         var loopClassroom = firebase.database().ref('classrooms/' + classKey);
         loopClassroom.on('value', function(snapshot) {
           if (snapshot.val() != null) {
             var change = false;
             var index = -1;
-            for (j = 0 ; j < $scope.classrooms.length ; j++) {
+            for (var j = 0 ; j < $scope.classrooms.length ; j++) {
                 if ($scope.classrooms[j].id == snapshot.val().id) {
                   change = true;
                   index = j;
@@ -2590,6 +2598,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           }
         });
       } else {
+        $ionicLoading.hide();
         $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
       }
     }
@@ -2673,7 +2682,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               var index = -1;
               var level = snapshot.val();
 
-              for (i = 0 ; i < $scope.levels.length ; i++) {
+              for (var i = 0 ; i < $scope.levels.length ; i++) {
                 if ($scope.levels[i].id == level.id) {
                   change = true;
                   index = i;
@@ -2825,6 +2834,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           }
         });
       } else {
+        $ionicLoading.hide();
         $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
       }
     }
@@ -2841,7 +2851,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var studentKeys = $firebaseArray(classroomStudentsRef);
     studentKeys.$loaded(function() {
       $scope.students = [];
-      for (i = 0 ; i < studentKeys.length ; i++) {
+      for (var i = 0 ; i < studentKeys.length ; i++) {
         var studentKey = studentKeys.$keyAt(i);
         var loopStudent = firebase.database().ref('students/' + studentKey);
         loopStudent.on('value', function(snapshot) {
@@ -2854,7 +2864,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             if (student.classrooms != undefined && student.classrooms[$scope.classroom.id] != undefined) {
               student.picture = student.classrooms[$scope.classroom.id].picture;
             }
-            for (j = 0 ; j < $scope.students.length ; j++) {
+            for (var j = 0 ; j < $scope.students.length ; j++) {
               if ($scope.students[j].id == student.id) {
                 change = true;
                 index = j;
@@ -2979,9 +2989,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                   }
                 });
               } else {
-                $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
+                $ionicLoading.hide();
+                $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert, $scope.newStudentModal);
               }
-              $scope.file = undefined;
+              delete $scope.file;
             } else {
               var newStudentClassRef = firebase.database().ref('students/' + sessionStudent.uid + '/classrooms/' + $scope.classroom.id);
               newStudentClassRef.set({
@@ -3072,7 +3083,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     }
     $scope.studentItems = [];
     for (var itemId in student.items) {
-      for (i = 0 ; i < $scope.items.length ; i++) {
+      for (var i = 0 ; i < $scope.items.length ; i++) {
         if (student.items[itemId].id == $scope.items[i].id) {
           $scope.studentHasItems = true;
           if ($scope.items[i].achievements != undefined) {
@@ -3329,7 +3340,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var itemKeys = $firebaseArray(classroomItemsRef);
     itemKeys.$loaded(function() {
       $scope.items = [];
-      for (i = 0 ; i < itemKeys.length ; i++) {
+      for (var i = 0 ; i < itemKeys.length ; i++) {
         var itemKey = itemKeys.$keyAt(i);
         var loopItem = firebase.database().ref('items/' + itemKey);
         loopItem.on('value', function(snapshot) {
@@ -3337,7 +3348,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             var change = false;
             var index = -1;
             var item = snapshot.val();
-            for (j = 0 ; j < $scope.items.length ; j++) {
+            for (var j = 0 ; j < $scope.items.length ; j++) {
               if (item.id == $scope.items[j].id) {
                 change = true;
                 index = j;
@@ -3541,7 +3552,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             $scope.createNotificationItems($scope.studentsToEvaluate[pos].id, item, 'win', item.score);
             $scope.checkAchievements(item, $scope.studentsToEvaluate[pos], item.maxScore);
             $scope.checkMissions(item, $scope.studentsToEvaluate[pos], item.score);
-            $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.notificationOfStudent + ': ' + $scope.studentsToEvaluate[pos].name + ' ' + $scope.studentsToEvaluate[pos].surname + ' ' + $scope.hasRecibedMaxPointsItemAlert + ': ' + item.name + ', ' + $scope.maxPointsHasBeenEstablishedAlert);
+            $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.notificationOfStudent + ': ' + $scope.studentsToEvaluate[pos].name + ' ' + $scope.studentsToEvaluate[pos].surname + ' ' + $scope.hasRecibedMaxPointsItemAlert + ': ' + item.name + ', ' + $scope.maxPointsHasBeenEstablishedAlert, $scope.selectItemsModal);
           } else {
             studentItemRef.set({
               'id' : item.id,
@@ -3561,7 +3572,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               });
               $scope.createNotificationItems($scope.studentsToEvaluate[pos].id, item, 'lose', item.score);
               $scope.checkAchievements(item, $scope.studentsToEvaluate[pos], 0);
-              $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.notificationOfStudent + ': ' + $scope.studentsToEvaluate[pos].name + ' ' + $scope.studentsToEvaluate[pos].surname + ' ' + $scope.hasLostMinPointItemAlert + ': ' + item.name + ', ' + $scope.zeroPointEstablishedAlert);
+              $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.notificationOfStudent + ': ' + $scope.studentsToEvaluate[pos].name + ' ' + $scope.studentsToEvaluate[pos].surname + ' ' + $scope.hasLostMinPointItemAlert + ': ' + item.name + ', ' + $scope.zeroPointEstablishedAlert, $scope.selectItemsModal);
             }
           }
         }   
@@ -3620,7 +3631,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                   $scope.createNotificationItems($scope.students[studentPos].id, item, 'win', item.score);
                   $scope.checkAchievements(item, $scope.students[studentPos], item.maxScore);
                   $scope.checkMissions(item, $scope.students[studentPos], item.score);
-                  $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.notificationOfStudent + ': ' + $scope.students[studentPos].name + ' ' + $scope.students[studentPos].surname  + ' ' + $scope.hasRecibedMaxPointsItemAlert + ': ' + item.name + ', ' + $scope.maxPointsHasBeenEstablishedAlert);
+                  $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.notificationOfStudent + ': ' + $scope.students[studentPos].name + ' ' + $scope.students[studentPos].surname  + ' ' + $scope.hasRecibedMaxPointsItemAlert + ': ' + item.name + ', ' + $scope.maxPointsHasBeenEstablishedAlert, $scope.selectItemsModal);
                 } else {
                   studentItemRef.set({
                     'id' : item.id,
@@ -3640,7 +3651,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                     });
                     $scope.createNotificationItems($scope.students[studentPos].id, item, 'lose', item.score);
                     $scope.checkAchievements(item, $scope.students[studentPos], 0);
-                    $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.notificationOfStudent + ': ' + $scope.students[studentPos].name + ' ' + $scope.students[studentPos].surname + ' ' + $scope.hasLostMinPointItemAlert + ': ' + item.name + ', ' + $scope.zeroPointEstablishedAlert);
+                    $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', $scope.notificationOfStudent + ': ' + $scope.students[studentPos].name + ' ' + $scope.students[studentPos].surname + ' ' + $scope.hasLostMinPointItemAlert + ': ' + item.name + ', ' + $scope.zeroPointEstablishedAlert, $scope.selectItemsModal);
                   }
                 }
               }
@@ -3736,7 +3747,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             { text: $scope.useDefaultPoints,
               type: 'button-positive',
               onTap: function(e) {
-                for(var element in $scope.items) {
+                for (var element in $scope.items) {
                   if(item.id == $scope.items[element].id) {
                     item.score = $scope.items[element].score;
                   }
@@ -3780,17 +3791,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var studentItemPointsToRemoveRef = firebase.database().ref('students/' + $scope.student.id + '/items/' + item.id + '/points');
     var studentClassPointsToRemoveRef = firebase.database().ref('students/' + $scope.student.id + '/classrooms/' + $scope.classroom.id + '/totalPoints');
     if ((Number($scope.student.items[item.id].points) - 1) < 0) {
-      $ionicPopup.show({
-        title: '<i class="icon ion-information-circled"></i>',
-        template: '<p style="text-align:center;">' + $scope.studentDoesNotHaveEnougPointsAlert + ', ' + $scope.zeroPointsWillEstablishAlert + '</p>',
-        buttons: [
-          {text: $scope.okayText,
-            onTap: function(e) {
-              $scope.closeModalStudentDialog();
-            }
-          }
-        ]
-      });
+      $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', '<p style="text-align:center;">' + $scope.studentDoesNotHaveEnougPointsAlert + ', ' + $scope.zeroPointsWillEstablishAlert + '</p>', $scope.studentDialogModal);
       studentItemPointsToRemoveRef.set(0);
       $scope.student.items[item.id].points = 0;
       $scope.createNotificationItems($scope.student.id, item, 'lose', 1);
@@ -3823,17 +3824,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var studentItemPointsToAddRef = firebase.database().ref('students/' + $scope.student.id + '/items/' + item.id + '/points');
     var studentClassPointsToAddRef = firebase.database().ref('students/' + $scope.student.id + '/classrooms/' + $scope.classroom.id + '/totalPoints');
     if ((Number($scope.student.items[item.id].points) + 1) > item.maxScore) {
-      $ionicPopup.show({
-        title: '<i class="icon ion-information-circled"></i>',
-        template: '<p style="text-align:center;">' + $scope.studentDoesNotHaveEnougPointsAlert + ', ' + $scope.maxPointsWillEstablishAlert + '</p>',
-        buttons: [
-          {text: $scope.okayText,
-            onTap: function(e) {
-              $scope.closeModalStudentDialog();
-            }
-          }
-        ]
-      });
+      $scope.popupAlertCreate('<i class="icon ion-information-circled"></i>', '<p style="text-align:center;">' + $scope.studentDoesNotHaveEnougPointsAlert + ', ' + $scope.maxPointsWillEstablishAlert + '</p>', $scope.studentDialogModal);
       studentItemPointsToAddRef.set(item.maxScore);
       $scope.student.items[item.id].points = item.maxScore;
       $scope.createNotificationItems($scope.student.id, item, 'win', 1);
@@ -3900,7 +3891,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           }
         });
       } else {
+        $ionicLoading.hide();
         $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
+
       }
     }
   }
@@ -3916,7 +3909,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var achievementKeys = $firebaseArray(itemAchievementsRef);
     achievementKeys.$loaded(function() {
       $scope.achievements = [];
-      for (i = 0 ; i < achievementKeys.length ; i++) {
+      for (var i = 0 ; i < achievementKeys.length ; i++) {
         var achievementKey = achievementKeys.$keyAt(i);
         var loopAchievement = firebase.database().ref('achievements/' + achievementKey);
         loopAchievement.on('value', function(snapshot) {
@@ -3924,7 +3917,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             var change = false;
             var index = -1;
             var achievement = snapshot.val();
-            for (j = 0 ; j < $scope.achievements.length ; j++) {
+            for (var j = 0 ; j < $scope.achievements.length ; j++) {
               if (achievement.id == $scope.achievements[j].id) {
                 change = true;
                 index = j;
@@ -4040,9 +4033,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                 }
               });
             } else {
-              $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
+              $ionicLoading.hide();
+              $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert, $scope.newAchievementModal);
             }
-            $scope.file = undefined;
+            delete $scope.file;
           } else {
             var achievementBadgeRef = firebase.database().ref('achievements/' + id + '/badge');
             achievementBadgeRef.set($scope.defaultAchievementAvatar);
@@ -4187,7 +4181,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       var achievementsArray = $firebaseArray(achievementsRef);
       itemAchievementsArray.$loaded(function() {
         achievementsArray.$loaded(function() {
-          for (i = 0 ; i < itemAchievementsArray.length ; i++) {
+          for (var i = 0 ; i < itemAchievementsArray.length ; i++) {
             var achievementKey = itemAchievementsArray.$keyAt(i);
             var loopAchievements = firebase.database().ref('achievements/' + achievementKey);
             loopAchievements.on('value', function(snapshot) {
@@ -4274,6 +4268,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
           }
         });
       } else {
+        $ionicLoading.hide();
         $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
       }
     }
@@ -4290,7 +4285,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var teamKeys = $firebaseArray(classroomTeamsRef);
     teamKeys.$loaded(function() {
       $scope.teams = [];
-      for (i = 0 ; i < teamKeys.length ; i++) {
+      for (var i = 0 ; i < teamKeys.length ; i++) {
         var teamKey = teamKeys.$keyAt(i);
         var loopTeam = firebase.database().ref('teams/' + teamKey);
         loopTeam.on('value', function(snapshot) {
@@ -4298,7 +4293,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             var change = false;
             var index = -1;
             var team = snapshot.val();
-            for (j = 0 ; j < $scope.teams.length ; j++) {
+            for (var j = 0 ; j < $scope.teams.length ; j++) {
               if ($scope.teams[j].id == team.id) {
                 change = true;
                 index = j;
@@ -4411,9 +4406,10 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               }
             });
           } else {
-            $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
+            $ionicLoading.hide();
+            $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert, $scope.newTeamDialogModal);
           }
-          $scope.file = undefined;
+          delete $scope.file;
         } else {
           var teamPictureRef = firebase.database().ref('teams/' + id + '/picture');
           teamPictureRef.set($scope.defaultTeamAvatar);
@@ -4465,15 +4461,15 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       var participantsPerTeam = Math.trunc(numParticipants / numTeams);
       var lefttovers = numParticipants % numTeams;
       randomNumberList = [];
-      for (i = 0 ; i < numParticipants ; i++) {
+      for (var i = 0 ; i < numParticipants ; i++) {
         randomNumberList.push(i);
       }
       randomNumberList = randomNumberList.sort(function() { return Math.random() - 0.5 });
       var teamsList = [];
       var teamNamesList = [];
-      for (i = 0 ; i < numTeams ; i++) {
+      for (var i = 0 ; i < numTeams ; i++) {
         var team = [];
-        for (j = 0 ; j < participantsPerTeam ; j++) {
+        for (var j = 0 ; j < participantsPerTeam ; j++) {
           team.push($scope.students[randomNumberList[0]]);
           randomNumberList.splice(0, 1);
         }
@@ -4481,7 +4477,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         teamsList.push(team);
       }
       if (lefttovers > 0) {
-        for ( i = 0 ; i < lefttovers ; i++) {
+        for (var i = 0 ; i < lefttovers ; i++) {
           var randomTeam = Math.trunc(Math.random()*numTeams);
           teamsList[randomTeam].push($scope.students[randomNumberList[i]]);
         }
@@ -4489,7 +4485,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       var teamsNode = $firebaseArray(teamsRef);
       teamsNode.$loaded(function() {
         var counter = 0;
-        for (i = 0 ; i < numTeams ; i++) {
+        for (var i = 0 ; i < numTeams ; i++) {
           teamsNode.$add({
             'name' : teamNamesList[i],
             'objective' : objective,
@@ -4722,7 +4718,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var rewardKeys = $firebaseArray(classroomRewardsRef);
     rewardKeys.$loaded(function() {
       $scope.rewards = [];
-      for (i = 0 ; i < rewardKeys.length ; i++) {
+      for (var i = 0 ; i < rewardKeys.length ; i++) {
         var rewardKey = rewardKeys.$keyAt(i);
         var loopReward = firebase.database().ref('rewards/' + rewardKey);
         loopReward.on('value', function(snapshot) {
@@ -4730,7 +4726,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
             var change = false;
             var index = -1;
             var reward = snapshot.val();
-            for (j = 0 ; j < $scope.rewards.length ; j++) {
+            for (var j = 0 ; j < $scope.rewards.length ; j++) {
               if (reward.id == $scope.rewards[j].id) {
                 change = true;
                 index = j;
@@ -4921,7 +4917,7 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
     var missionKeys = $firebaseArray(classroomMissionsRef);
     missionKeys.$loaded(function() {
       $scope.missions = [];
-      for (i = 0 ; i < missionKeys.length ; i++) {
+      for (var i = 0 ; i < missionKeys.length ; i++) {
         var missionKey = missionKeys.$keyAt(i);
         var loopMission = firebase.database().ref('missions/' + missionKey);
         loopMission.on('value', function(snapshot) {
@@ -4934,13 +4930,13 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
               missionStateRef.set(true);
               mission.finisehd = true;
 
-              for(var studentId in mission.students) {
+              for (var studentId in mission.students) {
                 var studentMissionToDeleteRef = firebase.database().ref('students/' + studentId + '/missions/' + mission.id);
                 studentMissionToDeleteRef.remove();
               }
               $scope.createNotificationsMissionFinishedByTime($scope.teacher, mission);
             }
-            for (j = 0 ; j < $scope.missions.length ; j++) {
+            for (var j = 0 ; j < $scope.missions.length ; j++) {
               if (mission.id == $scope.missions[j].id) {
                 change = true;
                 index = j;
@@ -5480,12 +5476,16 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                     if (student.missions[missionId].items[itemId] != undefined) {
                       if (item.id == itemId) {
                         if ((Number(student.missions[missionId].items[itemId].points) + Number(points)) < $scope.missions[element].items[itemId].neededPoints) {
-                          studentMissionItemPointsRef.set((Number(student.missions[missionId].items[itemId].points) + Number(points)));
+                          if ((Number(student.missions[missionId].items[itemId].points) + Number(points)) < 0) {
+                            studentMissionItemPointsRef.set(0);
+                          } else {
+                            studentMissionItemPointsRef.set((Number(student.missions[missionId].items[itemId].points) + Number(points)));
+                          }
                         } else {
                           unlockedMissionItems += 1;
                           var studentMissionItemRef = firebase.database().ref('students/' + student.id + '/missions/' + missionId + '/items/' + itemId);
                           studentMissionItemRef.remove();
-                          student.missions[missionId].items[itemId] = undefined;
+                          delete student.missions[missionId].items[itemId];
                         }
                       }
                     } else {
