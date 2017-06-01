@@ -46,9 +46,9 @@
           </div>
           <label ng-show="!isIOS" class="button button-calm inputfile">
             {{ 'SELECT_IMAGE' | translate }}
-            <input class="button button-light button-block button-outline" type="file" id="inputAvatar" ng-click="updateTeacherAvatar()">
+            <input class="button button-light button-block button-outline" type="file" id="inputAvatar" onchange="angular.element(this).scope().updateTeacherAvatar(this)">
           </label>
-          <input class="button button-light button-block button-outline" ng-show="isIOS" type="file" id="inputAvatar" ng-click="updateTeacherAvatar()">
+          <input class="button button-light button-block button-outline" ng-show="isIOS" type="file" id="inputAvatar" onchange="angular.element(this).scope().updateTeacherAvatar(this)">
           <label class="item item-input list-elements" id="signUp-input3">
             <span class="inputLabelProfile">
               <i class="icon ion-person"></i>&nbsp;&nbsp;{{ 'NAME' | translate }}
@@ -298,9 +298,9 @@
           </div>
           <label ng-show="!isIOS" class="button button-calm inputfile" ng-disabled="isArchivedClassroom">
             {{ 'SELECT_IMAGE' | translate }}
-            <input class="button button-light button-block button-outline" type="file" id="inputAchievementPicture" ng-click="updateAchievementPicture()" ng-disabled="isArchivedClassroom">
+            <input class="button button-light button-block button-outline" type="file" id="inputAchievementPicture" onchange="angular.element(this).scope().updateAchievementPicture(this)" ng-disabled="isArchivedClassroom">
           </label>
-          <input class="button button-light button-block button-outline" ng-show="isIOS" type="file" id="inputAchievementPicture" ng-click="updateAchievementPicture()" ng-disabled="isArchivedClassroom">
+          <input class="button button-light button-block button-outline" ng-show="isIOS" type="file" id="inputAchievementPicture" onchange="angular.element(this).scope().updateAchievementPicture(this)" ng-disabled="isArchivedClassroom">
           <label class="item item-input list-elements">
             <span class="input-label">{{ 'NAME' | translate }} </span>
             <input type="text" placeholder="{{achievement.name}}" ng-model="modelAchievement.name" ng-disabled="isArchivedClassroom">

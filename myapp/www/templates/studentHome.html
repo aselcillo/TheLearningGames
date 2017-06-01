@@ -39,14 +39,16 @@
               <span>{{ 'PROFILE' | translate }}</span>
             </h3>
           </header>
-          <ion-item class ="teacherAvatar">
-            <img src={{student.avatar}} class="avatar">
-          </ion-item>
+          <div class="avatar_margen">
+            <ion-item class ="teacherAvatar">
+              <img src={{student.avatar}} class="avatar">
+            </ion-item>
+          </div>
           <label ng-show="!isIOS" class="button button-calm inputfile">
             {{ 'SELECT_IMAGE' | translate }}
-            <input class="button button-light button-block button-outline" type="file" id="inputAvatar" ng-click="updateStudentAvatar()">
+            <input class="button button-light button-block button-outline" type="file" id="inputAvatar" onchange="angular.element(this).scope().updateStudentAvatar(this)">
           </label>
-          <input class="button button-light button-block button-outline" ng-show="isIOS" type="file" id="inputAvatar" ng-click="updateStudentAvatar()">
+          <input class="button button-light button-block button-outline" ng-show="isIOS" type="file" id="inputAvatar" onchange="angular.element(this).scope().updateStudentAvatar(this)">
           <label class="item item-input list-elements" id="signUp-input3">
             <span class="inputLabelProfile">
               <i class="icon ion-person"></i>&nbsp;&nbsp;{{ 'NAME' | translate }}
