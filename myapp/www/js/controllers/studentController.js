@@ -146,7 +146,6 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
       '<ion-item class="itemPopover" ng-show="archivedClassroomsToShow" ng-click="closePopoverStudentHome(); showArchivedClassrooms(false)"><i class="icon ion-eye-disabled"></i>&nbsp;&nbsp;{{ \'HIDE_ARCHIVED_CLASSES\' | translate }}</ion-item>'+
       '<ion-item class="itemPopover" ng-click="closePopoverStudentHome(); settingsForm()"><i class="icon ion-gear-a"></i>&nbsp;&nbsp;{{ \'SETTINGS\' | translate }}</ion-item>'+
       '<ion-item class="itemPopover log-out-button" ng-click="closePopoverStudentHome(); logOut()"><i class="icon ion-log-out"></i>&nbsp;&nbsp;{{ \'LOG_OUT\' | translate }}</ion-item>'+
-
     '</ion-list>'+
   '</ion-popover-view>';
 
@@ -625,46 +624,43 @@ function ($scope, $stateParams, $http, $state, $ionicModal, $ionicActionSheet, $
                                           /* FUNCTIONS IN PROFILE */
 
   /**
+    @input: Input type file used to get the picture
     Updates the student's avatar with an image uploaded from the local storage and saves it on the firebase storage.
   */
-  $scope.updateStudentAvatar = function() {
+  $scope.updateStudentAvatar = function(input) {
     var downloadURL;
-    var fileButton = document.getElementById('inputAvatar');
-    
-    fileButton.addEventListener('change',function(e) {
-      if (e.target.files.length > 0) {
-        $ionicLoading.show();
-        var file = e.target.files[0];
-        var fileExtension = file.name.split('.').pop().toLowerCase();
-        if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
-          var storageRef = firebase.storage().ref('Profile_Pictures/' + sessionUser.uid + '/profilePicture');
-          var task = storageRef.put(file);
-          task.on('state_changed', function progress(snapshot) {
+      if (input.files.length > 0) {
+      $ionicLoading.show();
+      var file = input.files[0];
+      var fileExtension = file.name.split('.').pop().toLowerCase();
+      if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
+        var storageRef = firebase.storage().ref('Profile_Pictures/' + sessionUser.uid + '/profilePicture');
+        var task = storageRef.put(file);
+        task.on('state_changed', function progress(snapshot) {
+           
+        }, function error(error) {
+          $ionicLoading.hide();
+        }, function complete() {
+          downloadURL = task.snapshot.downloadURL;
             
-          }, function error(error) {
-            $ionicLoading.hide();
-          }, function complete() {
-            downloadURL = task.snapshot.downloadURL;
-              
-            $scope.student.avatar = downloadURL;
-            var studentAvatarToUpdateRef = firebase.database().ref('students/' + sessionUser.uid + '/avatar/');
-            studentAvatarToUpdateRef.set(downloadURL);
-            sessionUser.updateProfile ({
-              photoURL : downloadURL,
-            });
-            $scope.student.name = CryptoJS.AES.decrypt($scope.student.name, sessionUser.uid).toString(CryptoJS.enc.Utf8);
-            $scope.student.surname = CryptoJS.AES.decrypt($scope.student.surname, sessionUser.uid).toString(CryptoJS.enc.Utf8);
-            $ionicLoading.hide();
-
-            if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
-              $scope.$apply();
-            }
+          $scope.student.avatar = downloadURL;
+          var studentAvatarToUpdateRef = firebase.database().ref('students/' + sessionUser.uid + '/avatar/');
+          studentAvatarToUpdateRef.set(downloadURL);
+          sessionUser.updateProfile ({
+            photoURL : downloadURL,
           });
-        } else {
-          $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
-        }
+          $scope.student.name = CryptoJS.AES.decrypt($scope.student.name, sessionUser.uid).toString(CryptoJS.enc.Utf8);
+          $scope.student.surname = CryptoJS.AES.decrypt($scope.student.surname, sessionUser.uid).toString(CryptoJS.enc.Utf8);
+          $ionicLoading.hide();
+
+          if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+            $scope.$apply();
+          }
+        });
+      } else {
+        $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
       }
-    });
+    }
   }
 
   /**
