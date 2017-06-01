@@ -834,9 +834,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       '</div>'+
       '<label ng-show="!isIOS" class="button button-calm inputfile">'+
         '{{ \'SELECT_IMAGE\' | translate }}'+
-        '<input class="button button-light button-block button-outline" type="file" id="inputNewStudentPicture" ng-click="updateInputFile(\'inputNewStudentPicture\')">'+
+        '<input class="button button-light button-block button-outline" type="file" id="inputNewStudentPicture" onchange="angular.element(this).scope().updateInputFile(this)">'+
       '</label>'+
-      '<input class="button button-light button-block button-outline" ng-show="isIOS" type="file" id="inputNewStudentPicture" ng-click="updateInputFile(\'inputNewStudentPicture\')">'+
+      '<input class="button button-light button-block button-outline" ng-show="isIOS" type="file" id="inputNewStudentPicture" onchange="angular.element(this).scope().updateInputFile(this)">'+
       '<div>'+
         '<ion-list>'+
           '<form id="newStudentForm" class="list">'+
@@ -877,9 +877,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
       '</div>'+
       '<label ng-show="!isIOS" class="button button-calm inputfile" ng-show="classroom.studentsView" ng-disabled="isArchivedClassroom">'+
         '{{ \'SELECT_IMAGE\' | translate }}'+
-        '<input class="button button-light button-block button-outline" type="file" id="inputStudentPicture" ng-click="updateStudentPicture()" ng-disabled="isArchivedClassroom">'+
+        '<input class="button button-light button-block button-outline" type="file" id="inputStudentPicture" onchange="angular.element(this).scope().updateStudentPicture(this)" ng-disabled="isArchivedClassroom">'+
       '</label>'+
-      '<input class="button button-light button-block button-outline" ng-show="isIOS" type="file" id="inputStudentPicture" ng-click="updateStudentPicture()" ng-disabled="isArchivedClassroom">'+
+      '<input class="button button-light button-block button-outline" ng-show="isIOS" type="file" id="inputStudentPicture" onchange="angular.element(this).scope().updateStudentPicture(this)" ng-disabled="isArchivedClassroom">'+
         '<form id="studentProfileFormData" class="list">'+
           '<ion-list id="signUp-list2">'+
             '<label class="item item-input list-elements" id="signUp-input3">'+
@@ -941,9 +941,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         '</div>'+
         '<label ng-disabled="isArchivedClassroom" ng-show="!isIOS" class="button button-calm inputfile">'+
           '{{ \'SELECT_IMAGE\' | translate }}'+
-          '<input class="button button-light button-block button-outline" type="file" id="inputTeamPicture" ng-click="updateTeamPicture()">'+
+          '<input class="button button-light button-block button-outline" type="file" id="inputTeamPicture" onchange="angular.element(this).scope().updateTeamPicture(this)">'+
         '</label>'+
-        '<input class="button button-light button-block button-outline" ng-show="isIOS" type="file" id="inputTeamPicture" ng-click="updateTeamPicture()" ng-disabled="isArchivedClassroom">'+
+        '<input class="button button-light button-block button-outline" ng-show="isIOS" type="file" id="inputTeamPicture" onchange="angular.element(this).scope().updateTeamPicture(this)" ng-disabled="isArchivedClassroom">'+
         '<form id="teamDialogForm">'+
           '<label class="item item-input list-elements">'+
             '<span class="input-label">{{ \'NAME\' | translate }}</span>'+
@@ -984,9 +984,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         '</div>'+
         '<label ng-show="!isIOS" class="button button-calm inputfile">'+
           '{{ \'SELECT_IMAGE\' | translate }}'+
-          '<input class="button button-light button-block button-outline" type="file" id="inputNewTeamPicture" ng-click="updateInputFile(\'inputNewTeamPicture\')">'+
+          '<input class="button button-light button-block button-outline" type="file" id="inputNewTeamPicture" onchange="angular.element(this).scope().updateInputFile(this)">'+
         '</label>'+
-        '<input class="button button-light button-block button-outline" ng-show="isIOS" type="file" id="inputNewTeamPicture" ng-click="updateInputFile(\'inputNewTeamPicture\')">'+
+        '<input class="button button-light button-block button-outline" ng-show="isIOS" type="file" id="inputNewTeamPicture" onchange="angular.element(this).scope().updateInputFile(this)">'+
         '<form id="newTeamForm">'+
           '<label class="item item-input list-elements">'+
             '<span class="input-label">{{ \'NAME\' | translate }}</span>'+
@@ -1161,9 +1161,9 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
         '</div>'+
         '<label ng-show="!isIOS" class="button button-calm inputfile">'+
           '{{ \'SELECT_IMAGE\' | translate }}'+
-          '<input class="button button-light button-block button-outline" type="file" id="inputNewAchievementBadge" ng-click="updateInputFile(\'inputNewAchievementBadge\')">'+
+          '<input class="button button-light button-block button-outline" type="file" id="inputNewAchievementBadge" onchange="angular.element(this).scope().updateInputFile(this)">'+
         '</label>'+
-        '<input class="button button-light button-block button-outline" ng-show="isIOS" type="file" id="inputNewAchievementBadge" ng-click="updateInputFile(\'inputNewAchievementBadge\')">'+
+        '<input class="button button-light button-block button-outline" ng-show="isIOS" type="file" id="inputNewAchievementBadge" onchange="angular.element(this).scope().updateInputFile(this)">'+
         '<form id="newAchievementForm" class="list">'+
           '<ion-list>'+
           '<label class="item item-input list-elements">'+
@@ -1990,17 +1990,13 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                                         /* UPDATE INPUT FILE */
 
   /**
-    @elementId: Id of the input type file used to get the picture
+    @input: Input type file used to get the picture
     Used to get the file selected depending on the input type file used
   */
-  $scope.updateInputFile = function(elementId) {
-    var fileButton = document.getElementById(elementId);
-    
-    fileButton.addEventListener('change',function(e) {
-      if (e.target.files.length > 0) {
-        $scope.file = e.target.files[0];
-      }
-    });
+  $scope.updateInputFile = function(input) {
+    if (input.files.length > 0) {
+      $scope.file = input.files[0];
+    }
   }
 
 
@@ -2568,47 +2564,44 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                                         /* FUNCTIONS IN TEACHER PROFILE */
 
   /**
+    @input: Input type file used to get the picture
     Updates the teacher's avatar with an image uploaded from the local storage and saves it on the firebase storage.
   */
-  $scope.updateTeacherAvatar = function() {
+  $scope.updateTeacherAvatar = function(input) {
     var downloadURL;
-    var fileButton = document.getElementById('inputAvatar');
-    
-    fileButton.addEventListener('change',function(e) {
-      if (e.target.files.length > 0) {
-        $ionicLoading.show();
-        var file = e.target.files[0];
-        var fileExtension = file.name.split('.').pop().toLowerCase();
-        if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
-          var storageRef = firebase.storage().ref('Profile_Pictures/' + sessionUser.uid + '/profilePicture');
-          var task = storageRef.put(file);
-          task.on('state_changed', function progress(snapshot) {
+    if (input.files.length > 0) {
+      $ionicLoading.show();
+      var file = input.files[0];
+      var fileExtension = file.name.split('.').pop().toLowerCase();
+      if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
+        var storageRef = firebase.storage().ref('Profile_Pictures/' + sessionUser.uid + '/profilePicture');
+        var task = storageRef.put(file);
+        task.on('state_changed', function progress(snapshot) {
 
-          }, function error(error) {
-            $ionicLoading.hide();
-          }, function complete() {
-            downloadURL = task.snapshot.downloadURL;
-              
-            $scope.teacher.avatar = downloadURL;
-            var teacherAvatarToUpdateRef = firebase.database().ref('teachers/' + sessionUser.uid + '/avatar/');
-            teacherAvatarToUpdateRef.set(downloadURL);
-            sessionUser.updateProfile ({
-              photoURL : downloadURL,
-            });
-            $scope.teacher.name = CryptoJS.AES.decrypt($scope.teacher.name, sessionUser.uid).toString(CryptoJS.enc.Utf8);
-            $scope.teacher.surname = CryptoJS.AES.decrypt($scope.teacher.surname, sessionUser.uid).toString(CryptoJS.enc.Utf8);
-            $ionicLoading.hide();
-
-            if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
-              $scope.$apply();
-            }
-          });
-        } else {
+        }, function error(error) {
           $ionicLoading.hide();
-          $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
-        }
+        }, function complete() {
+          downloadURL = task.snapshot.downloadURL;
+              
+          $scope.teacher.avatar = downloadURL;
+          var teacherAvatarToUpdateRef = firebase.database().ref('teachers/' + sessionUser.uid + '/avatar/');
+          teacherAvatarToUpdateRef.set(downloadURL);
+          sessionUser.updateProfile ({
+            photoURL : downloadURL,
+          });
+          $scope.teacher.name = CryptoJS.AES.decrypt($scope.teacher.name, sessionUser.uid).toString(CryptoJS.enc.Utf8);
+          $scope.teacher.surname = CryptoJS.AES.decrypt($scope.teacher.surname, sessionUser.uid).toString(CryptoJS.enc.Utf8);
+          $ionicLoading.hide();
+
+          if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+            $scope.$apply();
+          }
+        });
+      } else {
+        $ionicLoading.hide();
+        $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
       }
-    });
+    }
   }
 
   /**
@@ -2811,43 +2804,40 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
   }
 
   /**
+    @input: Input type file used to get the picture
     Updates the students's classroom's picture with an image uploaded from the local storage and saves it on the firebase storage.
   */
-  $scope.updateStudentPicture = function() {
+  $scope.updateStudentPicture = function(input) {
     var downloadURL;
-    var fileButton = document.getElementById('inputStudentPicture');
-    
-    fileButton.addEventListener('change',function(e) {
-      if (e.target.files.length > 0) {
-        $ionicLoading.show();
-        var file = e.target.files[0];
-        var fileExtension = file.name.split('.').pop().toLowerCase();
-        if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
-          var storageRef = firebase.storage().ref('Profile_Pictures/' + $scope.student.id + '/' + $scope.classroom.id + '/classroomPicture');
-          var task = storageRef.put(file);
-          task.on('state_changed', function progress(snapshot) {
+    if (input.files.length > 0) {
+      $ionicLoading.show();
+      var file = input.files[0];
+      var fileExtension = file.name.split('.').pop().toLowerCase();
+      if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
+        var storageRef = firebase.storage().ref('Profile_Pictures/' + $scope.student.id + '/' + $scope.classroom.id + '/classroomPicture');
+        var task = storageRef.put(file);
+        task.on('state_changed', function progress(snapshot) {
 
-          }, function error(error) {
-            $ionicLoading.hide();
-          }, function complete() {
-            downloadURL = task.snapshot.downloadURL;
-              
-            $scope.student.picture = downloadURL;
-            var studentPictureToUpdateRef = firebase.database().ref('students/' + $scope.student.id + '/classrooms/' + $scope.classroom.id + '/picture');
-            studentPictureToUpdateRef.set(downloadURL);
-            
-            $ionicLoading.hide();
-
-            if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
-              $scope.$apply();
-            }
-          });
-        } else {
+        }, function error(error) {
           $ionicLoading.hide();
-          $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
-        }
+        }, function complete() {
+          downloadURL = task.snapshot.downloadURL;
+              
+          $scope.student.picture = downloadURL;
+          var studentPictureToUpdateRef = firebase.database().ref('students/' + $scope.student.id + '/classrooms/' + $scope.classroom.id + '/picture');
+          studentPictureToUpdateRef.set(downloadURL);
+            
+          $ionicLoading.hide();
+
+          if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+            $scope.$apply();
+          }
+        });
+      } else {
+        $ionicLoading.hide();
+        $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
       }
-    });
+    }
   }
 
   /**
@@ -3871,43 +3861,41 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                                         /* FUNCTIONS IN ACHIEVEMENTS */
 
   /**
+    @input: Input type file used to get the picture
     Updates the achievement's picture with an image uploaded from the local storage and saves it on the firebase storage.
   */
-  $scope.updateAchievementPicture = function() {
+  $scope.updateAchievementPicture = function(input) {
     var downloadURL;
-    var fileButton = document.getElementById('inputAchievementPicture');
-    
-    fileButton.addEventListener('change',function(e) {
-      if (e.target.files.length > 0) {
-        $ionicLoading.show();
-        var file = e.target.files[0];
-        var fileExtension = file.name.split('.').pop().toLowerCase();
-        if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
-          var storageRef = firebase.storage().ref('Achievement_Pictures/' + $scope.achievement.id + '/achievementPicture');
-          var task = storageRef.put(file);
-          task.on('state_changed', function progress(snapshot) {
+    if (input.files.length > 0) {
+      $ionicLoading.show();
+      var file = input.files[0];
+      var fileExtension = file.name.split('.').pop().toLowerCase();
+      if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
+        var storageRef = firebase.storage().ref('Achievement_Pictures/' + $scope.achievement.id + '/achievementPicture');
+        var task = storageRef.put(file);
+        task.on('state_changed', function progress(snapshot) {
 
-          }, function error(error) {
-            $ionicLoading.hide();
-          }, function complete() {
-            downloadURL = task.snapshot.downloadURL;
-              
-            $scope.achievement.badge = downloadURL;
-            var achievementPictureToUpdateRef = firebase.database().ref('achievements/' + $scope.achievement.id + '/badge/');
-            achievementPictureToUpdateRef.set(downloadURL);
-            
-            $ionicLoading.hide();
-
-            if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
-              $scope.$apply();
-            }
-          });
-        } else {
+        }, function error(error) {
           $ionicLoading.hide();
-          $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
-        }
+        }, function complete() {
+          downloadURL = task.snapshot.downloadURL;
+             
+          $scope.achievement.badge = downloadURL;
+          var achievementPictureToUpdateRef = firebase.database().ref('achievements/' + $scope.achievement.id + '/badge/');
+          achievementPictureToUpdateRef.set(downloadURL);
+           
+          $ionicLoading.hide();
+
+          if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+            $scope.$apply();
+          }
+        });
+      } else {
+        $ionicLoading.hide();
+        $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
+
       }
-    });
+    }
   }
 
   /**
@@ -4250,43 +4238,40 @@ function ($scope, $stateParams, $ionicModal, $http, $state, $ionicPopover, $ioni
                                        /* FUNCTIONS IN TEAMS */
 
   /**
+    @input: Input type file used to get the picture
     Updates the teams's picture with an image uploaded from the local storage and saves it on the firebase storage.
   */
-  $scope.updateTeamPicture = function() {
+  $scope.updateTeamPicture = function(input) {
     var downloadURL;
-    var fileButton = document.getElementById('inputTeamPicture');
-    
-    fileButton.addEventListener('change',function(e) {
-      if (e.target.files.length > 0) {
-        $ionicLoading.show();
-        var file = e.target.files[0];
-        var fileExtension = file.name.split('.').pop().toLowerCase();
-        if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
-          var storageRef = firebase.storage().ref('Team_Pictures/' + $scope.team.id + '/teamPicture');
-          var task = storageRef.put(file);
-          task.on('state_changed', function progress(snapshot) {
+    if (input.files.length > 0) {
+      $ionicLoading.show();
+      var file = input.files[0];
+      var fileExtension = file.name.split('.').pop().toLowerCase();
+      if (fileExtension == 'png' || fileExtension == 'jpg' || fileExtension == 'jpeg' || fileExtension == 'gif' || fileExtension == 'bmp') {
+        var storageRef = firebase.storage().ref('Team_Pictures/' + $scope.team.id + '/teamPicture');
+        var task = storageRef.put(file);
+        task.on('state_changed', function progress(snapshot) {
 
-          }, function error(error) {
-            $ionicLoading.hide();
-          }, function complete() {
-            downloadURL = task.snapshot.downloadURL;
-              
-            $scope.team.picture = downloadURL;
-            var teamPictureToUpdateRef = firebase.database().ref('teams/' + $scope.team.id + '/picture');
-            teamPictureToUpdateRef.set(downloadURL);
-            
-            $ionicLoading.hide();
-
-            if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
-              $scope.$apply();
-            }
-          });
-        } else {
+        }, function error(error) {
           $ionicLoading.hide();
-          $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
-        }
+        }, function complete() {
+          downloadURL = task.snapshot.downloadURL;
+              
+          $scope.team.picture = downloadURL;
+          var teamPictureToUpdateRef = firebase.database().ref('teams/' + $scope.team.id + '/picture');
+          teamPictureToUpdateRef.set(downloadURL);
+            
+          $ionicLoading.hide();
+
+          if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+            $scope.$apply();
+          }
+        });
+      } else {
+        $ionicLoading.hide();
+        $scope.popupAlertCreate('<i class="icon ion-alert-circled"></i>', $scope.fileInvalidAlert);
       }
-    });
+    }
   }
 
   /**
