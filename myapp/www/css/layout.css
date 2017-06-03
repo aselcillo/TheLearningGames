@@ -246,7 +246,7 @@ padding-left:40px;
 }
 
 .platform-ios input[type="date"] {
-	width: 100%;
+	min-width: 97%;
 }
 
 .notification-button {
