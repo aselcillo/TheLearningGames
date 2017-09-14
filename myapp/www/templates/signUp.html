@@ -40,6 +40,7 @@
             <i class="icon ion-image"></i>&nbsp;&nbsp;{{ 'AVATAR' | translate }}</span>
           <input type="text" ng-model="modelSignUp.avatar">
         </label>
+        <a style="color: #105289;" class="button button-light  button-block button-clear" ng-click="showTermsPopup()">{{termsAndConditionsLabel}}</a>
       </ion-list>
       <div class="button-bar action_buttons">
         <button id="signUp-button9" ng-disabled="!modelSignUp.name || !modelSignUp.surname || !modelSignUp.email || !modelSignUp.password || modelSignUp.password!=modelSignUp.passwordRepeat || !modelSignUp.passwordRepeat" id="signUp-btn9" class="button button-calm button-large button-block" ng-click="registerUser(modelSignUp.name, modelSignUp.surname, modelSignUp.email, modelSignUp.password, modelSignUp.school, modelSignUp.avatar)">{{ 'SIGN_UP' | translate }}</button>
