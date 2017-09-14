@@ -29,6 +29,7 @@ function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading, $trans
     Needed for the translations to work in the controller's words.
   */
   $translate(['EMAIL_INVALID', 'ERROR_ACCESS_UNKNOW', 'EMAIL_ALREADY_USED', 'ERROR_WEAK_PASSWORD', 'SCHOOL_NOT_ESTABLISHED', 'VERIFY_EMAIL', 'TERMS_CONDITIONS']).then(function(translations) {
+
     $scope.emailInvalidAlert = translations.EMAIL_INVALID;
     $scope.errorEmailUsedAlert = translations.EMAIL_ALREADY_USED;
     $scope.errorUnknowAlert = translations.ERROR_ACCESS_UNKNOW;
@@ -36,6 +37,7 @@ function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading, $trans
     $scope.weakPasswordAlert = translations.ERROR_WEAK_PASSWORD;
     $scope.checkEmailToVerify = translations.VERIFY_EMAIL;
     $scope.termsAndConditions = translations.TERMS_CONDITIONS;
+
   });
 
   /**
@@ -49,6 +51,7 @@ function ($scope, $stateParams, $http, $state, sharedData, $ionicLoading, $trans
     $scope.weakPasswordAlert = $translate.instant('ERROR_WEAK_PASSWORD');
     $scope.checkEmailToVerify = $translate.instant('VERIFY_EMAIL');
     $scope.termsAndConditions = $translate.instant('TERMS_CONDITIONS');
+
   });
 
   $scope.modelSignUp = {};
